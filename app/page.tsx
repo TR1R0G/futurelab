@@ -1,17 +1,24 @@
 import { Hero } from "@/components/hero/Hero";
-import { loadHeroContent } from "@/lib/mdx";
+import { Ecosystem } from "@/components/ecosystem/Ecosystem";
+import { loadHeroContent, loadEcosystemContent } from "@/lib/mdx";
 
 export default async function Home() {
-  const content = await loadHeroContent();
+  const heroContent = await loadHeroContent();
+  const ecosystemContent = await loadEcosystemContent();
 
   return (
     <main className="flex-1">
       <Hero
-        title={content.title}
-        description={content.description}
-        primaryCta={content.primaryCta}
-        secondaryCta={content.secondaryCta}
-        imageAlt={content.imageAlt}
+        title={heroContent.title}
+        description={heroContent.description}
+        primaryCta={heroContent.primaryCta}
+        secondaryCta={heroContent.secondaryCta}
+        imageAlt={heroContent.imageAlt}
+      />
+      <Ecosystem
+        title={ecosystemContent.title}
+        subtitle={ecosystemContent.subtitle}
+        cards={ecosystemContent.cards}
       />
     </main>
   );
