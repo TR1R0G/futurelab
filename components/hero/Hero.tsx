@@ -61,51 +61,74 @@ export function Hero({
         };
       };
 
-      const getTarget = (): ScrollTarget => {
+      const getTarget = (vh: number): ScrollTarget => {
         const width = window.innerWidth;
+        const imageHeight = Math.round(vh * 0.9);
+        const imageTop = Math.round((vh - imageHeight) / 2);
+        const centerY = vh / 2;
 
         if (width >= 1600) {
+          const imageWidth = Math.min(
+            Math.round(width * 0.85),
+            Math.round(imageHeight * 0.6)
+          );
           return {
-            image: { top: 126, width: 418, height: 784 },
-            description: { left: 154, top: 480, width: 520 },
-            actions: { right: 195, top: 468, width: 390 },
+            image: { top: imageTop, width: imageWidth, height: imageHeight },
+            description: { left: 154, top: Math.round(centerY - 65), width: 520 },
+            actions: { right: 195, top: Math.round(centerY - 65), width: 390 },
             gradientScale: 3.05,
             gradientTop: 285,
           };
         }
 
         if (width >= 1200) {
+          const imageWidth = Math.min(
+            Math.round(width * 0.85),
+            Math.round(imageHeight * 0.6)
+          );
           return {
-            image: { top: 112, width: 405, height: 735 },
-            description: { left: 180, top: 462, width: 390 },
-            actions: { right: 116, top: 456, width: 255 },
+            image: { top: imageTop, width: imageWidth, height: imageHeight },
+            description: { left: 180, top: Math.round(centerY - 47), width: 390 },
+            actions: { right: 116, top: Math.round(centerY - 50), width: 255 },
             gradientScale: 2.65,
             gradientTop: 260,
           };
         }
 
         if (width >= 900) {
+          const imageWidth = Math.min(
+            Math.round(width * 0.85),
+            Math.round(imageHeight * 0.6)
+          );
           return {
-            image: { top: 150, width: 345, height: 612 },
-            description: { left: 112, top: 424, width: 245 },
-            actions: { right: 48, top: 404, width: 248 },
+            image: { top: imageTop, width: imageWidth, height: imageHeight },
+            description: { left: 112, top: Math.round(centerY - 47), width: 245 },
+            actions: { right: 48, top: Math.round(centerY - 72), width: 248 },
             gradientScale: 2.25,
             gradientTop: 285,
           };
         }
 
         if (width >= 640) {
+          const imageWidth = Math.min(
+            Math.round(width * 0.85),
+            Math.round(imageHeight * 0.65)
+          );
           return {
-            image: { top: 168, width: 352, height: 600 },
-            description: { left: 92, top: 430, width: 245 },
-            actions: { right: 54, top: 474, width: 244 },
+            image: { top: imageTop, width: imageWidth, height: imageHeight },
+            description: { left: 92, top: Math.round(centerY - 52), width: 245 },
+            actions: { right: 54, top: Math.round(centerY - 72), width: 244 },
             gradientScale: 2.2,
             gradientTop: 300,
           };
         }
 
+        const imageWidth = Math.min(
+          Math.round(width * 0.85),
+          Math.round(imageHeight * 0.55)
+        );
         return {
-          image: { top: 112, width: 236, height: 620 },
+          image: { top: imageTop, width: imageWidth, height: imageHeight },
           hideText: true,
           gradientScale: 1.9,
           gradientTop: 260,
@@ -136,11 +159,12 @@ export function Hero({
       const update = () => {
         frame = 0;
 
-        const maxScroll = Math.max(1, section.offsetHeight - window.innerHeight);
+        const vh = window.innerHeight;
+        const maxScroll = Math.max(1, section.offsetHeight - vh);
         const sectionTop = section.getBoundingClientRect().top + window.scrollY;
         const progress = clamp((window.scrollY - sectionTop) / maxScroll);
         const eased = gsap.parseEase("power2.inOut")(progress);
-        const target = getTarget();
+        const target = getTarget(vh);
 
         header.style.opacity = String(1 - clamp(progress * 3));
         header.style.transform =
@@ -235,7 +259,7 @@ export function Hero({
               fill
               className="object-cover"
               priority
-              sizes="(max-width: 640px) 240px, (max-width: 1024px) 350px, 420px"
+              sizes="90vw"
             />
           </div>
         </div>
