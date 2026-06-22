@@ -45,3 +45,29 @@ export async function loadEcosystemContent(): Promise<EcosystemContent> {
 
   return frontmatter;
 }
+
+export interface InfrastructureCard {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+export interface InfrastructureContent {
+  title: string;
+  subtitle: string;
+  ctaText: string;
+  ctaButton: string;
+  cards: InfrastructureCard[];
+}
+
+export async function loadInfrastructureContent(): Promise<InfrastructureContent> {
+  const filePath = path.join(process.cwd(), "content", "infrastructure.mdx");
+  const source = await fs.readFile(filePath, "utf-8");
+
+  const { frontmatter } = await compileMDX<InfrastructureContent>({
+    source,
+    options: { parseFrontmatter: true },
+  });
+
+  return frontmatter;
+}

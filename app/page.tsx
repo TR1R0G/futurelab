@@ -1,10 +1,19 @@
 import { Hero } from "@/components/hero/Hero";
 import { Ecosystem } from "@/components/ecosystem/Ecosystem";
-import { loadHeroContent, loadEcosystemContent } from "@/lib/mdx";
+import { Infrastructure } from "@/components/infrastructure/Infrastructure";
+import {
+  loadHeroContent,
+  loadEcosystemContent,
+  loadInfrastructureContent,
+} from "@/lib/mdx";
 
 export default async function Home() {
-  const heroContent = await loadHeroContent();
-  const ecosystemContent = await loadEcosystemContent();
+  const [heroContent, ecosystemContent, infrastructureContent] =
+    await Promise.all([
+      loadHeroContent(),
+      loadEcosystemContent(),
+      loadInfrastructureContent(),
+    ]);
 
   return (
     <main className="flex-1">
@@ -19,6 +28,13 @@ export default async function Home() {
         title={ecosystemContent.title}
         subtitle={ecosystemContent.subtitle}
         cards={ecosystemContent.cards}
+      />
+      <Infrastructure
+        title={infrastructureContent.title}
+        subtitle={infrastructureContent.subtitle}
+        ctaText={infrastructureContent.ctaText}
+        ctaButton={infrastructureContent.ctaButton}
+        cards={infrastructureContent.cards}
       />
     </main>
   );
