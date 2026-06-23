@@ -71,3 +71,25 @@ export async function loadInfrastructureContent(): Promise<InfrastructureContent
 
   return frontmatter;
 }
+
+export interface AcademyCard {
+  title: string;
+}
+
+export interface AcademyContent {
+  title: string;
+  subtitle: string;
+  cards: AcademyCard[];
+}
+
+export async function loadAcademyContent(): Promise<AcademyContent> {
+  const filePath = path.join(process.cwd(), "content", "academy.mdx");
+  const source = await fs.readFile(filePath, "utf-8");
+
+  const { frontmatter } = await compileMDX<AcademyContent>({
+    source,
+    options: { parseFrontmatter: true },
+  });
+
+  return frontmatter;
+}
