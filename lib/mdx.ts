@@ -119,3 +119,33 @@ export async function loadProgramsContent(): Promise<ProgramsContent> {
 
   return frontmatter;
 }
+
+export interface DirectionChip {
+  label: string;
+  variant: "gradient" | "light" | "outline";
+}
+
+export interface DirectionsContent {
+  title: string;
+  chips: DirectionChip[];
+  statement: {
+    linesBeforeImage: string[];
+    imageAlt: string;
+    imageSrc: string;
+    imageLead: string;
+    imageTail: string;
+    linesAfterImage: string[];
+  };
+}
+
+export async function loadDirectionsContent(): Promise<DirectionsContent> {
+  const filePath = path.join(process.cwd(), "content", "directions.mdx");
+  const source = await fs.readFile(filePath, "utf-8");
+
+  const { frontmatter } = await compileMDX<DirectionsContent>({
+    source,
+    options: { parseFrontmatter: true },
+  });
+
+  return frontmatter;
+}
