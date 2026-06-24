@@ -7,9 +7,14 @@ import { gsap } from "@/lib/gsap";
 interface GradientOrbProps {
   className?: string;
   style?: CSSProperties;
+  variant?: "default" | "video";
 }
 
-export function GradientOrb({ className = "", style }: GradientOrbProps) {
+export function GradientOrb({
+  className = "",
+  style,
+  variant = "default",
+}: GradientOrbProps) {
   const orbRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -33,7 +38,9 @@ export function GradientOrb({ className = "", style }: GradientOrbProps) {
 
   return (
     <div
-      className={`hero-light pointer-events-none absolute ${className}`}
+      className={`hero-light pointer-events-none absolute ${
+        variant === "video" ? "hero-light-video" : ""
+      } ${className}`}
       ref={orbRef}
       style={style}
     >

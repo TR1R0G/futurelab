@@ -74,15 +74,19 @@ export function ExpandedImageScreen({
     });
 
     const readTargetRect = () => {
-      const height = Math.round(window.innerHeight * 0.9);
-      const width = Math.min(
-        Math.round(window.innerWidth * 0.85),
-        Math.round(height * 0.6)
+      const visualGroupWidth = 1013.91;
+      const visualGroupHeight = 946.61;
+      const visualScale = Math.min(
+        1,
+        (window.innerWidth * 0.9) / visualGroupWidth,
+        (window.innerHeight * 0.92) / visualGroupHeight
       );
+      const width = Math.round(530 * visualScale);
+      const height = Math.round(928 * visualScale);
 
       return {
         left: Math.round((window.innerWidth - width) / 2),
-        top: Math.round((window.innerHeight - height) / 2),
+        top: Math.round((window.innerHeight - visualGroupHeight * visualScale) / 2),
         width,
         height,
       };
@@ -153,7 +157,10 @@ export function ExpandedImageScreen({
             gsap.set(frame, {
               ...rect,
               autoAlpha: 1,
-              borderRadius: 14,
+              borderRadius:
+                progress <= middleEnd
+                  ? mix(12, 22, progress / middleEnd)
+                  : mix(22, 35, (progress - middleEnd) / (1 - middleEnd)),
             });
           },
           onLeaveBack: () => {
@@ -230,20 +237,13 @@ export function ExpandedImageScreen({
       className={`expanded-image-section relative z-[90] ml-[calc(50%_-_50vw)] h-[220svh] w-screen bg-transparent ${className}`}
     >
       <div className="sticky top-0 h-[100svh] overflow-hidden bg-transparent">
-        <div ref={gradientRef} className="absolute inset-0">
-          <GradientOrb
-            style={{
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%) rotate(-12.33deg) scale(2.9)",
-              opacity: 1,
-            }}
-          />
+        <div ref={gradientRef} className="video-gradient-field absolute inset-0">
+          <GradientOrb variant="video" />
         </div>
 
         <div
           ref={frameRef}
-          className="absolute z-10 h-[90svh] w-[min(85vw,54svh)] overflow-hidden rounded-[14px] opacity-0 shadow-2xl shadow-black/45 max-sm:w-[min(85vw,49.5svh)]"
+          className="absolute z-10 h-[min(86svh,928px)] w-[min(85vw,calc(min(86svh,928px)*0.57112))] overflow-hidden rounded-[35px] opacity-0 shadow-2xl shadow-black/45"
         >
           <Image
             src={src}

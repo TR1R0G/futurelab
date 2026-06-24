@@ -2,6 +2,7 @@
 
 import type { DirectionsContent } from "@/lib/mdx";
 import { ExpandedImageScreen } from "@/components/media/ExpandedImageScreen";
+import { CTACard } from "@/components/infrastructure/CTACard";
 import { gsap, registerGsapPlugins } from "@/lib/gsap";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
@@ -129,6 +130,19 @@ export function Directions({ title, chips, statement }: DirectionsProps) {
         movingTextSelector=".directions-statement-copy"
         sourceSelector=".directions-inline-image"
       />
+
+      <div className="directions-post-image relative z-[100] flex min-h-[100svh] flex-col justify-center bg-black pb-28 pt-28 md:pb-36 md:pt-36 lg:pb-44 lg:pt-44">
+        <CTACard
+          variant="wide"
+          text="Начните путь в цифровой профессии через реальные проекты"
+          buttonText="Начать обучение"
+        />
+
+        <div
+          className="mx-auto mt-28 h-1 w-[calc(100%_-_40px)] max-w-[1436px] rounded-sm bg-[linear-gradient(90deg,#4B0E5B_0%,#A91E83_29.9%,#FD9A34_65.67%,#F9EB44_100%)] md:mt-36 md:w-[calc(100%_-_64px)] lg:mt-44"
+          aria-hidden="true"
+        />
+      </div>
     </section>
   );
 }

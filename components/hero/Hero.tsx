@@ -63,75 +63,64 @@ export function Hero({
 
       const getTarget = (vh: number): ScrollTarget => {
         const width = window.innerWidth;
-        const imageHeight = Math.round(vh * 0.9);
-        const imageTop = Math.round((vh - imageHeight) / 2);
+        const visualGroupWidth = 1013.91;
+        const visualGroupHeight = 946.61;
+        const visualScale = Math.min(
+          1,
+          (width * 0.9) / visualGroupWidth,
+          (vh * 0.92) / visualGroupHeight
+        );
+        const imageWidth = Math.round(530 * visualScale);
+        const imageHeight = Math.round(928 * visualScale);
+        const imageTop = Math.round((vh - visualGroupHeight * visualScale) / 2);
         const centerY = vh / 2;
+        const gradientTop = Math.round(imageTop + 22 * visualScale);
 
         if (width >= 1600) {
-          const imageWidth = Math.min(
-            Math.round(width * 0.85),
-            Math.round(imageHeight * 0.6)
-          );
           return {
             image: { top: imageTop, width: imageWidth, height: imageHeight },
             description: { left: 154, top: Math.round(centerY - 65), width: 520 },
             actions: { right: 195, top: Math.round(centerY - 65), width: 390 },
-            gradientScale: 3.05,
-            gradientTop: 285,
+            gradientScale: 1,
+            gradientTop,
           };
         }
 
         if (width >= 1200) {
-          const imageWidth = Math.min(
-            Math.round(width * 0.85),
-            Math.round(imageHeight * 0.6)
-          );
           return {
             image: { top: imageTop, width: imageWidth, height: imageHeight },
             description: { left: 180, top: Math.round(centerY - 47), width: 390 },
             actions: { right: 116, top: Math.round(centerY - 50), width: 255 },
-            gradientScale: 2.65,
-            gradientTop: 260,
+            gradientScale: 1,
+            gradientTop,
           };
         }
 
         if (width >= 900) {
-          const imageWidth = Math.min(
-            Math.round(width * 0.85),
-            Math.round(imageHeight * 0.6)
-          );
           return {
             image: { top: imageTop, width: imageWidth, height: imageHeight },
             description: { left: 112, top: Math.round(centerY - 47), width: 245 },
             actions: { right: 48, top: Math.round(centerY - 72), width: 248 },
-            gradientScale: 2.25,
-            gradientTop: 285,
+            gradientScale: 1,
+            gradientTop,
           };
         }
 
         if (width >= 640) {
-          const imageWidth = Math.min(
-            Math.round(width * 0.85),
-            Math.round(imageHeight * 0.65)
-          );
           return {
             image: { top: imageTop, width: imageWidth, height: imageHeight },
             description: { left: 92, top: Math.round(centerY - 52), width: 245 },
             actions: { right: 54, top: Math.round(centerY - 72), width: 244 },
-            gradientScale: 2.2,
-            gradientTop: 300,
+            gradientScale: 1,
+            gradientTop,
           };
         }
 
-        const imageWidth = Math.min(
-          Math.round(width * 0.85),
-          Math.round(imageHeight * 0.55)
-        );
         return {
           image: { top: imageTop, width: imageWidth, height: imageHeight },
           hideText: true,
-          gradientScale: 1.9,
-          gradientTop: 260,
+          gradientScale: 1,
+          gradientTop,
         };
       };
 
@@ -237,8 +226,8 @@ export function Hero({
       className="hero-section relative w-full bg-black"
     >
       <div className="hero-stage sticky top-0 h-screen w-full overflow-hidden bg-black">
-        <div className="absolute inset-0">
-          <GradientOrb />
+        <div className="video-gradient-field absolute inset-0">
+          <GradientOrb variant="video" />
         </div>
 
         <HeroHeader cta="Связаться с нами" headerRef={headerRef} />
@@ -252,7 +241,7 @@ export function Hero({
         </p>
 
         <div ref={imageRef} className="hero-image relative z-10">
-          <div className="hero-image-frame relative h-full w-full overflow-hidden rounded-[14px] shadow-2xl shadow-black/45">
+          <div className="hero-image-frame relative h-full w-full overflow-hidden rounded-[35px] shadow-2xl shadow-black/45">
             <Image
               src="/images/office.png"
               alt={imageAlt}
