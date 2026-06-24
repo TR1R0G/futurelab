@@ -1,6 +1,7 @@
 "use client";
 
 import type { DirectionsContent } from "@/lib/mdx";
+import { ExpandedImageScreen } from "@/components/media/ExpandedImageScreen";
 import { gsap, registerGsapPlugins } from "@/lib/gsap";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
@@ -55,7 +56,7 @@ export function Directions({ title, chips, statement }: DirectionsProps) {
   return (
     <section
       ref={sectionRef}
-      className="directions-section relative z-[70] isolate overflow-hidden bg-black px-5 pb-28 pt-20 md:px-8 md:pb-36 md:pt-24 lg:pb-44 lg:pt-20"
+      className="directions-section relative z-[70] isolate overflow-visible bg-black px-5 pb-28 pt-20 md:px-8 md:pb-36 md:pt-24 lg:pb-44 lg:pt-20"
     >
       <div className="directions-board relative mx-auto h-auto max-w-[1436px] md:h-[398px]">
         <div
@@ -86,13 +87,13 @@ export function Directions({ title, chips, statement }: DirectionsProps) {
         </div>
       </div>
 
-      <div className="directions-statement relative mx-auto mt-32 max-w-[1420px] text-center md:mt-44 lg:mt-52">
+      <div className="directions-statement sticky top-[12svh] mx-auto mt-32 max-w-[1420px] text-center md:mt-44 lg:mt-52">
         <div
           className="pointer-events-none absolute left-1/2 top-1/2 h-[620px] w-[960px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_32%_48%,rgba(254,158,52,0.58),transparent_34%),radial-gradient(circle_at_53%_43%,rgba(177,58,202,0.58),transparent_36%),radial-gradient(circle_at_66%_35%,rgba(42,143,255,0.42),transparent_36%)] blur-[90px]"
           aria-hidden="true"
         />
 
-        <div className="relative z-10 text-[32px] font-black leading-[1.48] tracking-[-0.03em] text-white md:text-[44px] lg:text-[52px]">
+        <div className="directions-statement-copy relative z-10 text-[32px] font-black leading-[1.48] tracking-[-0.03em] text-white md:text-[44px] lg:text-[52px]">
           {statement.linesBeforeImage.map((line) => (
             <p key={line} className="directions-statement-line">
               {line}
@@ -101,7 +102,7 @@ export function Directions({ title, chips, statement }: DirectionsProps) {
 
           <p className="directions-statement-line">
             {statement.imageLead}
-            <span className="mx-5 inline-flex translate-y-[0.18em] overflow-hidden rounded-[12px] align-baseline shadow-[0_10px_34px_rgba(0,0,0,0.45)] md:mx-7">
+            <span className="directions-inline-image mx-5 inline-flex translate-y-[0.18em] overflow-hidden rounded-[12px] align-baseline shadow-[0_10px_34px_rgba(0,0,0,0.45)] md:mx-7">
               <Image
                 src={statement.imageSrc}
                 alt={statement.imageAlt}
@@ -120,6 +121,14 @@ export function Directions({ title, chips, statement }: DirectionsProps) {
           ))}
         </div>
       </div>
+
+      <ExpandedImageScreen
+        src={statement.imageSrc}
+        alt={statement.imageAlt}
+        className="-mt-[58svh]"
+        movingTextSelector=".directions-statement-copy"
+        sourceSelector=".directions-inline-image"
+      />
     </section>
   );
 }

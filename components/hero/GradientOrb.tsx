@@ -1,9 +1,15 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import type { CSSProperties } from "react";
 import { gsap } from "@/lib/gsap";
 
-export function GradientOrb() {
+interface GradientOrbProps {
+  className?: string;
+  style?: CSSProperties;
+}
+
+export function GradientOrb({ className = "", style }: GradientOrbProps) {
   const orbRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -26,7 +32,11 @@ export function GradientOrb() {
   }, []);
 
   return (
-    <div className="hero-light pointer-events-none absolute" ref={orbRef}>
+    <div
+      className={`hero-light pointer-events-none absolute ${className}`}
+      ref={orbRef}
+      style={style}
+    >
       <div className="hero-light-inner">
         <span className="hero-light-ellipse hero-light-ellipse-blue" />
         <span className="hero-light-ellipse hero-light-ellipse-yellow" />
