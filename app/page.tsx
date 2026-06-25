@@ -6,6 +6,7 @@ import { Programs } from "@/components/programs/Programs";
 import { Directions } from "@/components/directions/Directions";
 import { Solutions } from "@/components/solutions/Solutions";
 import { RealizedProjects } from "@/components/realized-projects/RealizedProjects";
+import { CTACard } from "@/components/infrastructure/CTACard";
 import {
   loadHeroContent,
   loadEcosystemContent,
@@ -79,6 +80,13 @@ export default async function Home() {
         title={realizedProjectsContent.title}
         projects={realizedProjectsContent.projects}
       />
+      <section className="bg-black px-0 pb-28 pt-24 md:pb-36 md:pt-32 lg:pb-40 lg:pt-[200px]">
+        <CTACard
+          variant="project"
+          text="Обсудим и предложим решение под Ваш проект"
+          buttonText="Обсудить проект"
+        />
+      </section>
     </main>
   );
 }
