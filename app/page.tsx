@@ -4,6 +4,7 @@ import { Infrastructure } from "@/components/infrastructure/Infrastructure";
 import { Academy } from "@/components/academy/Academy";
 import { Programs } from "@/components/programs/Programs";
 import { Directions } from "@/components/directions/Directions";
+import { Solutions } from "@/components/solutions/Solutions";
 import {
   loadHeroContent,
   loadEcosystemContent,
@@ -11,6 +12,7 @@ import {
   loadAcademyContent,
   loadProgramsContent,
   loadDirectionsContent,
+  loadSolutionsContent,
 } from "@/lib/mdx";
 
 export default async function Home() {
@@ -21,6 +23,7 @@ export default async function Home() {
     academyContent,
     programsContent,
     directionsContent,
+    solutionsContent,
   ] = await Promise.all([
     loadHeroContent(),
     loadEcosystemContent(),
@@ -28,6 +31,7 @@ export default async function Home() {
     loadAcademyContent(),
     loadProgramsContent(),
     loadDirectionsContent(),
+    loadSolutionsContent(),
   ]);
 
   return (
@@ -61,6 +65,11 @@ export default async function Home() {
         title={directionsContent.title}
         chips={directionsContent.chips}
         statement={directionsContent.statement}
+      />
+      <Solutions
+        title={solutionsContent.title}
+        description={solutionsContent.description}
+        card={solutionsContent.card}
       />
     </main>
   );

@@ -149,3 +149,27 @@ export async function loadDirectionsContent(): Promise<DirectionsContent> {
 
   return frontmatter;
 }
+
+export interface SolutionsContent {
+  title: string;
+  description: string;
+  card: {
+    title: string;
+    description: string;
+    image: string;
+    imageAlt: string;
+    cta: string;
+  };
+}
+
+export async function loadSolutionsContent(): Promise<SolutionsContent> {
+  const filePath = path.join(process.cwd(), "content", "solutions.mdx");
+  const source = await fs.readFile(filePath, "utf-8");
+
+  const { frontmatter } = await compileMDX<SolutionsContent>({
+    source,
+    options: { parseFrontmatter: true },
+  });
+
+  return frontmatter;
+}
