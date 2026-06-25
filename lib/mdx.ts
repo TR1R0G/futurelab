@@ -173,3 +173,27 @@ export async function loadSolutionsContent(): Promise<SolutionsContent> {
 
   return frontmatter;
 }
+
+export interface RealizedProject {
+  title: string;
+  description: string;
+  image: string;
+  imageAlt: string;
+}
+
+export interface RealizedProjectsContent {
+  title: string;
+  projects: RealizedProject[];
+}
+
+export async function loadRealizedProjectsContent(): Promise<RealizedProjectsContent> {
+  const filePath = path.join(process.cwd(), "content", "realized-projects.mdx");
+  const source = await fs.readFile(filePath, "utf-8");
+
+  const { frontmatter } = await compileMDX<RealizedProjectsContent>({
+    source,
+    options: { parseFrontmatter: true },
+  });
+
+  return frontmatter;
+}

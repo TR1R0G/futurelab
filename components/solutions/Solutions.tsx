@@ -17,6 +17,7 @@ const SOLUTION_CARD_IMAGE_TOP = 1059
 const SOLUTION_EXPANDED_GLOW_TOP = 1415.47
 const SOLUTION_EXPANDED_IMAGE_TOP = 1598
 const SOLUTION_BLOCK_HEIGHT = 2020.92
+const SOLUTION_TRAILING_SPACE = 220
 
 export function Solutions({ title, description, cards }: SolutionsProps) {
 	const sectionRef = useRef<HTMLElement>(null)
@@ -126,7 +127,7 @@ export function Solutions({ title, description, cards }: SolutionsProps) {
 	}, [cards.length])
 
 	const sectionHeight =
-		SOLUTION_CARD_TOP + cards.length * SOLUTION_BLOCK_HEIGHT + 820
+		SOLUTION_CARD_TOP + cards.length * SOLUTION_BLOCK_HEIGHT + SOLUTION_TRAILING_SPACE
 
 	return (
 		<section
