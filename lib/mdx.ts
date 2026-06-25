@@ -153,13 +153,13 @@ export async function loadDirectionsContent(): Promise<DirectionsContent> {
 export interface SolutionsContent {
   title: string;
   description: string;
-  card: {
+  cards: {
     title: string;
     description: string;
     image: string;
     imageAlt: string;
     cta: string;
-  };
+  }[];
 }
 
 export async function loadSolutionsContent(): Promise<SolutionsContent> {

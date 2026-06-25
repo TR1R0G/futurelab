@@ -69,7 +69,7 @@ export default async function Home() {
       <Solutions
         title={solutionsContent.title}
         description={solutionsContent.description}
-        card={solutionsContent.card}
+        cards={solutionsContent.cards}
       />
     </main>
   );
