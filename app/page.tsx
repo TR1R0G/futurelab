@@ -7,6 +7,7 @@ import { Directions } from "@/components/directions/Directions";
 import { Solutions } from "@/components/solutions/Solutions";
 import { RealizedProjects } from "@/components/realized-projects/RealizedProjects";
 import { CTACard } from "@/components/infrastructure/CTACard";
+import { Experience } from "@/components/experience/Experience";
 import {
   loadHeroContent,
   loadEcosystemContent,
@@ -87,6 +88,7 @@ export default async function Home() {
           buttonText="Обсудить проект"
         />
       </section>
+      <Experience />
     </main>
   );
 }
