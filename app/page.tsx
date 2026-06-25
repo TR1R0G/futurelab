@@ -8,6 +8,7 @@ import { Solutions } from "@/components/solutions/Solutions";
 import { RealizedProjects } from "@/components/realized-projects/RealizedProjects";
 import { CTACard } from "@/components/infrastructure/CTACard";
 import { Experience } from "@/components/experience/Experience";
+import { ContactBlock } from "@/components/contact/ContactBlock";
 import {
   loadHeroContent,
   loadEcosystemContent,
@@ -89,6 +90,7 @@ export default async function Home() {
         />
       </section>
       <Experience />
+      <ContactBlock />
     </main>
   );
 }
