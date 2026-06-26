@@ -17,6 +17,13 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       smoothWheel: true,
     });
 
+    const refreshLayout = () => {
+      requestAnimationFrame(() => {
+        (lenis as { resize?: () => void }).resize?.();
+        ScrollTrigger.refresh();
+      });
+    };
+
     lenis.on("scroll", ScrollTrigger.update);
 
     const tickerFn = (time: number) => {
@@ -27,10 +34,22 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     gsap.ticker.add(tickerFn);
     gsap.ticker.lagSmoothing(0);
 
+    window.addEventListener("load", refreshLayout);
+
+    if ("fonts" in document) {
+      document.fonts.ready.then(refreshLayout).catch(() => undefined);
+    }
+
+    const refreshTimeout = window.setTimeout(refreshLayout, 500);
+
     return () => {
+      window.removeEventListener("load", refreshLayout);
+      window.clearTimeout(refreshTimeout);
+
       if (tickerFnRef.current) {
         gsap.ticker.remove(tickerFnRef.current);
       }
+
       lenis.destroy();
     };
   }, []);
