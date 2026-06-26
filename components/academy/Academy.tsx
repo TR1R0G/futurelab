@@ -138,7 +138,7 @@ export function Academy({ title, subtitle, cards }: AcademyProps) {
           cardsTimeline.to(
             programsSection,
             {
-              y: () => window.innerHeight * 0.28,
+              y: 0,
               duration: 1.82,
             },
             lastCardExitStart - 1.1
@@ -163,7 +163,7 @@ export function Academy({ title, subtitle, cards }: AcademyProps) {
         className="academy-pin sticky top-0 z-40 flex min-h-[100svh] flex-col justify-center overflow-visible py-16 md:py-20 lg:py-24"
       >
         <div className="academy-heading relative z-[500] mx-auto w-full max-w-[1436px] px-5 md:px-8">
-          <h2 className="max-w-[980px] text-[42px] font-bold leading-[1.06] tracking-[-0.02em] text-white md:text-6xl lg:text-[72px]">
+          <h2 className="font-heading max-w-[980px] text-[42px] font-bold leading-[1.06] tracking-[-0.02em] text-white md:text-6xl lg:text-[72px]">
             {title}
           </h2>
           <p className="mt-10 max-w-[1040px] text-xl font-semibold leading-[1.23] text-[#A6A6A6] md:text-2xl lg:mt-20 lg:text-[31px]">

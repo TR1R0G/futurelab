@@ -101,7 +101,7 @@ export function Infrastructure({
       className="infrastructure-section w-full overflow-hidden bg-black pb-24 pt-24 md:pb-32 md:pt-32 lg:pb-40 lg:pt-40"
     >
       <div className="infrastructure-heading mx-auto max-w-[1120px] px-5 md:px-8">
-        <h2 className="max-w-3xl text-[36px] font-bold leading-[1.08] text-white md:text-5xl lg:text-[56px]">
+        <h2 className="font-heading max-w-3xl text-[36px] font-bold leading-[1.08] text-white md:text-5xl lg:text-[56px]">
           {title}
         </h2>
         <p className="mt-8 max-w-2xl text-base font-medium text-white/60 md:text-lg">

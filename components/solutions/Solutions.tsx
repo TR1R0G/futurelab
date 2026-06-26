@@ -141,7 +141,7 @@ export function Solutions({ title, description, cards }: SolutionsProps) {
 				style={{ height: `${sectionHeight}px` }}
 			>
 				<div className='lg:absolute lg:left-0 lg:top-[150px] lg:w-[857px]'>
-					<h2 className='whitespace-pre-line text-[42px] font-bold leading-[1.08] tracking-[-0.03em] text-white md:text-[56px] lg:text-[65px] lg:leading-[73px]'>
+					<h2 className='font-heading whitespace-pre-line text-[42px] font-bold leading-[1.08] tracking-[-0.03em] text-white md:text-[56px] lg:text-[65px] lg:leading-[73px]'>
 						{title}
 					</h2>
 				</div>

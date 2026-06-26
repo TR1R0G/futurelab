@@ -79,7 +79,7 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 					className='ecosystem-track relative min-h-[720px] w-full overflow-hidden rounded-[28px] bg-[#B24ECC] px-8 py-12 md:rounded-[35px] md:px-12 md:py-16 lg:h-[717px] lg:min-h-[717px] lg:w-[2781px] lg:p-0'
 				>
 					<div className='lg:absolute lg:left-[242px] lg:top-[100px] lg:w-[615px]'>
-						<h2 className='whitespace-pre-line text-[42px] font-bold leading-[1.08] tracking-[-0.03em] text-white md:text-[54px] lg:text-[65px] lg:leading-[73px]'>
+						<h2 className='font-heading whitespace-pre-line text-[42px] font-bold leading-[1.08] tracking-[-0.03em] text-white md:text-[54px] lg:text-[65px] lg:leading-[73px]'>
 							{displayTitle}
 						</h2>
 					</div>

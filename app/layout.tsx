@@ -1,18 +1,38 @@
-import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Golos_Text, Onest, Sansation } from "next/font/google";
 import "./globals.css";
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
 import { PageLoadGate } from "@/components/providers/PageLoadGate";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const golosText = Golos_Text({
+  variable: "--font-golos-text",
   subsets: ["latin", "cyrillic"],
+  display: "swap",
+});
+
+const sansation = Sansation({
+  variable: "--font-sansation",
+  weight: ["400", "700"],
+  subsets: ["latin", "cyrillic"],
+  display: "swap",
+  adjustFontFallback: false,
+});
+
+const onest = Onest({
+  variable: "--font-onest",
+  subsets: ["latin", "cyrillic"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: "Future Lab — Студия цифровых технологий",
   description:
     "Пространство, где развиваются специалисты, создаются проекты и внедряются цифровые решения.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -23,7 +43,7 @@ export default function RootLayout({
   return (
     <html
       lang="ru"
-      className={`${geistSans.variable} h-full antialiased dark`}
+      className={`${golosText.variable} ${sansation.variable} ${onest.variable} h-full antialiased dark`}
     >
       <head>
         <link
@@ -33,7 +53,7 @@ export default function RootLayout({
           fetchPriority="high"
         />
       </head>
-      <body className="min-h-full flex flex-col bg-black text-white">
+      <body className="min-h-full flex flex-col bg-black font-sans text-white">
         <PageLoadGate>
           <SmoothScroll>{children}</SmoothScroll>
         </PageLoadGate>

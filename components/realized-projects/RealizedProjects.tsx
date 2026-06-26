@@ -72,7 +72,7 @@ export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
       className="realized-projects-section overflow-hidden bg-black pb-28 pt-20 md:pb-36 md:pt-28 lg:h-[1126px] lg:pb-0 lg:pt-[120px]"
     >
       <div className="mx-auto max-w-[1436px]">
-        <h2 className="text-[42px] font-bold leading-tight tracking-[-0.03em] text-white md:text-[55px] md:leading-[62px]">
+        <h2 className="font-heading text-[42px] font-bold leading-tight tracking-[-0.03em] text-white md:text-[55px] md:leading-[62px]">
           {title}
         </h2>
       </div>
