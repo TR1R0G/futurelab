@@ -35,6 +35,8 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     gsap.ticker.lagSmoothing(0);
 
     window.addEventListener("load", refreshLayout);
+    window.addEventListener("futurelab:critical-assets-ready", refreshLayout);
+    window.addEventListener("futurelab:image-loaded", refreshLayout);
 
     if ("fonts" in document) {
       document.fonts.ready.then(refreshLayout).catch(() => undefined);
@@ -44,6 +46,11 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
 
     return () => {
       window.removeEventListener("load", refreshLayout);
+      window.removeEventListener(
+        "futurelab:critical-assets-ready",
+        refreshLayout
+      );
+      window.removeEventListener("futurelab:image-loaded", refreshLayout);
       window.clearTimeout(refreshTimeout);
 
       if (tickerFnRef.current) {

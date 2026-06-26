@@ -1,10 +1,10 @@
 'use client'
 
 import { CTACard } from '@/components/infrastructure/CTACard'
+import { FadeInImage } from '@/components/media/FadeInImage'
 import { ExpandedImageScreen } from '@/components/media/ExpandedImageScreen'
 import { gsap, registerGsapPlugins } from '@/lib/gsap'
 import type { DirectionsContent } from '@/lib/mdx'
-import Image from 'next/image'
 import { useEffect, useRef } from 'react'
 
 interface DirectionsProps {
@@ -104,12 +104,13 @@ export function Directions({ title, chips, statement }: DirectionsProps) {
 					<p className='directions-statement-line'>
 						{statement.imageLead}
 						<span className='directions-inline-image mx-5 inline-flex translate-y-[0.18em] overflow-hidden rounded-[12px] align-baseline shadow-[0_10px_34px_rgba(0,0,0,0.45)] md:mx-7'>
-							<Image
+							<FadeInImage
 								src={statement.imageSrc}
 								alt={statement.imageAlt}
 								width={58}
 								height={88}
 								className='h-[58px] w-[38px] object-cover md:h-[78px] md:w-[52px] lg:h-[88px] lg:w-[58px]'
+								unoptimized
 							/>
 						</span>
 						{statement.imageTail}

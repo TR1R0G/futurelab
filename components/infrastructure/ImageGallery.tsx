@@ -1,40 +1,40 @@
 "use client";
 
 import { gsap, registerGsapPlugins } from "@/lib/gsap";
-import Image from "next/image";
+import { FadeInImage } from "@/components/media/FadeInImage";
 import { useEffect, useRef } from "react";
 
 const galleryItems = [
   {
-    src: "/images/block4/carousel/f0f71cfa329f0a022a453c3f74669d2521830e27.png",
+    src: "/images/block4/carousel/optimized/presentation.webp",
     alt: "Современное пространство FutureLab",
     left: 0,
     width: 552,
     position: "50% 50%",
   },
   {
-    src: "/images/block4/carousel/0bd8825211f14a96303353d7445d32585cd883e9.png",
+    src: "/images/block4/carousel/optimized/team.webp",
     alt: "Команда за совместной работой",
     left: 572,
     width: 306,
     position: "50% 50%",
   },
   {
-    src: "/images/block4/carousel/d84dd0666b46fe19bdc85984919bc83635cf7e18.png",
+    src: "/images/block4/carousel/optimized/lab.webp",
     alt: "Технологическая лаборатория FutureLab",
     left: 898,
     width: 552,
     position: "50% 50%",
   },
   {
-    src: "/images/block4/carousel/ffe37fe87329d259f3ffc8f296e8429d922b7f51.png",
+    src: "/images/block4/carousel/optimized/zone.webp",
     alt: "Презентационная зона FutureLab",
     left: 1470,
     width: 552,
     position: "50% 50%",
   },
   {
-    src: "/images/block4/carousel/c7b94540596ffe74590acc26846bb655e5f5c8a1 (1).png",
+    src: "/images/block4/carousel/optimized/workspace.webp",
     alt: "Рабочая зона FutureLab",
     left: 2042,
     width: 306,
@@ -165,13 +165,14 @@ export function ImageGallery() {
                   width: image.width,
                 }}
               >
-                <Image
+                <FadeInImage
                   src={image.src}
                   alt={setIndex === 0 ? image.alt : ""}
                   fill
                   className="object-cover"
                   style={{ objectPosition: image.position }}
                   sizes={`${image.width}px`}
+                  unoptimized
                 />
               </div>
             ))}

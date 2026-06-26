@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { GradientOrb } from "@/components/hero/GradientOrb";
+import { FadeInImage } from "@/components/media/FadeInImage";
 import { gsap, registerGsapPlugins, ScrollTrigger } from "@/lib/gsap";
 
 interface ExpandedImageScreenProps {
@@ -245,12 +245,13 @@ export function ExpandedImageScreen({
           ref={frameRef}
           className="absolute z-10 h-[min(86svh,928px)] w-[min(85vw,calc(min(86svh,928px)*0.57112))] overflow-hidden rounded-[35px] opacity-0 shadow-2xl shadow-black/45"
         >
-          <Image
+          <FadeInImage
             src={src}
             alt={alt}
             fill
             className="object-cover"
             sizes="85vw"
+            unoptimized
           />
         </div>
       </div>

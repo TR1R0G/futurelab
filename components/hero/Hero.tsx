@@ -4,6 +4,7 @@ import type { RefObject } from "react";
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { gsap, registerGsapPlugins } from "@/lib/gsap";
+import { FadeInImage } from "@/components/media/FadeInImage";
 import { GradientOrb } from "./GradientOrb";
 import { HeroTitle } from "./HeroTitle";
 import { HeroActions } from "./HeroActions";
@@ -242,12 +243,13 @@ export function Hero({
 
         <div ref={imageRef} className="hero-image relative z-10">
           <div className="hero-image-frame relative h-full w-full overflow-hidden rounded-[35px] shadow-2xl shadow-black/45">
-            <Image
-              src="/images/office.png"
+            <FadeInImage
+              src="/images/optimized/office.webp"
               alt={imageAlt}
               fill
               className="object-cover"
               priority
+              unoptimized
               sizes="90vw"
             />
           </div>

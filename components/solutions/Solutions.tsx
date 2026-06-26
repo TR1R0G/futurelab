@@ -2,6 +2,7 @@
 
 import { gsap, registerGsapPlugins } from '@/lib/gsap'
 import type { SolutionsContent } from '@/lib/mdx'
+import { FadeInImage } from '@/components/media/FadeInImage'
 import Image from 'next/image'
 import type { CSSProperties } from 'react'
 import { useEffect, useRef } from 'react'
@@ -288,12 +289,13 @@ function TransitionMedia({
 			className='solutions-transition-media relative z-20 mt-20 h-[391px] w-full overflow-hidden rounded-[35px] shadow-2xl shadow-black/40 lg:absolute lg:left-[371px] lg:top-[1059px] lg:mt-0 lg:h-[391px] lg:w-[694px]'
 			style={{ top }}
 		>
-			<Image
+			<FadeInImage
 				src={image}
 				alt={imageAlt}
 				fill
 				sizes='(min-width: 1024px) 1436px, calc(100vw - 40px)'
 				className='object-cover'
+				unoptimized
 			/>
 		</div>
 	)

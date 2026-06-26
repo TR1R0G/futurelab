@@ -13,8 +13,23 @@ body {
   color: var(--foreground);
 }
 
+html.is-preloading,
+html.is-preloading body {
+  overflow: hidden;
+}
+
 body {
   overflow-x: hidden;
+}
+
+@keyframes futurelab-loader {
+  0% {
+    transform: translateX(-105%);
+  }
+
+  100% {
+    transform: translateX(205%);
+  }
 }
 
 .hero-section {

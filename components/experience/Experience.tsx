@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { FadeInImage } from "@/components/media/FadeInImage";
 
 const stats = [
   {
@@ -16,22 +16,22 @@ const stats = [
 ];
 
 const mosaicRows = [
-  { offset: true, images: ["/images/block6/image1.png", "/images/block6/image2.png"] },
+  { offset: true, images: ["/images/block6/optimized/image1.webp", "/images/block6/optimized/image2.webp"] },
   {
     offset: false,
-    images: ["/images/block6/image3.png", "/images/office.png", "/images/block6/image1.png"],
+    images: ["/images/block6/optimized/image3.webp", "/images/optimized/office.webp", "/images/block6/optimized/image1.webp"],
   },
-  { offset: true, images: ["/images/block6/image2.png", "/images/block6/image3.png"] },
+  { offset: true, images: ["/images/block6/optimized/image2.webp", "/images/block6/optimized/image3.webp"] },
   {
     offset: false,
-    images: ["/images/office.png", "/images/block6/image1.png", "/images/block6/image2.png"],
+    images: ["/images/optimized/office.webp", "/images/block6/optimized/image1.webp", "/images/block6/optimized/image2.webp"],
   },
-  { offset: true, images: ["/images/block6/image3.png", "/images/block6/image3.png"] },
+  { offset: true, images: ["/images/block6/optimized/image3.webp", "/images/block6/optimized/image3.webp"] },
   {
     offset: false,
-    images: ["/images/block6/image1.png", "/images/block6/image2.png", "/images/office.png"],
+    images: ["/images/block6/optimized/image1.webp", "/images/block6/optimized/image2.webp", "/images/optimized/office.webp"],
   },
-  { offset: true, images: ["/images/block6/image2.png", "/images/block6/image1.png"] },
+  { offset: true, images: ["/images/block6/optimized/image2.webp", "/images/block6/optimized/image1.webp"] },
 ];
 
 export function Experience() {
@@ -121,13 +121,14 @@ function MosaicBackground() {
                 key={`${rowIndex}-${imageIndex}-${src}`}
                 className="relative h-[163px] w-[268px] shrink-0 overflow-hidden rounded-[15px]"
               >
-                <Image
+                <FadeInImage
                   src={src}
                   alt=""
                   fill
                   sizes="268px"
                   className="object-cover"
                   aria-hidden="true"
+                  unoptimized
                 />
               </div>
             ))}

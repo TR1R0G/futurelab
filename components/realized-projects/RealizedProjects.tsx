@@ -1,7 +1,7 @@
 "use client";
 
 import { gsap, registerGsapPlugins } from "@/lib/gsap";
-import Image from "next/image";
+import { FadeInImage } from "@/components/media/FadeInImage";
 import { useEffect, useRef } from "react";
 import type { RealizedProject } from "@/lib/mdx";
 
@@ -107,12 +107,13 @@ function ProjectCard({ project }: { project: RealizedProject }) {
         </p>
 
         <div className="absolute left-10 top-[496px] h-[332px] w-[618px] overflow-hidden rounded-[10px]">
-          <Image
+          <FadeInImage
             src={project.image}
             alt={project.imageAlt}
             fill
             sizes="618px"
             className="object-cover"
+            unoptimized
           />
           <PlayButton />
         </div>
