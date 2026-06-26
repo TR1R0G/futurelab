@@ -4,12 +4,50 @@ import { gsap, registerGsapPlugins } from "@/lib/gsap";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 
-const images = [
-  { alt: "Технологическая лаборатория", position: "50% 20%" },
-  { alt: "Команда за совместной работой", position: "50% 53%" },
-  { alt: "Современное офисное пространство", position: "50% 35%" },
-  { alt: "Рабочая встреча команды", position: "50% 64%" },
-  { alt: "Коворкинг FutureLab", position: "50% 80%" },
+const galleryItems = [
+  {
+    src: "/images/block4/carousel/f0f71cfa329f0a022a453c3f74669d2521830e27.png",
+    alt: "Современное пространство FutureLab",
+    left: 0,
+    width: 552,
+    position: "50% 50%",
+  },
+  {
+    src: "/images/block4/carousel/0bd8825211f14a96303353d7445d32585cd883e9.png",
+    alt: "Команда за совместной работой",
+    left: 572,
+    width: 306,
+    position: "50% 50%",
+  },
+  {
+    src: "/images/block4/carousel/d84dd0666b46fe19bdc85984919bc83635cf7e18.png",
+    alt: "Технологическая лаборатория FutureLab",
+    left: 898,
+    width: 552,
+    position: "50% 50%",
+  },
+  {
+    src: "/images/block4/carousel/ffe37fe87329d259f3ffc8f296e8429d922b7f51.png",
+    alt: "Презентационная зона FutureLab",
+    left: 1470,
+    width: 552,
+    position: "50% 50%",
+  },
+  {
+    src: "/images/block4/carousel/c7b94540596ffe74590acc26846bb655e5f5c8a1 (1).png",
+    alt: "Рабочая зона FutureLab",
+    left: 2042,
+    width: 306,
+    position: "50% 50%",
+  },
+];
+
+const galleryBackplates = [
+  { left: 0, width: 552 },
+  { left: 572, width: 291 },
+  { left: 898, width: 552 },
+  { left: 1470, width: 552 },
+  { left: 2042, width: 306 },
 ];
 
 export function ImageGallery() {
@@ -31,12 +69,38 @@ export function ImageGallery() {
         );
         if (!firstSet) return;
 
+        const items = gsap.utils.toArray<HTMLElement>(
+          ".infrastructure-gallery-item",
+          gallery
+        );
+        const moveItemsAlongCurve = () => {
+          const galleryRect = gallery.getBoundingClientRect();
+          const galleryCenter = galleryRect.left + galleryRect.width / 2;
+          const maxDistance = galleryRect.width * 0.52;
+
+          items.forEach((item) => {
+            const itemRect = item.getBoundingClientRect();
+            const itemCenter = itemRect.left + itemRect.width / 2;
+            const distanceProgress = Math.min(
+              1,
+              Math.abs(itemCenter - galleryCenter) / maxDistance
+            );
+            const curveProgress = distanceProgress * distanceProgress;
+            const y = -26 * curveProgress;
+
+            gsap.set(item, { y });
+          });
+        };
+
+        moveItemsAlongCurve();
+
         const tween = gsap.to(track, {
           x: () => -firstSet.offsetWidth,
           duration: 28,
           ease: "none",
           repeat: -1,
           invalidateOnRefresh: true,
+          onUpdate: moveItemsAlongCurve,
         });
 
         const slowDown = () => tween.timeScale(0.28);
@@ -52,6 +116,7 @@ export function ImageGallery() {
           gallery.removeEventListener("focusin", slowDown);
           gallery.removeEventListener("focusout", speedUp);
           tween.kill();
+          gsap.set(items, { clearProps: "transform" });
         };
       });
     }, gallery);
@@ -65,42 +130,71 @@ export function ImageGallery() {
   return (
     <div
       ref={galleryRef}
-      className="infrastructure-gallery relative mt-16 w-full overflow-hidden py-3 md:mt-24 lg:mt-28"
+      className="infrastructure-gallery relative mt-16 h-[468px] w-full overflow-hidden pt-[72px] md:mt-24 lg:mt-28"
       aria-label="Фотографии пространства FutureLab"
     >
       <div
         ref={trackRef}
-        className="infrastructure-gallery-track flex w-max will-change-transform"
+        className="infrastructure-gallery-track flex h-[396px] w-max will-change-transform"
       >
         {[0, 1].map((setIndex) => (
           <div
             key={setIndex}
             data-gallery-set={setIndex === 0 ? "original" : "clone"}
-            className="flex shrink-0 gap-3 pr-3 md:gap-4 md:pr-4"
+            className="relative h-[396px] w-[2368px] shrink-0"
             aria-hidden={setIndex === 1}
           >
-            {images.map((image, index) => (
+            {galleryBackplates.map((backplate) => (
+              <div
+                key={`${setIndex}-backplate-${backplate.left}`}
+                className="absolute top-0 h-[396px]"
+                style={{
+                  left: backplate.left,
+                  width: backplate.width,
+                  backgroundColor: "#000",
+                }}
+              />
+            ))}
+
+            {galleryItems.map((image) => (
               <div
                 key={`${setIndex}-${image.alt}`}
-                className={`infrastructure-gallery-item relative h-[220px] shrink-0 overflow-hidden md:h-[290px] lg:h-[340px] ${
-                  index % 3 === 2
-                    ? "w-[330px] md:w-[480px] lg:w-[570px]"
-                    : "w-[245px] md:w-[330px] lg:w-[390px]"
-                }`}
+                className="infrastructure-gallery-item absolute top-0 h-[396px] overflow-hidden will-change-transform"
+                style={{
+                  left: image.left,
+                  width: image.width,
+                }}
               >
                 <Image
-                  src="/images/office.png"
+                  src={image.src}
                   alt={setIndex === 0 ? image.alt : ""}
                   fill
-                  className="scale-[1.04] object-cover"
+                  className="object-cover"
                   style={{ objectPosition: image.position }}
-                  sizes="(max-width: 768px) 330px, (max-width: 1024px) 480px, 570px"
+                  sizes={`${image.width}px`}
                 />
               </div>
             ))}
           </div>
         ))}
       </div>
+
+      <div
+        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-[242px] bg-[linear-gradient(270deg,rgba(0,0,0,0)_0%,#000_100%)]"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute inset-y-0 right-0 z-10 w-[242px] bg-[linear-gradient(90deg,rgba(0,0,0,0)_0%,#000_100%)]"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 z-20 h-[26px] bg-black"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-[26px] bg-black"
+        aria-hidden="true"
+      />
     </div>
   );
 }
