@@ -1,6 +1,6 @@
 "use client";
 
-import { gsap, registerGsapPlugins } from "@/lib/gsap";
+import { gsap, registerGsapPlugins, ScrollTrigger } from "@/lib/gsap";
 import { FadeInImage } from "@/components/media/FadeInImage";
 import { useEffect, useRef } from "react";
 import type { RealizedProject } from "@/lib/mdx";
@@ -28,6 +28,22 @@ export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
       media.add(
         "(min-width: 1024px) and (prefers-reduced-motion: no-preference)",
         () => {
+          const setViewportFit = () => {
+            const titleHeight = 62;
+            const topPadding = Math.min(120, Math.max(40, window.innerHeight * 0.09));
+            const cardGap = Math.min(70, Math.max(32, window.innerHeight * 0.055));
+            const bottomPadding = Math.min(48, Math.max(24, window.innerHeight * 0.035));
+            const availableCardHeight =
+              window.innerHeight - topPadding - titleHeight - cardGap - bottomPadding;
+            const scale = Math.min(1, Math.max(0.55, availableCardHeight / 874));
+
+            section.style.setProperty("--realized-top-padding", `${topPadding}px`);
+            section.style.setProperty("--realized-card-gap", `${cardGap}px`);
+            section.style.setProperty("--realized-card-scale", String(scale));
+            section.style.setProperty("--realized-card-width", `${698 * scale}px`);
+            section.style.setProperty("--realized-card-height", `${874 * scale}px`);
+          };
+
           const getScrollDistance = () => {
             const wrapperRect = wrapper.getBoundingClientRect();
             const trackRect = track.getBoundingClientRect();
@@ -38,6 +54,8 @@ export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
               track.scrollWidth - wrapper.clientWidth + sideSpace * 2
             );
           };
+
+          setViewportFit();
 
           const tween = gsap.to(track, {
             x: () => -getScrollDistance(),
@@ -53,7 +71,15 @@ export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
             },
           });
 
+          const handleResize = () => {
+            setViewportFit();
+            ScrollTrigger.refresh();
+          };
+
+          window.addEventListener("resize", handleResize);
+
           return () => {
+            window.removeEventListener("resize", handleResize);
             tween.kill();
           };
         }
@@ -69,7 +95,7 @@ export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
   return (
     <section
       ref={sectionRef}
-      className="realized-projects-section overflow-hidden bg-black pb-28 pt-20 md:pb-36 md:pt-28 lg:h-[1126px] lg:pb-0 lg:pt-[120px]"
+      className="realized-projects-section overflow-hidden bg-black pb-28 pt-20 md:pb-36 md:pt-28 lg:h-[100svh] lg:pb-0 lg:pt-[var(--realized-top-padding,120px)]"
     >
       <div className="mx-auto max-w-[1436px]">
         <h2 className="font-heading text-[42px] font-bold leading-tight tracking-[-0.03em] text-white md:text-[55px] md:leading-[62px]">
@@ -79,7 +105,7 @@ export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
 
       <div
         ref={wrapperRef}
-        className="mt-20 overflow-x-auto overflow-y-visible pb-4 [scrollbar-width:none] md:mt-[70px] lg:overflow-hidden [&::-webkit-scrollbar]:hidden"
+        className="mt-20 overflow-x-auto overflow-y-visible pb-4 [scrollbar-width:none] md:mt-[70px] lg:mt-[var(--realized-card-gap,70px)] lg:overflow-hidden [&::-webkit-scrollbar]:hidden"
       >
         <div
           ref={trackRef}
@@ -96,8 +122,8 @@ export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
 
 function ProjectCard({ project }: { project: RealizedProject }) {
   return (
-    <article className="relative h-[874px] w-[698px] shrink-0 overflow-hidden rounded-[35px] bg-[linear-gradient(65.17deg,#4B0E5B_-2.47%,#A91E83_18.71%,#FD9A34_44.05%,#F9EB44_68.37%)]">
-      <div className="relative h-[868px] rounded-[35px] bg-[#1D1D1D]">
+    <article className="relative h-[874px] w-[698px] shrink-0 origin-top-left overflow-hidden rounded-[35px] bg-[linear-gradient(65.17deg,#4B0E5B_-2.47%,#A91E83_18.71%,#FD9A34_44.05%,#F9EB44_68.37%)] lg:h-[var(--realized-card-height,874px)] lg:w-[var(--realized-card-width,698px)]">
+      <div className="relative h-[868px] w-[698px] origin-top-left rounded-[35px] bg-[#1D1D1D] lg:scale-[var(--realized-card-scale,1)]">
         <h3 className="absolute left-10 top-10 w-[618px] text-[40px] font-semibold leading-[48px] text-[#DE5CFF]">
           {project.title}
         </h3>

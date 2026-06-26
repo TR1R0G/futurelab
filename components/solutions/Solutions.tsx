@@ -16,9 +16,17 @@ interface SolutionsProps {
 const SOLUTION_CARD_TOP = 555
 const SOLUTION_CARD_IMAGE_TOP = 1059
 const SOLUTION_EXPANDED_GLOW_TOP = 1415.47
-const SOLUTION_EXPANDED_IMAGE_TOP = 1598
 const SOLUTION_BLOCK_HEIGHT = 2020.92
 const SOLUTION_TRAILING_SPACE = 220
+const SOLUTION_IMAGE_TRANSITION_DISTANCE = 1080
+const SOLUTION_IMAGE_FINAL_AT = 0.82
+
+type Rect = {
+	left: number
+	top: number
+	width: number
+	height: number
+}
 
 export function Solutions({ title, description, cards }: SolutionsProps) {
 	const sectionRef = useRef<HTMLElement>(null)
@@ -35,6 +43,7 @@ export function Solutions({ title, description, cards }: SolutionsProps) {
 		const clamp = (value: number) => Math.min(1, Math.max(0, value))
 		const lerp = (from: number, to: number, progress: number) =>
 			from + (to - from) * progress
+		const sourceRects = new Map<HTMLDivElement, Rect>()
 		let frame = 0
 
 		const getLayout = (index: number) => {
@@ -49,52 +58,170 @@ export function Solutions({ title, description, cards }: SolutionsProps) {
 					height: 391,
 					borderRadius: 35,
 				},
-				end: {
-					left: 0,
-					top: SOLUTION_EXPANDED_IMAGE_TOP + offset,
-					width: 1436,
-					height: 809,
-					borderRadius: 35,
-				},
 			}
 		}
 
-		const applyState = (media: HTMLDivElement, index: number, progress: number) => {
-			const { start, end } = getLayout(index)
+		const getTargetRect = (): Rect => {
+			const visualWidth = 1436
+			const visualHeight = 809
+			const visualScale = Math.min(
+				1,
+				(window.innerWidth * 0.9) / visualWidth,
+				(window.innerHeight * 0.92) / visualHeight,
+			)
+			const width = Math.round(visualWidth * visualScale)
+			const height = Math.round(visualHeight * visualScale)
+
+			return {
+				left: Math.round((window.innerWidth - width) / 2),
+				top: Math.max(32, Math.round((window.innerHeight - height) / 2)),
+				width,
+				height,
+			}
+		}
+
+		const readSourceRect = (media: HTMLDivElement, index: number): Rect => {
+			const rect = media.getBoundingClientRect()
+
+			if (
+				rect.width > 0 &&
+				rect.height > 0 &&
+				media.style.position !== 'fixed'
+			) {
+				return {
+					left: rect.left,
+					top: rect.top,
+					width: rect.width,
+					height: rect.height,
+				}
+			}
+
+			const container = media.closest<HTMLElement>('.solutions-inner')
+			const containerRect = container?.getBoundingClientRect()
+			const { start } = getLayout(index)
+
+			return {
+				left: (containerRect?.left ?? 0) + start.left,
+				top: section.getBoundingClientRect().top + start.top,
+				width: start.width,
+				height: start.height,
+			}
+		}
+
+		const getReleasedPosition = (
+			media: HTMLDivElement,
+			target: Rect,
+			releaseScroll: number,
+		) => {
+			const container = media.closest<HTMLElement>('.solutions-inner')
+			const containerRect = container?.getBoundingClientRect()
+			const containerTop =
+				(containerRect?.top ?? section.getBoundingClientRect().top) +
+				window.scrollY
+			const containerLeft = containerRect?.left ?? 0
+
+			return {
+				left: Math.round(target.left - containerLeft),
+				top: Math.round(releaseScroll - containerTop + target.top),
+			}
+		}
+
+		const setSourceState = (media: HTMLDivElement, index: number) => {
+			const { start } = getLayout(index)
+
+			media.style.position = 'absolute'
+			media.style.left = `${start.left}px`
+			media.style.top = `${start.top}px`
+			media.style.width = `${start.width}px`
+			media.style.height = `${start.height}px`
+			media.style.borderRadius = `${start.borderRadius}px`
+			media.style.zIndex = '20'
+			media.style.transform = 'none'
+			media.style.willChange = 'left, top, width, height, border-radius'
+		}
+
+		const setReleasedState = (
+			media: HTMLDivElement,
+			target: Rect,
+			releaseScroll: number,
+		) => {
+			const released = getReleasedPosition(media, target, releaseScroll)
+
+			media.style.position = 'absolute'
+			media.style.left = `${released.left}px`
+			media.style.top = `${released.top}px`
+			media.style.width = `${target.width}px`
+			media.style.height = `${target.height}px`
+			media.style.borderRadius = '35px'
+			media.style.zIndex = '20'
+			media.style.transform = 'none'
+			media.style.willChange = 'left, top, width, height, border-radius'
+		}
+
+		const setFixedState = (
+			media: HTMLDivElement,
+			start: Rect,
+			target: Rect,
+			progress: number,
+		) => {
 			const eased = ease(progress)
 
-			media.style.left = `${lerp(start.left, end.left, eased)}px`
-			media.style.top = `${lerp(start.top, end.top, eased)}px`
-			media.style.width = `${lerp(start.width, end.width, eased)}px`
-			media.style.height = `${lerp(start.height, end.height, eased)}px`
-			media.style.borderRadius = `${lerp(
-				start.borderRadius,
-				end.borderRadius,
-				eased,
-			)}px`
+			media.style.position = 'fixed'
+			media.style.left = `${lerp(start.left, target.left, eased)}px`
+			media.style.top = `${lerp(start.top, target.top, eased)}px`
+			media.style.width = `${lerp(start.width, target.width, eased)}px`
+			media.style.height = `${lerp(start.height, target.height, eased)}px`
+			media.style.borderRadius = '35px'
+			media.style.zIndex = '220'
+			media.style.transform = 'none'
+			media.style.willChange = 'left, top, width, height, border-radius'
 		}
 
 		const update = () => {
 			frame = 0
 
 			if (!mediaQuery.matches) {
+				sourceRects.clear()
 				mediaRefs.current.forEach(media => media?.removeAttribute('style'))
 				return
 			}
 
 			const sectionTop = section.getBoundingClientRect().top + window.scrollY
+			const target = getTargetRect()
 
 			mediaRefs.current.forEach((media, index) => {
 				if (!media) return
 
 				const { cardTop } = getLayout(index)
 				const animationStart = sectionTop + cardTop + 5
-				const animationEnd = animationStart + 870
-				const progress = clamp(
-					(window.scrollY - animationStart) / (animationEnd - animationStart),
-				)
+				const releaseScroll =
+					animationStart + SOLUTION_IMAGE_TRANSITION_DISTANCE
+				const rawProgress =
+					(window.scrollY - animationStart) /
+					SOLUTION_IMAGE_TRANSITION_DISTANCE
 
-				applyState(media, index, progress)
+				if (rawProgress <= 0) {
+					setSourceState(media, index)
+					sourceRects.set(media, readSourceRect(media, index))
+					return
+				}
+
+				if (rawProgress >= 1) {
+					setReleasedState(media, target, releaseScroll)
+					sourceRects.delete(media)
+					return
+				}
+
+				const startRect =
+					sourceRects.get(media) ?? readSourceRect(media, index)
+				sourceRects.set(media, startRect)
+
+				setFixedState(
+					media,
+					startRect,
+					target,
+					clamp(rawProgress / SOLUTION_IMAGE_FINAL_AT),
+				)
 			})
 		}
 
@@ -104,13 +231,14 @@ export function Solutions({ title, description, cards }: SolutionsProps) {
 		}
 
 		const handleResize = () => {
+			sourceRects.clear()
 			mediaRefs.current.forEach(media => media?.removeAttribute('style'))
 			requestUpdate()
 		}
 
 		const ctx = gsap.context(() => {
 			mediaRefs.current.forEach((media, index) => {
-				if (media) applyState(media, index, 0)
+				if (media) setSourceState(media, index)
 			})
 			update()
 			window.addEventListener('scroll', requestUpdate, { passive: true })
@@ -137,7 +265,7 @@ export function Solutions({ title, description, cards }: SolutionsProps) {
 			style={{ minHeight: `${sectionHeight}px` }}
 		>
 			<div
-				className='relative mx-auto max-w-[1436px]'
+				className='solutions-inner relative mx-auto max-w-[1436px]'
 				style={{ height: `${sectionHeight}px` }}
 			>
 				<div className='lg:absolute lg:left-0 lg:top-[150px] lg:w-[857px]'>
@@ -220,33 +348,33 @@ function LearnMoreButton({ label }: { label: string }) {
 		>
 			<span className='absolute left-[22.21px] top-[22.21px] h-[207px] w-[207px] rounded-full bg-[#0051FF]' />
 			<svg
-				className='learn-more-title-ring absolute left-[37.71px] top-[37.71px] h-[176px] w-[176px] overflow-visible'
-				viewBox='0 0 176 176'
+				className='learn-more-title-ring absolute left-[18.21px] top-[18.21px] h-[216px] w-[216px] overflow-visible'
+				viewBox='0 0 216 216'
 				aria-hidden='true'
 			>
 				<defs>
 					<path
 						id='learn-more-circle'
-						d='M88 88 m -62 0 a 62 62 0 1 1 124 0 a 62 62 0 1 1 -124 0'
+						d='M108 108 m -75 0 a 75 75 0 1 1 150 0 a 75 75 0 1 1 -150 0'
 					/>
 				</defs>
-				<text className='fill-white text-[22px] font-semibold tracking-[0.035em]'>
+				<text className='fill-white text-[24px] font-semibold tracking-[0.035em]'>
 					<textPath
 						href='#learn-more-circle'
 						startOffset='0%'
-						textLength='330'
+						textLength='465'
 						lengthAdjust='spacing'
 					>
-						{label} • {label} •
+						{label} • {label} • {label} •
 					</textPath>
 				</text>
 			</svg>
 			<Image
 				src='/images/block6/arrow.svg'
 				alt=''
-				width={16}
-				height={16}
-				className='absolute left-[118.21px] top-[118.2px] h-[16px] w-[16px]'
+				width={28}
+				height={28}
+				className='absolute left-[112.21px] top-[112.2px] h-[28px] w-[28px]'
 				aria-hidden='true'
 			/>
 		</button>

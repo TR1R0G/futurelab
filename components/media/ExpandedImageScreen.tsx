@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { GradientOrb } from "@/components/hero/GradientOrb";
 import { FadeInImage } from "@/components/media/FadeInImage";
-import { gsap, registerGsapPlugins, ScrollTrigger } from "@/lib/gsap";
+import { gsap, registerGsapPlugins } from "@/lib/gsap";
 
 interface ExpandedImageScreenProps {
   src: string;
@@ -32,8 +32,9 @@ export function ExpandedImageScreen({
     const gradient = gradientRef.current;
     if (!section || !frame || !gradient) return;
 
-    const triggerStart = "top top";
-    const triggerEnd = "+=120%";
+    const positionEase = gsap.parseEase("power2.inOut");
+    const fullSizeAt = 0.82;
+    const clamp = (value: number) => Math.min(1, Math.max(0, value));
 
     const readSourceRect = () => {
       const source = sourceSelector
@@ -86,26 +87,15 @@ export function ExpandedImageScreen({
 
       return {
         left: Math.round((window.innerWidth - width) / 2),
-        top: Math.round((window.innerHeight - visualGroupHeight * visualScale) / 2),
+        top: Math.max(32, Math.round((window.innerHeight - height) / 2)),
         width,
         height,
       };
     };
 
-    const readMiddleRect = () => {
-      const height = Math.round(window.innerHeight * 0.26);
-      const width = Math.round(height * 0.58);
-
-      return {
-        left: Math.round(window.innerWidth * 0.515),
-        top: Math.round(window.innerHeight * 0.35),
-        width,
-        height,
-      };
-    };
-
-    const media = gsap.matchMedia();
     const ctx = gsap.context(() => {
+      const media = gsap.matchMedia();
+
       media.add("(prefers-reduced-motion: no-preference)", () => {
         const movingText = movingTextSelector
           ? document.querySelector<HTMLElement>(movingTextSelector)
@@ -114,119 +104,103 @@ export function ExpandedImageScreen({
           ? document.querySelector<HTMLElement>(sourceSelector)
           : null;
 
-        const middleEnd = 0.55;
+        let frameId = 0;
         let startRect = readSourceRect();
         let hasStartRect = false;
 
-        ScrollTrigger.create({
-          trigger: section,
-          start: triggerStart,
-          end: triggerEnd,
-          scrub: 1,
-          invalidateOnRefresh: true,
-          onUpdate: ({ progress }) => {
-            let rect = startRect;
-            const middle = readMiddleRect();
-            const target = readTargetRect();
+        const resetStartRect = () => {
+          gsap.set(sourceImage, { opacity: 1 });
+          gsap.set(frame, { autoAlpha: 0 });
+          startRect = readSourceRect();
+          hasStartRect = true;
+        };
 
-            if (progress <= 0.001) {
-              startRect = readSourceRect();
-              hasStartRect = true;
-              gsap.set(sourceImage, { opacity: 1 });
-              gsap.set(frame, { autoAlpha: 0 });
-              return;
+        const update = () => {
+          frameId = 0;
+
+          const maxScroll = Math.max(1, section.offsetHeight - window.innerHeight);
+          const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+          const progress = clamp((window.scrollY - sectionTop) / maxScroll);
+          const target = readTargetRect();
+
+          if (progress <= 0.001) {
+            resetStartRect();
+            if (movingText) {
+              gsap.set(movingText, { y: 0, opacity: 1 });
             }
+            gsap.set(gradient, { opacity: 0, scale: 0.72 });
+            return;
+          }
 
-            gsap.set(sourceImage, { opacity: 0 });
-            if (!hasStartRect || Math.abs(startRect.top) > window.innerHeight) {
-              startRect = readSourceRect();
-              hasStartRect = true;
-              rect = startRect;
-            }
-
-            if (progress <= middleEnd) {
-              rect = mixRect(startRect, middle, progress / middleEnd);
-            } else {
-              rect = mixRect(
-                middle,
-                target,
-                (progress - middleEnd) / (1 - middleEnd)
-              );
-            }
-
-            gsap.set(frame, {
-              ...rect,
-              autoAlpha: 1,
-              borderRadius:
-                progress <= middleEnd
-                  ? mix(12, 22, progress / middleEnd)
-                  : mix(22, 35, (progress - middleEnd) / (1 - middleEnd)),
-            });
-          },
-          onLeaveBack: () => {
+          if (!hasStartRect) {
             startRect = readSourceRect();
-            hasStartRect = false;
-            gsap.set(frame, { autoAlpha: 0 });
-            gsap.set(sourceImage, { opacity: 1 });
-          },
-          onRefresh: (self) => {
-            if (self.progress === 0) {
-              startRect = readSourceRect();
-              hasStartRect = false;
-              gsap.set(frame, { autoAlpha: 0 });
-              gsap.set(sourceImage, { opacity: 1 });
-            }
-          },
+            hasStartRect = true;
+          }
+
+          const imageProgress = clamp(progress / fullSizeAt);
+          const easedProgress = positionEase(imageProgress);
+          const rect = mixRect(startRect, target, easedProgress);
+
+          gsap.set(sourceImage, { opacity: 0 });
+          gsap.set(frame, {
+            ...rect,
+            autoAlpha: 1,
+            borderRadius: mix(12, 35, easedProgress),
+          });
+          gsap.set(gradient, {
+            opacity: easedProgress,
+            scale: mix(0.72, 1, easedProgress),
+          });
+
+          if (movingText) {
+            const firstPhase = clamp(progress / 0.42);
+            const secondPhase = clamp((progress - 0.42) / 0.5);
+            const textY = mix(
+              mix(0, -window.innerHeight * 0.08, positionEase(firstPhase)),
+              -window.innerHeight * 0.78,
+              positionEase(secondPhase)
+            );
+
+            gsap.set(movingText, {
+              y: textY,
+              opacity: mix(1, 0.16, positionEase(secondPhase)),
+            });
+          }
+        };
+
+        const requestUpdate = () => {
+          if (frameId) return;
+          frameId = window.requestAnimationFrame(update);
+        };
+
+        const handleResize = () => {
+          hasStartRect = false;
+          resetStartRect();
+          requestUpdate();
+        };
+
+        gsap.set(frame, {
+          force3D: true,
+          willChange: "left, top, width, height, border-radius, opacity",
         });
 
-        gsap.fromTo(
-          gradient,
-          { opacity: 0, scale: 0.72 },
-          {
-            opacity: 1,
-            scale: 1,
-            ease: "none",
-            scrollTrigger: {
-              trigger: section,
-              start: triggerStart,
-              end: triggerEnd,
-              scrub: 1,
-              invalidateOnRefresh: true,
-            },
-          }
-        );
+        resetStartRect();
+        update();
 
-        if (movingText) {
-          const textTimeline = gsap.timeline({
-            scrollTrigger: {
-              trigger: section,
-              start: triggerStart,
-              end: triggerEnd,
-              scrub: 1,
-              invalidateOnRefresh: true,
-            },
-          });
+        window.addEventListener("scroll", requestUpdate, { passive: true });
+        window.addEventListener("resize", handleResize);
 
-          textTimeline.to(movingText, {
-            y: () => -window.innerHeight * 0.08,
-            opacity: 1,
-            ease: "none",
-            duration: 0.55,
-          });
-
-          textTimeline.to(movingText, {
-            y: () => -window.innerHeight * 0.78,
-            opacity: 0.16,
-            ease: "none",
-            duration: 0.75,
-          });
-        }
-
+        return () => {
+          if (frameId) window.cancelAnimationFrame(frameId);
+          window.removeEventListener("scroll", requestUpdate);
+          window.removeEventListener("resize", handleResize);
+        };
       });
+
+      return () => media.revert();
     }, section);
 
     return () => {
-      media.revert();
       ctx.revert();
     };
   }, [movingTextSelector, sourceSelector]);

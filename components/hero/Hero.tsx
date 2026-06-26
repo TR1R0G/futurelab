@@ -50,6 +50,7 @@ export function Hero({
       const clamp = (value: number) => Math.min(1, Math.max(0, value));
       const lerp = (start: number, end: number, progress: number) =>
         start + (end - start) * progress;
+      const finalImageAt = 0.82;
 
       const readRect = (element: HTMLElement) => {
         const computed = getComputedStyle(element);
@@ -73,9 +74,11 @@ export function Hero({
         );
         const imageWidth = Math.round(530 * visualScale);
         const imageHeight = Math.round(928 * visualScale);
-        const imageTop = Math.round((vh - visualGroupHeight * visualScale) / 2);
+        const imageTop = Math.max(32, Math.round((vh - imageHeight) / 2));
         const centerY = vh / 2;
-        const gradientTop = Math.round(imageTop + 22 * visualScale);
+        const gradientTop = Math.round(
+          (vh - visualGroupHeight * visualScale) / 2 + 22 * visualScale
+        );
 
         if (width >= 1600) {
           return {
@@ -153,7 +156,8 @@ export function Hero({
         const maxScroll = Math.max(1, section.offsetHeight - vh);
         const sectionTop = section.getBoundingClientRect().top + window.scrollY;
         const progress = clamp((window.scrollY - sectionTop) / maxScroll);
-        const eased = gsap.parseEase("power2.inOut")(progress);
+        const imageProgress = clamp(progress / finalImageAt);
+        const eased = gsap.parseEase("power2.inOut")(imageProgress);
         const target = getTarget(vh);
 
         header.style.opacity = String(1 - clamp(progress * 3));
