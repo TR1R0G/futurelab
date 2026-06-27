@@ -554,7 +554,7 @@ body {
 
 @media (min-width: 1600px) {
 	.hero-section {
-		height: 220svh;
+		height: calc(100svh + 1046px);
 		min-height: 1700px;
 	}
 

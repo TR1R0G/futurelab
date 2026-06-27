@@ -34,6 +34,7 @@ export function Hero({
   const copyRef = useRef<HTMLDivElement>(null);
   const descRef = useRef<HTMLParagraphElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
+  const imageFrameRef = useRef<HTMLDivElement>(null);
   const actionsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -45,10 +46,11 @@ export function Hero({
       const copy = copyRef.current;
       const desc = descRef.current;
       const image = imageRef.current;
+      const imageFrame = imageFrameRef.current;
       const actions = actionsRef.current;
       const light = section?.querySelector<HTMLElement>(".hero-light");
 
-      if (!section || !header || !copy || !desc || !image || !actions || !light) {
+      if (!section || !header || !copy || !desc || !image || !imageFrame || !actions || !light) {
         return;
       }
 
@@ -142,7 +144,7 @@ export function Hero({
       };
 
       const resetInlineStyles = () => {
-        for (const element of [header, copy, desc, image, actions, light]) {
+        for (const element of [header, copy, desc, image, imageFrame, actions, light]) {
           element.removeAttribute("style");
         }
 
@@ -183,6 +185,7 @@ export function Hero({
         image.style.width = `${lerp(start.image.width, target.image.width, eased)}px`;
         image.style.height = `${lerp(start.image.height, target.image.height, eased)}px`;
         image.style.transform = "translateX(-50%)";
+        imageFrame.style.borderRadius = `${lerp(13, 35, eased)}px`;
 
         if (target.hideText) {
           desc.style.opacity = String(1 - clamp(progress * 2));
@@ -251,7 +254,7 @@ export function Hero({
         </p>
 
         <div ref={imageRef} className="hero-image relative z-10">
-          <div className="hero-image-frame relative h-full w-full overflow-hidden rounded-[35px] shadow-2xl shadow-black/45">
+          <div ref={imageFrameRef} className="hero-image-frame relative h-full w-full overflow-hidden rounded-[13px] shadow-2xl shadow-black/45">
             <FadeInImage
               src="/images/optimized/office.webp"
               alt={imageAlt}
