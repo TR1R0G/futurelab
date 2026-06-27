@@ -9,11 +9,12 @@ interface HeroTitleProps {
 
 export function HeroTitle({ title }: HeroTitleProps) {
   const containerRef = useRef<HTMLHeadingElement>(null);
-  const titleLines = title
-    .replace(" технологий и развития", " технологий|и развития")
-    .replace(" молодых специалистов", " молодых|специалистов")
-    .replace(" for young specialist", " for young|specialist")
-    .split("|");
+  const titleLines =
+    title === "Студия цифровых технологий и развития молодых специалистов"
+      ? ["Студия цифровых технологий", "и развития молодых", "специалистов"]
+      : title === "Digital technology studio for young specialist development"
+        ? ["Digital technology studio", "for young specialist", "development"]
+        : title.split("|");
 
   useEffect(() => {
     registerGsapPlugins();
@@ -52,7 +53,7 @@ export function HeroTitle({ title }: HeroTitleProps) {
       className="hero-title font-bold text-white"
     >
       {titleLines.map((line, index) => (
-        <span key={line} className="block">
+        <span key={line} className="block whitespace-nowrap">
           {line}
           {index < titleLines.length - 1 ? " " : ""}
         </span>

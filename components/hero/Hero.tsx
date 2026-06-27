@@ -236,8 +236,8 @@ export function Hero({
       className="hero-section relative w-full bg-black"
     >
       <div className="hero-stage sticky top-0 h-screen w-full overflow-hidden bg-black">
-        <div className="video-gradient-field absolute inset-0">
-          <GradientOrb variant="video" />
+        <div className="absolute inset-0 z-0">
+          <GradientOrb />
         </div>
 
         <HeroHeader cta={headerCta} headerRef={headerRef} language={language} />
