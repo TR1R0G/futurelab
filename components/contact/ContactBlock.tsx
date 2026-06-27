@@ -1,34 +1,53 @@
-export function ContactBlock() {
+interface ContactBlockProps {
+  title: string;
+  cardTitle: string;
+  cardText: string;
+  emailTitle: string;
+  telegramTitle: string;
+}
+
+export function ContactBlock({
+  title,
+  cardTitle,
+  cardText,
+  emailTitle,
+  telegramTitle,
+}: ContactBlockProps) {
   return (
     <section className="contact-section relative overflow-hidden bg-white px-5 py-24 text-black md:px-8 md:py-28 lg:h-[738px] lg:px-0 lg:py-0">
       <ContactGlow />
 
       <div className="relative z-10 mx-auto max-w-[1438px]">
         <h2 className="font-heading text-[42px] font-bold leading-[1.08] tracking-[-0.03em] text-black md:text-[50px] lg:absolute lg:left-0 lg:top-[206px] lg:w-[698px] lg:text-[55px] lg:leading-[62px]">
-          Остались вопросы?
+          {title}
         </h2>
 
         <div className="contact-card mt-12 grid gap-10 rounded-[30px] bg-white px-7 py-10 shadow-[0_20px_50px_rgba(0,0,0,0.15)] md:mt-14 md:grid-cols-2 md:rounded-[35px] md:px-12 md:py-12 lg:absolute lg:left-0 lg:top-[308px] lg:mt-0 lg:h-[230px] lg:w-[1436px] lg:grid-cols-none lg:gap-0 lg:px-0 lg:py-0">
           <div className="lg:absolute lg:left-[123px] lg:top-10 lg:w-[412px]">
             <h3 className="text-[26px] font-semibold leading-none text-black md:text-[30px]">
-              Свяжитесь с нами
+              {cardTitle}
             </h3>
             <p className="mt-8 max-w-[412px] text-[21px] font-medium leading-[1.7] text-[#4C4C4C] md:text-[23px] lg:mt-[38px]">
-              Обращайтесь по вопросам <br />и предложениям о сотрудничестве!
+              {cardText.split("\n").map((line, index) => (
+                <span key={line}>
+                  {line}
+                  {index < cardText.split("\n").length - 1 ? <br /> : null}
+                </span>
+              ))}
             </p>
           </div>
 
           <ContactItem
             className="lg:absolute lg:left-[738px] lg:top-[34px] lg:w-[306px]"
             icon="mail"
-            title="Написать команде futurelab"
+            title={emailTitle}
             value="contact@future-lab.uz"
           />
 
           <ContactItem
             className="lg:absolute lg:left-[1107px] lg:top-[34px] lg:w-[240px]"
             icon="telegram"
-            title="Начать чат в Telegram"
+            title={telegramTitle}
             value="@nazzar_group"
           />
         </div>

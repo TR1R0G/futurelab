@@ -19,9 +19,21 @@ import {
   loadDirectionsContent,
   loadSolutionsContent,
   loadRealizedProjectsContent,
+  normalizeLanguage,
 } from "@/lib/mdx";
+import { uiCopy } from "@/lib/i18n";
 
-export default async function Home() {
+interface HomeProps {
+  searchParams?: Promise<{
+    lang?: string | string[];
+  }>;
+}
+
+export default async function Home({ searchParams }: HomeProps) {
+  const params = await searchParams;
+  const language = normalizeLanguage(params?.lang);
+  const copy = uiCopy[language];
+
   const [
     heroContent,
     ecosystemContent,
@@ -32,24 +44,26 @@ export default async function Home() {
     solutionsContent,
     realizedProjectsContent,
   ] = await Promise.all([
-    loadHeroContent(),
-    loadEcosystemContent(),
-    loadInfrastructureContent(),
-    loadAcademyContent(),
-    loadProgramsContent(),
-    loadDirectionsContent(),
-    loadSolutionsContent(),
-    loadRealizedProjectsContent(),
+    loadHeroContent(language),
+    loadEcosystemContent(language),
+    loadInfrastructureContent(language),
+    loadAcademyContent(language),
+    loadProgramsContent(language),
+    loadDirectionsContent(language),
+    loadSolutionsContent(language),
+    loadRealizedProjectsContent(language),
   ]);
 
   return (
-    <main className="flex-1">
+    <main className="flex-1" lang={language}>
       <Hero
         title={heroContent.title}
         description={heroContent.description}
         primaryCta={heroContent.primaryCta}
         secondaryCta={heroContent.secondaryCta}
+        headerCta={heroContent.headerCta}
         imageAlt={heroContent.imageAlt}
+        language={language}
       />
       <Ecosystem
         title={ecosystemContent.title}
@@ -73,6 +87,8 @@ export default async function Home() {
         title={directionsContent.title}
         chips={directionsContent.chips}
         statement={directionsContent.statement}
+        ctaText={copy.directionsCta.text}
+        ctaButton={copy.directionsCta.buttonText}
       />
       <Solutions
         title={solutionsContent.title}
@@ -86,13 +102,13 @@ export default async function Home() {
       <section className="bg-black px-0 pb-28 pt-24 md:pb-36 md:pt-32 lg:pb-40 lg:pt-[200px]">
         <CTACard
           variant="project"
-          text="Обсудим и предложим решение под Ваш проект"
-          buttonText="Обсудить проект"
+          text={copy.projectCta.text}
+          buttonText={copy.projectCta.buttonText}
         />
       </section>
-      <Experience />
-      <ContactBlock />
-      <Footer />
+      <Experience {...copy.experience} />
+      <ContactBlock {...copy.contact} />
+      <Footer address={copy.footer.address} />
     </main>
   );
 }

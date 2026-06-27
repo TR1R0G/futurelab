@@ -12,6 +12,7 @@ export function HeroTitle({ title }: HeroTitleProps) {
   const titleLines = title
     .replace(" технологий и развития", " технологий|и развития")
     .replace(" молодых специалистов", " молодых|специалистов")
+    .replace(" for young specialist", " for young|specialist")
     .split("|");
 
   useEffect(() => {

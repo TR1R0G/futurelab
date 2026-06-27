@@ -20,6 +20,8 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 	const displayTitle =
 		title === 'Единая экосистема разработки и роста'
 			? 'Единая экосистема\nразработки\nи роста'
+			: title === 'Unified ecosystem for development and growth'
+			? 'Unified ecosystem\nfor development\nand growth'
 			: title
 
 	useEffect(() => {

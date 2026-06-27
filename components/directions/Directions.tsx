@@ -11,6 +11,8 @@ interface DirectionsProps {
 	title: string
 	chips: DirectionsContent['chips']
 	statement: DirectionsContent['statement']
+	ctaText: string
+	ctaButton: string
 }
 
 const chipLayout = [
@@ -21,7 +23,13 @@ const chipLayout = [
 	'left-[1127px] top-[60px] w-[277px] rotate-[14.17deg]',
 ]
 
-export function Directions({ title, chips, statement }: DirectionsProps) {
+export function Directions({
+	title,
+	chips,
+	statement,
+	ctaText,
+	ctaButton,
+}: DirectionsProps) {
 	const sectionRef = useRef<HTMLElement>(null)
 
 	useEffect(() => {
@@ -135,8 +143,8 @@ export function Directions({ title, chips, statement }: DirectionsProps) {
 			<div className='directions-post-image relative z-[100] flex min-h-[50svh] flex-col justify-center bg-black pb-28 pt-28 md:pb-32 md:pt-32 lg:pb-36 lg:pt-36'>
 				<CTACard
 					variant='wide'
-					text='Начните путь в цифровой профессии через реальные проекты'
-					buttonText='Начать обучение'
+					text={ctaText}
+					buttonText={ctaButton}
 				/>
 
 				<div

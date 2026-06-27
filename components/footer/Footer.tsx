@@ -1,7 +1,7 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
 
-export function Footer() {
+export function Footer({ address }: { address: string }) {
   return (
     <footer className="footer-section font-onest relative h-auto bg-black px-5 py-16 text-white md:px-8 lg:h-[385px] lg:px-0 lg:py-0">
       <div className="mx-auto max-w-[1436px] lg:relative lg:h-full">
@@ -16,7 +16,7 @@ export function Footer() {
 
         <div className="mt-12 space-y-[11px] text-[16px] leading-[30px] text-white md:mt-14 lg:absolute lg:left-[1078px] lg:top-[110px] lg:mt-0">
           <FooterContact icon={<LocationIcon />}>
-            Узбекситан, г. Самарканд, А. Темура, 162
+            {address}
           </FooterContact>
           <FooterContact icon={<MailIcon />}>pr@nazzar.tech</FooterContact>
         </div>

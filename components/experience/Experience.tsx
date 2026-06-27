@@ -1,19 +1,15 @@
 import { FadeInImage } from "@/components/media/FadeInImage";
 
-const stats = [
-  {
-    value: "Более 250",
-    label: "реализованных AR-решений\nв музеях, выставках\nи туристических объектах",
-  },
-  {
-    value: "Более 1 000 000",
-    label: "пользователей\nвзаимодействовали с нашими\nрешениями",
-  },
-  {
-    value: "8+ лет опыта",
-    label: "победители международных\nконкурсов",
-  },
-];
+interface ExperienceProps {
+  title: string;
+  intro: string[];
+  stats: {
+    value: string;
+    label: string;
+  }[];
+  outro: string[];
+  buttonText: string;
+}
 
 const mosaicRows = [
   { offset: true, images: ["/images/block6/optimized/image1.webp", "/images/block6/optimized/image2.webp"] },
@@ -34,26 +30,26 @@ const mosaicRows = [
   { offset: true, images: ["/images/block6/optimized/image2.webp", "/images/block6/optimized/image1.webp"] },
 ];
 
-export function Experience() {
+export function Experience({
+  title,
+  intro,
+  stats,
+  outro,
+  buttonText,
+}: ExperienceProps) {
   return (
     <section className="experience-section relative overflow-hidden bg-black px-5 py-24 md:px-8 md:py-28 lg:h-[1384px] lg:px-0 lg:py-0">
       <MosaicBackground />
 
       <div className="relative z-10 mx-auto max-w-[1438px]">
         <h2 className="font-heading max-w-[944px] text-[42px] font-bold leading-[1.08] tracking-[-0.03em] text-white md:text-[50px] lg:absolute lg:left-0 lg:top-[150px] lg:text-[55px] lg:leading-[62px]">
-          Опыт и доверие, подтверждённые результатами
+          {title}
         </h2>
 
         <div className="mt-16 max-w-[941px] space-y-8 text-[18px] font-medium leading-[1.7] text-[#C4C4C4] md:text-[21px] lg:absolute lg:left-0 lg:top-[343px] lg:mt-0 lg:text-[23px]">
-          <p>
-            Future Lab входит в группу NazzAR Innovation Group с многолетним
-            опытом реализации AR-проектов.
-          </p>
-          <p>
-            Мы работаем с культурными, образовательными и туристическими
-            проектами, создавая цифровые решения для реальных пространств и
-            большой аудитории.
-          </p>
+          {intro.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
         </div>
 
         <div className="mt-16 grid gap-5 md:grid-cols-3 lg:absolute lg:left-0 lg:top-[589px] lg:mt-0 lg:flex lg:gap-10">
@@ -63,20 +59,16 @@ export function Experience() {
         </div>
 
         <div className="mt-16 max-w-[944px] space-y-8 text-[18px] font-medium leading-[1.7] text-[#C4C4C4] md:text-[21px] lg:absolute lg:left-0 lg:top-[929px] lg:mt-0 lg:text-[23px]">
-          <p>
-            Наш опыт сформирован на реализации AR-решений для проектов с
-            высокой посещаемостью и сложными сценариями взаимодействия.
-          </p>
-          <p>
-            Посмотрите проекты, где мы уже успешно внедрили AR и VR-решения.
-          </p>
+          {outro.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
         </div>
 
         <button
           type="button"
           className="mt-16 flex h-[55px] w-full max-w-[452px] items-center justify-center rounded-[13px] bg-[#0051FF] px-6 text-[22px] font-medium leading-[26px] text-white transition-transform hover:scale-[1.01] hover:bg-[#0050f2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0051FF] active:scale-[0.99] lg:absolute lg:left-1/2 lg:top-[1179px] lg:mt-0 lg:-translate-x-1/2"
         >
-          Перейти
+          {buttonText}
         </button>
       </div>
     </section>

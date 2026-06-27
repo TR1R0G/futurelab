@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { gsap, registerGsapPlugins } from "@/lib/gsap";
 import { FadeInImage } from "@/components/media/FadeInImage";
+import type { Language } from "@/lib/mdx";
 import { GradientOrb } from "./GradientOrb";
 import { HeroTitle } from "./HeroTitle";
 import { HeroActions } from "./HeroActions";
@@ -14,7 +15,9 @@ interface HeroProps {
   description: string;
   primaryCta: string;
   secondaryCta: string;
+  headerCta: string;
   imageAlt: string;
+  language: Language;
 }
 
 export function Hero({
@@ -22,7 +25,9 @@ export function Hero({
   description,
   primaryCta,
   secondaryCta,
+  headerCta,
   imageAlt,
+  language,
 }: HeroProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLElement>(null);
@@ -235,7 +240,7 @@ export function Hero({
           <GradientOrb variant="video" />
         </div>
 
-        <HeroHeader cta="Связаться с нами" headerRef={headerRef} />
+        <HeroHeader cta={headerCta} headerRef={headerRef} language={language} />
 
         <div ref={copyRef} className="hero-copy relative z-10">
           <HeroTitle title={title} />
@@ -291,9 +296,11 @@ interface ScrollTarget {
 function HeroHeader({
   cta,
   headerRef,
+  language,
 }: {
   cta: string;
   headerRef: RefObject<HTMLElement | null>;
+  language: Language;
 }) {
   return (
     <header ref={headerRef} className="hero-header relative z-20" aria-label="Future Lab">
@@ -312,9 +319,21 @@ function HeroHeader({
         </button>
       </div>
       <div className="hero-language" aria-label="Language">
-        <span>Eng</span>
+        <a
+          href="?lang=en"
+          className={language === "en" ? "font-bold" : "font-normal"}
+          aria-current={language === "en" ? "true" : undefined}
+        >
+          Eng
+        </a>
         <span className="hero-language-divider" aria-hidden="true" />
-        <strong>Рус</strong>
+        <a
+          href="?lang=ru"
+          className={language === "ru" ? "font-bold" : "font-normal"}
+          aria-current={language === "ru" ? "true" : undefined}
+        >
+          Рус
+        </a>
       </div>
     </header>
   );

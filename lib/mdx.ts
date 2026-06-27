@@ -2,11 +2,33 @@ import { compileMDX } from "next-mdx-remote/rsc";
 import fs from "fs/promises";
 import path from "path";
 
+export type Language = "ru" | "en";
+
+export function normalizeLanguage(value?: string | string[] | null): Language {
+  const language = Array.isArray(value) ? value[0] : value;
+  return language === "en" ? "en" : "ru";
+}
+
+async function loadFrontmatter<T>(fileName: string, language: Language): Promise<T> {
+  const localizedPath = path.join(process.cwd(), "content", language, fileName);
+  const defaultPath = path.join(process.cwd(), "content", fileName);
+
+  const source = await fs.readFile(language === "ru" ? defaultPath : localizedPath, "utf-8");
+
+  const { frontmatter } = await compileMDX<T>({
+    source,
+    options: { parseFrontmatter: true },
+  });
+
+  return frontmatter;
+}
+
 export interface HeroContent {
   title: string;
   description: string;
   primaryCta: string;
   secondaryCta: string;
+  headerCta: string;
   imageAlt: string;
 }
 
@@ -22,28 +44,12 @@ export interface EcosystemContent {
   cards: EcosystemCard[];
 }
 
-export async function loadHeroContent(): Promise<HeroContent> {
-  const filePath = path.join(process.cwd(), "content", "hero.mdx");
-  const source = await fs.readFile(filePath, "utf-8");
-
-  const { frontmatter } = await compileMDX<HeroContent>({
-    source,
-    options: { parseFrontmatter: true },
-  });
-
-  return frontmatter;
+export async function loadHeroContent(language: Language = "ru"): Promise<HeroContent> {
+  return loadFrontmatter<HeroContent>("hero.mdx", language);
 }
 
-export async function loadEcosystemContent(): Promise<EcosystemContent> {
-  const filePath = path.join(process.cwd(), "content", "ecosystem.mdx");
-  const source = await fs.readFile(filePath, "utf-8");
-
-  const { frontmatter } = await compileMDX<EcosystemContent>({
-    source,
-    options: { parseFrontmatter: true },
-  });
-
-  return frontmatter;
+export async function loadEcosystemContent(language: Language = "ru"): Promise<EcosystemContent> {
+  return loadFrontmatter<EcosystemContent>("ecosystem.mdx", language);
 }
 
 export interface InfrastructureCard {
@@ -60,16 +66,8 @@ export interface InfrastructureContent {
   cards: InfrastructureCard[];
 }
 
-export async function loadInfrastructureContent(): Promise<InfrastructureContent> {
-  const filePath = path.join(process.cwd(), "content", "infrastructure.mdx");
-  const source = await fs.readFile(filePath, "utf-8");
-
-  const { frontmatter } = await compileMDX<InfrastructureContent>({
-    source,
-    options: { parseFrontmatter: true },
-  });
-
-  return frontmatter;
+export async function loadInfrastructureContent(language: Language = "ru"): Promise<InfrastructureContent> {
+  return loadFrontmatter<InfrastructureContent>("infrastructure.mdx", language);
 }
 
 export interface AcademyCard {
@@ -82,16 +80,8 @@ export interface AcademyContent {
   cards: AcademyCard[];
 }
 
-export async function loadAcademyContent(): Promise<AcademyContent> {
-  const filePath = path.join(process.cwd(), "content", "academy.mdx");
-  const source = await fs.readFile(filePath, "utf-8");
-
-  const { frontmatter } = await compileMDX<AcademyContent>({
-    source,
-    options: { parseFrontmatter: true },
-  });
-
-  return frontmatter;
+export async function loadAcademyContent(language: Language = "ru"): Promise<AcademyContent> {
+  return loadFrontmatter<AcademyContent>("academy.mdx", language);
 }
 
 export interface ProgramCard {
@@ -108,16 +98,8 @@ export interface ProgramsContent {
   cards: ProgramCard[];
 }
 
-export async function loadProgramsContent(): Promise<ProgramsContent> {
-  const filePath = path.join(process.cwd(), "content", "programs.mdx");
-  const source = await fs.readFile(filePath, "utf-8");
-
-  const { frontmatter } = await compileMDX<ProgramsContent>({
-    source,
-    options: { parseFrontmatter: true },
-  });
-
-  return frontmatter;
+export async function loadProgramsContent(language: Language = "ru"): Promise<ProgramsContent> {
+  return loadFrontmatter<ProgramsContent>("programs.mdx", language);
 }
 
 export interface DirectionChip {
@@ -138,16 +120,8 @@ export interface DirectionsContent {
   };
 }
 
-export async function loadDirectionsContent(): Promise<DirectionsContent> {
-  const filePath = path.join(process.cwd(), "content", "directions.mdx");
-  const source = await fs.readFile(filePath, "utf-8");
-
-  const { frontmatter } = await compileMDX<DirectionsContent>({
-    source,
-    options: { parseFrontmatter: true },
-  });
-
-  return frontmatter;
+export async function loadDirectionsContent(language: Language = "ru"): Promise<DirectionsContent> {
+  return loadFrontmatter<DirectionsContent>("directions.mdx", language);
 }
 
 export interface SolutionsContent {
@@ -162,16 +136,8 @@ export interface SolutionsContent {
   }[];
 }
 
-export async function loadSolutionsContent(): Promise<SolutionsContent> {
-  const filePath = path.join(process.cwd(), "content", "solutions.mdx");
-  const source = await fs.readFile(filePath, "utf-8");
-
-  const { frontmatter } = await compileMDX<SolutionsContent>({
-    source,
-    options: { parseFrontmatter: true },
-  });
-
-  return frontmatter;
+export async function loadSolutionsContent(language: Language = "ru"): Promise<SolutionsContent> {
+  return loadFrontmatter<SolutionsContent>("solutions.mdx", language);
 }
 
 export interface RealizedProject {
@@ -186,14 +152,6 @@ export interface RealizedProjectsContent {
   projects: RealizedProject[];
 }
 
-export async function loadRealizedProjectsContent(): Promise<RealizedProjectsContent> {
-  const filePath = path.join(process.cwd(), "content", "realized-projects.mdx");
-  const source = await fs.readFile(filePath, "utf-8");
-
-  const { frontmatter } = await compileMDX<RealizedProjectsContent>({
-    source,
-    options: { parseFrontmatter: true },
-  });
-
-  return frontmatter;
+export async function loadRealizedProjectsContent(language: Language = "ru"): Promise<RealizedProjectsContent> {
+  return loadFrontmatter<RealizedProjectsContent>("realized-projects.mdx", language);
 }
