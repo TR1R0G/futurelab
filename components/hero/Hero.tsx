@@ -88,10 +88,17 @@ export function Hero({
         );
 
         if (width >= 1600) {
+          const frameOffset = (width - 1920) / 2;
+          const desktopDescriptionLeft = Math.max(40, Math.round(frameOffset + 242));
+          const desktopActionsRight = Math.max(
+            40,
+            Math.round(width - (frameOffset + 1349 + 329))
+          );
+
           return {
             image: { top: imageTop, width: imageWidth, height: imageHeight },
-            description: { left: 154, top: Math.round(centerY - 65), width: 520 },
-            actions: { right: 195, top: Math.round(centerY - 65), width: 390 },
+            description: { left: desktopDescriptionLeft, top: Math.round(centerY - 120), width: 402 },
+            actions: { right: desktopActionsRight, top: Math.round(centerY - 115), width: 329 },
             gradientScale: 1,
             gradientTop,
           };

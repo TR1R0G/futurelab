@@ -16,9 +16,9 @@ interface SolutionsProps {
 const SOLUTION_CARD_TOP = 555
 const SOLUTION_CARD_IMAGE_TOP = 1059
 const SOLUTION_EXPANDED_GLOW_TOP = 1415.47
+const SOLUTION_EXPANDED_IMAGE_TOP = 1598
 const SOLUTION_BLOCK_HEIGHT = 2020.92
 const SOLUTION_TRAILING_SPACE = 220
-const SOLUTION_IMAGE_TRANSITION_DISTANCE = 1080
 const SOLUTION_IMAGE_FINAL_AT = 0.82
 
 type Rect = {
@@ -195,10 +195,14 @@ export function Solutions({ title, description, cards }: SolutionsProps) {
 				const { cardTop } = getLayout(index)
 				const animationStart = sectionTop + cardTop + 5
 				const releaseScroll =
-					animationStart + SOLUTION_IMAGE_TRANSITION_DISTANCE
+					sectionTop +
+					SOLUTION_EXPANDED_IMAGE_TOP +
+					index * SOLUTION_BLOCK_HEIGHT -
+					target.top
+				const transitionDistance = Math.max(1, releaseScroll - animationStart)
 				const rawProgress =
 					(window.scrollY - animationStart) /
-					SOLUTION_IMAGE_TRANSITION_DISTANCE
+					transitionDistance
 
 				if (rawProgress <= 0) {
 					setSourceState(media, index)
