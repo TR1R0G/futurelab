@@ -17,7 +17,7 @@ export function ContactBlock({
     <section className="contact-section relative overflow-hidden bg-white px-5 py-24 text-black md:px-8 md:py-28 lg:h-[738px] lg:px-0 lg:py-0">
       <ContactGlow />
 
-      <div className="relative z-10 mx-auto max-w-[1438px]">
+      <div className="contact-content relative z-10 mx-auto max-w-[1438px]">
         <h2 className="font-heading text-[42px] font-bold leading-[1.08] tracking-[-0.03em] text-black md:text-[50px] lg:absolute lg:left-0 lg:top-[206px] lg:w-[698px] lg:text-[55px] lg:leading-[62px]">
           {title}
         </h2>
@@ -38,14 +38,14 @@ export function ContactBlock({
           </div>
 
           <ContactItem
-            className="lg:absolute lg:left-[738px] lg:top-[34px] lg:w-[306px]"
+            className="contact-item-mail lg:absolute lg:left-[738px] lg:top-[34px] lg:w-[306px]"
             icon="mail"
             title={emailTitle}
             value="contact@future-lab.uz"
           />
 
           <ContactItem
-            className="lg:absolute lg:left-[1107px] lg:top-[34px] lg:w-[240px]"
+            className="contact-item-telegram lg:absolute lg:left-[1107px] lg:top-[34px] lg:w-[240px]"
             icon="telegram"
             title={telegramTitle}
             value="@nazzar_group"

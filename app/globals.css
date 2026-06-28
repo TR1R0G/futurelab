@@ -281,6 +281,98 @@ body {
 }
 
 @media (min-width: 1200px) and (max-width: 1599px) {
+	.solutions-heading,
+	.solutions-description {
+		left: 135px !important;
+	}
+
+	.solutions-heading {
+		width: 770px !important;
+	}
+
+	.solutions-description {
+		max-width: 770px !important;
+		width: 770px !important;
+		font-size: 21px !important;
+		line-height: 25px !important;
+	}
+
+	.solutions-card-outline {
+		left: 135px !important;
+		width: 1170px !important;
+	}
+
+	.solutions-card-outline h3 {
+		left: 100px !important;
+		width: 700px !important;
+		font-size: 50px !important;
+		line-height: 60px !important;
+	}
+
+	.solutions-card-outline p {
+		left: 100px !important;
+		width: 770px !important;
+		font-size: 21px !important;
+		line-height: 25px !important;
+	}
+
+	.learn-more-button {
+		left: 899px !important;
+		top: 85px !important;
+	}
+
+	.realized-title-frame {
+		max-width: 1170px !important;
+	}
+
+	.realized-projects-track {
+		margin-left: 135px !important;
+	}
+
+	.experience-content,
+	.contact-content,
+	.footer-inner {
+		max-width: 1170px !important;
+	}
+
+	.experience-stats {
+		gap: 30px !important;
+	}
+
+	.experience-stat-card {
+		width: 370px !important;
+	}
+
+	.experience-stat-card-inner {
+		width: 356px !important;
+	}
+
+	.experience-stat-card-title,
+	.experience-stat-card-label {
+		width: 304px !important;
+	}
+
+	.contact-card {
+		width: 1170px !important;
+	}
+
+	.contact-card > div:first-child {
+		left: 100px !important;
+	}
+
+	.contact-item-mail {
+		left: 595px !important;
+	}
+
+	.contact-item-telegram {
+		left: 935px !important;
+	}
+
+	.footer-contact-list {
+		left: auto !important;
+		right: 0 !important;
+	}
+
 	.directions-board {
 		max-width: 1170px !important;
 	}

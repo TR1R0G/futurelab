@@ -272,13 +272,13 @@ export function Solutions({ title, description, cards }: SolutionsProps) {
 				className='solutions-inner relative mx-auto max-w-[1436px]'
 				style={{ height: `${sectionHeight}px` }}
 			>
-				<div className='lg:absolute lg:left-0 lg:top-[150px] lg:w-[857px]'>
+				<div className='solutions-heading lg:absolute lg:left-0 lg:top-[150px] lg:w-[857px]'>
 					<h2 className='font-heading whitespace-pre-line text-[42px] font-bold leading-[1.08] tracking-[-0.03em] text-white md:text-[56px] lg:text-[65px] lg:leading-[73px]'>
 						{title}
 					</h2>
 				</div>
 
-				<p className='mt-10 max-w-[944px] text-[18px] font-medium leading-[1.24] text-[#C4C4C4] md:text-[21px] lg:absolute lg:left-0 lg:top-[366px] lg:mt-0 lg:text-[23px] lg:leading-[28px]'>
+				<p className='solutions-description mt-10 max-w-[944px] text-[18px] font-medium leading-[1.24] text-[#C4C4C4] md:text-[21px] lg:absolute lg:left-0 lg:top-[366px] lg:mt-0 lg:text-[23px] lg:leading-[28px]'>
 					{description}
 				</p>
 
@@ -348,7 +348,7 @@ function LearnMoreButton({ label }: { label: string }) {
 		<button
 			type='button'
 			aria-label={label}
-			className='absolute left-[1107px] top-[160px] z-30 hidden h-[252.42px] w-[252.42px] text-white transition-transform hover:scale-[1.03] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0051FF] active:scale-[0.98] lg:block'
+			className='learn-more-button absolute left-[1107px] top-[160px] z-30 hidden h-[252.42px] w-[252.42px] text-white transition-transform hover:scale-[1.03] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0051FF] active:scale-[0.98] lg:block'
 		>
 			<span className='absolute left-[22.21px] top-[22.21px] h-[207px] w-[207px] rounded-full bg-[#0051FF]' />
 			<svg
