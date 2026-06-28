@@ -97,7 +97,7 @@ export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
       ref={sectionRef}
       className="realized-projects-section overflow-hidden bg-black pb-28 pt-20 md:pb-36 md:pt-28 lg:h-[100svh] lg:pb-0 lg:pt-[var(--realized-top-padding,120px)]"
     >
-      <div className="mx-auto max-w-[1436px]">
+      <div className="responsive-frame mx-auto max-w-[1436px]">
         <h2 className="font-heading text-[42px] font-bold leading-tight tracking-[-0.03em] text-white md:text-[55px] md:leading-[62px]">
           {title}
         </h2>
@@ -109,7 +109,7 @@ export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
       >
         <div
           ref={trackRef}
-          className="flex w-max gap-10 px-5 will-change-transform md:px-8 lg:ml-[max(32px,calc((100vw-1436px)/2))] lg:px-0"
+          className="realized-projects-track flex w-max gap-10 px-5 will-change-transform md:px-8 lg:ml-[max(32px,calc((100vw-1436px)/2))] lg:px-0"
         >
           {projects.map((project) => (
             <ProjectCard key={project.title} project={project} />

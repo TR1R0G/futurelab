@@ -67,7 +67,7 @@ export function Directions({
 			ref={sectionRef}
 			className='directions-section relative z-[100] isolate overflow-visible bg-black px-5 pb-28 pt-20 md:px-8 md:pb-36 md:pt-24 lg:pb-44 lg:pt-20'
 		>
-			<div className='directions-board relative mx-auto h-auto max-w-[1436px] overflow-visible md:h-[398px]'>
+			<div className='responsive-frame directions-board relative mx-auto h-auto max-w-[1436px] overflow-visible md:h-[398px]'>
 				<div
 					className='pointer-events-none absolute left-0 top-[7px] hidden h-[391px] w-full rounded-[35px] bg-[linear-gradient(65.17deg,#4B0E5B_-2.47%,#A91E83_18.71%,#FD9A34_44.05%,#F9EB44_68.37%)] md:block'
 					aria-hidden='true'
@@ -148,7 +148,7 @@ export function Directions({
 				/>
 
 				<div
-					className='mx-auto mt-[140px] h-1 w-[calc(100%_-_40px)] max-w-[1436px] rounded-sm bg-[linear-gradient(90deg,#4B0E5B_0%,#A91E83_29.9%,#FD9A34_65.67%,#F9EB44_100%)] md:mt-[180px] md:w-[calc(100%_-_64px)] lg:mt-[210px]'
+					className='responsive-frame mx-auto mt-[140px] h-1 w-[calc(100%_-_40px)] max-w-[1436px] rounded-sm bg-[linear-gradient(90deg,#4B0E5B_0%,#A91E83_29.9%,#FD9A34_65.67%,#F9EB44_100%)] md:mt-[180px] md:w-[calc(100%_-_64px)] lg:mt-[210px]'
 					aria-hidden='true'
 				/>
 			</div>

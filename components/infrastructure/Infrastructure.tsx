@@ -120,7 +120,7 @@ export function Infrastructure({
       <CTACard text={ctaText} buttonText={ctaButton} />
 
       <div
-        className="infrastructure-separator mx-auto mt-28 h-1 w-[calc(100%_-_40px)] max-w-[1436px] rounded-sm bg-[linear-gradient(90deg,#4B0E5B_0%,#A91E83_29.9%,#FD9A34_65.67%,#F9EB44_100%)] md:mt-36 md:w-[calc(100%_-_64px)] lg:mt-44"
+        className="responsive-frame infrastructure-separator mx-auto mt-28 h-1 w-[calc(100%_-_40px)] max-w-[1436px] rounded-sm bg-[linear-gradient(90deg,#4B0E5B_0%,#A91E83_29.9%,#FD9A34_65.67%,#F9EB44_100%)] md:mt-36 md:w-[calc(100%_-_64px)] lg:mt-44"
         aria-hidden="true"
       />
     </section>

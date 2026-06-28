@@ -17,7 +17,7 @@ export function ContactBlock({
     <section className="contact-section relative overflow-hidden bg-white px-5 py-24 text-black md:px-8 md:py-28 lg:h-[738px] lg:px-0 lg:py-0">
       <ContactGlow />
 
-      <div className="relative z-10 mx-auto max-w-[1438px]">
+      <div className="responsive-frame relative z-10 mx-auto max-w-[1438px]">
         <h2 className="font-heading text-[42px] font-bold leading-[1.08] tracking-[-0.03em] text-black md:text-[50px] lg:absolute lg:left-0 lg:top-[206px] lg:w-[698px] lg:text-[55px] lg:leading-[62px]">
           {title}
         </h2>
