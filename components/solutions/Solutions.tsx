@@ -5,7 +5,7 @@ import type { SolutionsContent } from '@/lib/mdx'
 import { FadeInImage } from '@/components/media/FadeInImage'
 import Image from 'next/image'
 import type { CSSProperties } from 'react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 interface SolutionsProps {
 	title: string
@@ -28,86 +28,9 @@ type Rect = {
 	height: number
 }
 
-type SolutionLayout = {
-	containerWidth: number
-	cardTop: number
-	cardImageTop: number
-	expandedGlowTop: number
-	expandedImageTop: number
-	blockHeight: number
-	trailingSpace: number
-	start: Rect & {
-		borderRadius: number
-	}
-	expanded: {
-		width: number
-		height: number
-	}
-}
-
-const desktopSolutionLayout: SolutionLayout = {
-	containerWidth: 1436,
-	cardTop: SOLUTION_CARD_TOP,
-	cardImageTop: SOLUTION_CARD_IMAGE_TOP,
-	expandedGlowTop: SOLUTION_EXPANDED_GLOW_TOP,
-	expandedImageTop: SOLUTION_EXPANDED_IMAGE_TOP,
-	blockHeight: SOLUTION_BLOCK_HEIGHT,
-	trailingSpace: SOLUTION_TRAILING_SPACE,
-	start: {
-		left: 371,
-		top: SOLUTION_CARD_IMAGE_TOP,
-		width: 694,
-		height: 391,
-		borderRadius: 35,
-	},
-	expanded: {
-		width: 1436,
-		height: 809,
-	},
-}
-
-const laptopSolutionLayout: SolutionLayout = {
-	containerWidth: 1170,
-	cardTop: 513,
-	cardImageTop: 963,
-	expandedGlowTop: 1283,
-	expandedImageTop: 1432,
-	blockHeight: 1778,
-	trailingSpace: 180,
-	start: {
-		left: 300,
-		top: 963,
-		width: 570,
-		height: 321,
-		borderRadius: 35,
-	},
-	expanded: {
-		width: 1170,
-		height: 659,
-	},
-}
-
-const getSolutionLayout = (width: number): SolutionLayout => {
-	if (width >= 1200 && width < 1600) return laptopSolutionLayout
-
-	return desktopSolutionLayout
-}
-
 export function Solutions({ title, description, cards }: SolutionsProps) {
 	const sectionRef = useRef<HTMLElement>(null)
 	const mediaRefs = useRef<Array<HTMLDivElement | null>>([])
-	const [layout, setLayout] = useState<SolutionLayout>(desktopSolutionLayout)
-
-	useEffect(() => {
-		const updateLayout = () => {
-			setLayout(getSolutionLayout(window.innerWidth))
-		}
-
-		updateLayout()
-		window.addEventListener('resize', updateLayout)
-
-		return () => window.removeEventListener('resize', updateLayout)
-	}, [])
 
 	useEffect(() => {
 		registerGsapPlugins()
@@ -124,23 +47,23 @@ export function Solutions({ title, description, cards }: SolutionsProps) {
 		let frame = 0
 
 		const getLayout = (index: number) => {
-			const currentLayout = getSolutionLayout(window.innerWidth)
-			const offset = index * currentLayout.blockHeight
+			const offset = index * SOLUTION_BLOCK_HEIGHT
 
 			return {
-				cardTop: currentLayout.cardTop + offset,
+				cardTop: SOLUTION_CARD_TOP + offset,
 				start: {
-					...currentLayout.start,
-					top: currentLayout.cardImageTop + offset,
+					left: 371,
+					top: SOLUTION_CARD_IMAGE_TOP + offset,
+					width: 694,
+					height: 391,
+					borderRadius: 35,
 				},
-				expandedImageTop: currentLayout.expandedImageTop + offset,
 			}
 		}
 
 		const getTargetRect = (): Rect => {
-			const currentLayout = getSolutionLayout(window.innerWidth)
-			const visualWidth = currentLayout.expanded.width
-			const visualHeight = currentLayout.expanded.height
+			const visualWidth = 1436
+			const visualHeight = 809
 			const visualScale = Math.min(
 				1,
 				(window.innerWidth * 0.9) / visualWidth,
@@ -269,11 +192,12 @@ export function Solutions({ title, description, cards }: SolutionsProps) {
 			mediaRefs.current.forEach((media, index) => {
 				if (!media) return
 
-				const { cardTop, expandedImageTop } = getLayout(index)
+				const { cardTop } = getLayout(index)
 				const animationStart = sectionTop + cardTop + 5
 				const releaseScroll =
 					sectionTop +
-					expandedImageTop -
+					SOLUTION_EXPANDED_IMAGE_TOP +
+					index * SOLUTION_BLOCK_HEIGHT -
 					target.top
 				const transitionDistance = Math.max(1, releaseScroll - animationStart)
 				const rawProgress =
@@ -336,7 +260,7 @@ export function Solutions({ title, description, cards }: SolutionsProps) {
 	}, [cards.length])
 
 	const sectionHeight =
-		layout.cardTop + cards.length * layout.blockHeight + layout.trailingSpace
+		SOLUTION_CARD_TOP + cards.length * SOLUTION_BLOCK_HEIGHT + SOLUTION_TRAILING_SPACE
 
 	return (
 		<section
@@ -346,26 +270,23 @@ export function Solutions({ title, description, cards }: SolutionsProps) {
 		>
 			<div
 				className='solutions-inner relative mx-auto max-w-[1436px]'
-				style={{
-					height: `${sectionHeight}px`,
-					maxWidth: `${layout.containerWidth}px`,
-				}}
+				style={{ height: `${sectionHeight}px` }}
 			>
-				<div className='solutions-heading lg:absolute lg:left-0 lg:top-[150px] lg:w-[857px]'>
+				<div className='lg:absolute lg:left-0 lg:top-[150px] lg:w-[857px]'>
 					<h2 className='font-heading whitespace-pre-line text-[42px] font-bold leading-[1.08] tracking-[-0.03em] text-white md:text-[56px] lg:text-[65px] lg:leading-[73px]'>
 						{title}
 					</h2>
 				</div>
 
-				<p className='solutions-description mt-10 max-w-[944px] text-[18px] font-medium leading-[1.24] text-[#C4C4C4] md:text-[21px] lg:absolute lg:left-0 lg:top-[366px] lg:mt-0 lg:text-[23px] lg:leading-[28px]'>
+				<p className='mt-10 max-w-[944px] text-[18px] font-medium leading-[1.24] text-[#C4C4C4] md:text-[21px] lg:absolute lg:left-0 lg:top-[366px] lg:mt-0 lg:text-[23px] lg:leading-[28px]'>
 					{description}
 				</p>
 
 				{cards.map((card, index) => {
-					const top = layout.cardTop + index * layout.blockHeight
+					const top = SOLUTION_CARD_TOP + index * SOLUTION_BLOCK_HEIGHT
 					const expandedTop =
-						layout.expandedGlowTop + index * layout.blockHeight
-					const imageTop = layout.cardImageTop + index * layout.blockHeight
+						SOLUTION_EXPANDED_GLOW_TOP + index * SOLUTION_BLOCK_HEIGHT
+					const imageTop = SOLUTION_CARD_IMAGE_TOP + index * SOLUTION_BLOCK_HEIGHT
 
 					return (
 						<div key={card.title}>
@@ -382,7 +303,6 @@ export function Solutions({ title, description, cards }: SolutionsProps) {
 								image={card.image}
 								imageAlt={card.imageAlt}
 								top={imageTop}
-								layout={layout}
 							/>
 						</div>
 					)
@@ -428,7 +348,7 @@ function LearnMoreButton({ label }: { label: string }) {
 		<button
 			type='button'
 			aria-label={label}
-			className='learn-more-button absolute left-[1107px] top-[160px] z-30 hidden h-[252.42px] w-[252.42px] text-white transition-transform hover:scale-[1.03] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0051FF] active:scale-[0.98] lg:block'
+			className='absolute left-[1107px] top-[160px] z-30 hidden h-[252.42px] w-[252.42px] text-white transition-transform hover:scale-[1.03] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0051FF] active:scale-[0.98] lg:block'
 		>
 			<span className='absolute left-[22.21px] top-[22.21px] h-[207px] w-[207px] rounded-full bg-[#0051FF]' />
 			<svg
@@ -489,24 +409,17 @@ function TransitionMedia({
 	image,
 	imageAlt,
 	top,
-	layout,
 }: {
 	mediaRef: (element: HTMLDivElement | null) => void
 	image: string
 	imageAlt: string
 	top: number
-	layout: SolutionLayout
 }) {
 	return (
 		<div
 			ref={mediaRef}
 			className='solutions-transition-media relative z-20 mt-20 h-[391px] w-full overflow-hidden rounded-[35px] shadow-2xl shadow-black/40 lg:absolute lg:left-[371px] lg:top-[1059px] lg:mt-0 lg:h-[391px] lg:w-[694px]'
-			style={{
-				'--solution-media-left': `${layout.start.left}px`,
-				'--solution-media-top': `${top}px`,
-				'--solution-media-width': `${layout.start.width}px`,
-				'--solution-media-height': `${layout.start.height}px`,
-			} as CSSProperties}
+			style={{ top }}
 		>
 			<FadeInImage
 				src={image}

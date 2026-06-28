@@ -74,25 +74,25 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 		>
 			<div
 				ref={wrapperRef}
-				className='ecosystem-wrapper relative mx-5 overflow-hidden rounded-[28px] bg-[#B24ECC] md:mx-8 md:rounded-[35px] lg:absolute lg:left-0 lg:top-[calc((100svh-var(--ecosystem-block-height))/2)] lg:m-0 lg:h-[var(--ecosystem-block-height)] lg:w-full'
+				className='relative mx-5 overflow-hidden rounded-[28px] bg-[#B24ECC] md:mx-8 md:rounded-[35px] lg:absolute lg:left-0 lg:top-[calc((100svh-var(--ecosystem-block-height))/2)] lg:m-0 lg:h-[var(--ecosystem-block-height)] lg:w-full'
 			>
 				<div
 					ref={trackRef}
 					className='ecosystem-track relative min-h-[720px] w-full overflow-hidden rounded-[28px] bg-[#B24ECC] px-8 py-12 md:rounded-[35px] md:px-12 md:py-16 lg:h-[717px] lg:min-h-[717px] lg:w-[2781px] lg:p-0'
 				>
-					<div className='ecosystem-title-block lg:absolute lg:left-[242px] lg:top-[100px] lg:w-[615px]'>
+					<div className='lg:absolute lg:left-[242px] lg:top-[100px] lg:w-[615px]'>
 						<h2 className='font-heading whitespace-pre-line text-[42px] font-bold leading-[1.08] tracking-[-0.03em] text-white md:text-[54px] lg:text-[65px] lg:leading-[73px]'>
 							{displayTitle}
 						</h2>
 					</div>
 
-					<p className='ecosystem-subtitle mt-8 max-w-[455px] text-[18px] font-medium leading-[1.35] text-white md:text-[21px] lg:absolute lg:left-[242px] lg:top-[359px] lg:mt-0 lg:text-[23px] lg:leading-[28px]'>
+					<p className='mt-8 max-w-[455px] text-[18px] font-medium leading-[1.35] text-white md:text-[21px] lg:absolute lg:left-[242px] lg:top-[359px] lg:mt-0 lg:text-[23px] lg:leading-[28px]'>
 						{subtitle}
 					</p>
 
 					<EcosystemIcon
 						src='/images/block3/icon1.svg'
-						className='ecosystem-anchor-icon mt-16 lg:absolute lg:left-[242px] lg:top-[534px] lg:mt-0'
+						className='mt-16 lg:absolute lg:left-[242px] lg:top-[534px] lg:mt-0'
 					/>
 
 					<div className='mt-16 grid gap-12 md:grid-cols-3 lg:mt-0 lg:block'>
@@ -140,18 +140,18 @@ function EcosystemFeature({
 	const position = desktopPositions[index] ?? desktopPositions[0]
 
 	return (
-		<article className={`ecosystem-feature ecosystem-feature-${index} relative min-h-[280px] lg:static`}>
+		<article className='relative min-h-[280px] lg:static'>
 			<EcosystemIcon
 				src={iconMap[card.icon] ?? iconMap.workspace}
-				className={`ecosystem-feature-icon lg:absolute ${position.icon}`}
+				className={`lg:absolute ${position.icon}`}
 			/>
 			<h3
-				className={`ecosystem-feature-title mt-10 max-w-[452px] text-[28px] font-semibold leading-[1.18] text-white lg:absolute lg:mt-0 lg:text-[33px] lg:leading-[40px] ${position.title}`}
+				className={`mt-10 max-w-[452px] text-[28px] font-semibold leading-[1.18] text-white lg:absolute lg:mt-0 lg:text-[33px] lg:leading-[40px] ${position.title}`}
 			>
 				{card.title}
 			</h3>
 			<p
-				className={`ecosystem-feature-description mt-7 max-w-[452px] text-[18px] font-medium leading-[1.35] text-white md:text-[21px] lg:absolute lg:mt-0 lg:text-[23px] lg:leading-[28px] ${position.description}`}
+				className={`mt-7 max-w-[452px] text-[18px] font-medium leading-[1.35] text-white md:text-[21px] lg:absolute lg:mt-0 lg:text-[23px] lg:leading-[28px] ${position.description}`}
 			>
 				{card.description}
 			</p>

@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 export function Footer({ address }: { address: string }) {
   return (
     <footer className="footer-section font-onest relative h-auto bg-black px-5 py-16 text-white md:px-8 lg:h-[385px] lg:px-0 lg:py-0">
-      <div className="responsive-frame mx-auto max-w-[1436px] lg:relative lg:h-full">
+      <div className="mx-auto max-w-[1436px] lg:relative lg:h-full">
         <Image
           src="/images/logo.svg"
           alt="futurelab by NAZZAR Innovation"

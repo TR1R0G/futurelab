@@ -162,7 +162,7 @@ export function Academy({ title, subtitle, cards }: AcademyProps) {
         ref={pinRef}
         className="academy-pin sticky top-0 z-40 flex min-h-[100svh] flex-col justify-center overflow-visible py-16 md:py-20 lg:py-24"
       >
-        <div className="responsive-frame academy-heading relative z-[500] mx-auto w-full max-w-[1436px] px-5 md:px-8">
+        <div className="academy-heading relative z-[500] mx-auto w-full max-w-[1436px] px-5 md:px-8">
           <h2 className="font-heading max-w-[980px] text-[42px] font-bold leading-[1.06] tracking-[-0.02em] text-white md:text-6xl lg:text-[72px]">
             {title}
           </h2>

@@ -12,7 +12,7 @@ export function Programs({ cards }: ProgramsProps) {
     <section
       className="programs-section relative z-[80] -mt-[90svh] bg-black px-5 pb-24 pt-10 md:px-8 md:pb-32 md:pt-16 lg:pb-[220px] lg:pt-[92px]"
     >
-      <div className="responsive-frame mx-auto grid max-w-[1436px] gap-8 md:grid-cols-3 md:gap-10">
+      <div className="mx-auto grid max-w-[1436px] gap-8 md:grid-cols-3 md:gap-10">
         {cards.map((card) => (
           <ProgramCard key={card.title} card={card} />
         ))}
