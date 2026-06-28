@@ -98,40 +98,61 @@ export function Hero({
         }
 
         if (width >= 1200) {
+          const tabletImageWidth = 373;
+          const tabletImageHeight = 653;
+
           return {
-            image: { top: imageTop, width: imageWidth, height: imageHeight },
-            description: { left: 180, top: Math.round(centerY - 47), width: 390 },
-            actions: { right: 116, top: Math.round(centerY - 50), width: 255 },
-            gradientScale: 1,
-            gradientTop,
+            image: {
+              top: Math.round((vh - tabletImageHeight) / 2),
+              width: tabletImageWidth,
+              height: tabletImageHeight,
+            },
+            description: { left: 135, top: Math.round(centerY - 113), width: 370 },
+            actions: { right: Math.max(134, Math.round((width - 1305) / 2)), top: Math.round(centerY - 113), width: 270 },
+            gradientScale: 1.256,
+            gradientTop: Math.round((vh - 631.91) / 2 - 60),
           };
         }
 
         if (width >= 900) {
+          const mediumImageWidth = 373;
+          const mediumImageHeight = 653;
+
           return {
-            image: { top: imageTop, width: imageWidth, height: imageHeight },
-            description: { left: 112, top: Math.round(centerY - 47), width: 245 },
-            actions: { right: 48, top: Math.round(centerY - 72), width: 248 },
-            gradientScale: 1,
-            gradientTop,
+            image: {
+              top: Math.round((vh - mediumImageHeight) / 2),
+              width: mediumImageWidth,
+              height: mediumImageHeight,
+            },
+            description: { left: 35, top: Math.round(centerY - 225), width: 210 },
+            actions: { right: 35, top: Math.round(centerY - 177), width: 210 },
+            gradientScale: 1.256,
+            gradientTop: Math.round((vh - 631.91) / 2 - 60),
           };
         }
 
         if (width >= 640) {
+          const smallTabletImageWidth = 373;
+          const smallTabletImageHeight = 653;
+
           return {
-            image: { top: imageTop, width: imageWidth, height: imageHeight },
-            description: { left: 92, top: Math.round(centerY - 52), width: 245 },
-            actions: { right: 54, top: Math.round(centerY - 72), width: 244 },
-            gradientScale: 1,
-            gradientTop,
+            image: {
+              top: Math.round((vh - smallTabletImageHeight) / 2),
+              width: smallTabletImageWidth,
+              height: smallTabletImageHeight,
+            },
+            description: { left: 155, top: Math.round(centerY - 225), width: 210 },
+            actions: { right: Math.max(0, width - 845), top: Math.round(centerY - 177), width: 210 },
+            gradientScale: 1.256,
+            gradientTop: Math.round((vh - 631.91) / 2 - 60),
           };
         }
 
         return {
-          image: { top: imageTop, width: imageWidth, height: imageHeight },
+          image: { top: 64, width: 300, height: 525 },
           hideText: true,
-          gradientScale: 1,
-          gradientTop,
+          gradientScale: 1.512,
+          gradientTop: 120,
         };
       };
 
@@ -168,10 +189,7 @@ export function Hero({
         const target = getTarget(vh);
 
         header.style.opacity = String(1 - clamp(progress * 3));
-        header.style.transform =
-          window.innerWidth >= 1600
-            ? `translateY(${-90 * eased}px)`
-            : `translateX(-50%) translateY(${-90 * eased}px)`;
+        header.style.transform = `translateY(${-90 * eased}px)`;
 
         copy.style.opacity = String(1 - clamp(progress * 3));
         copy.style.transform = `translateY(${-150 * eased}px)`;
@@ -185,7 +203,15 @@ export function Hero({
         image.style.width = `${lerp(start.image.width, target.image.width, eased)}px`;
         image.style.height = `${lerp(start.image.height, target.image.height, eased)}px`;
         image.style.transform = "translateX(-50%)";
-        imageFrame.style.borderRadius = `${lerp(13, 35, eased)}px`;
+        const initialRadius =
+          window.innerWidth >= 1200 && window.innerWidth < 1600 ? 15 : 13;
+        const expandedRadius =
+          window.innerWidth < 1200 ? 25 : 35;
+        imageFrame.style.borderRadius = `${lerp(
+          initialRadius,
+          expandedRadius,
+          eased
+        )}px`;
 
         if (target.hideText) {
           desc.style.opacity = String(1 - clamp(progress * 2));
