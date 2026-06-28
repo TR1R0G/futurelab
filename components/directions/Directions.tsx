@@ -87,7 +87,7 @@ export function Directions({
 						{chips.map((chip, index) => (
 							<div
 								key={chip.label}
-								className={`absolute h-[73px] ${chipLayout[index]}`}
+								className={`directions-chip-slot directions-chip-slot-${index} absolute h-[73px] ${chipLayout[index]}`}
 							>
 								<DirectionChip chip={chip} />
 							</div>

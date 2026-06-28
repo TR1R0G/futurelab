@@ -280,6 +280,37 @@ body {
 	will-change: transform, opacity;
 }
 
+@media (min-width: 1200px) and (max-width: 1599px) {
+	.directions-board {
+		max-width: 1170px !important;
+	}
+
+	.directions-chip-slot-0 {
+		left: 326px !important;
+		top: 236px !important;
+	}
+
+	.directions-chip-slot-1 {
+		left: 489px !important;
+		top: 301px !important;
+	}
+
+	.directions-chip-slot-2 {
+		left: 570px !important;
+		top: 166px !important;
+	}
+
+	.directions-chip-slot-3 {
+		left: 738px !important;
+		top: 209px !important;
+	}
+
+	.directions-chip-slot-4 {
+		left: 861px !important;
+		top: 60px !important;
+	}
+}
+
 /* Ecosystem horizontal-scroll section */
 .ecosystem-section {
 	background: #000;
