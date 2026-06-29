@@ -105,8 +105,9 @@ export function Hero({
         }
 
         if (width >= 1200) {
-          const tabletImageWidth = 373;
-          const tabletImageHeight = 653;
+          const compactHeight = vh <= 820;
+          const tabletImageWidth = compactHeight ? 340 : 373;
+          const tabletImageHeight = compactHeight ? 596 : 653;
 
           return {
             image: {
@@ -114,8 +115,16 @@ export function Hero({
               width: tabletImageWidth,
               height: tabletImageHeight,
             },
-            description: { left: 135, top: Math.round(centerY - 113), width: 370 },
-            actions: { right: Math.max(134, Math.round((width - 1305) / 2)), top: Math.round(centerY - 113), width: 270 },
+            description: {
+              left: compactHeight ? 98 : 135,
+              top: Math.round(centerY - 113),
+              width: compactHeight ? 310 : 370,
+            },
+            actions: {
+              right: Math.max(compactHeight ? 96 : 134, Math.round((width - 1305) / 2)),
+              top: Math.round(centerY - 113),
+              width: 270,
+            },
             gradientScale: 1.256,
             gradientTop: Math.round((vh - 631.91) / 2 - 60),
           };

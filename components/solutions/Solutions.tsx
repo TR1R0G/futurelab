@@ -187,10 +187,20 @@ export function Solutions({ title, description, cards }: SolutionsProps) {
 			}
 
 			const sectionTop = section.getBoundingClientRect().top + window.scrollY
+			const sectionBottom = sectionTop + section.offsetHeight
 			const target = getTargetRect()
 
 			mediaRefs.current.forEach((media, index) => {
 				if (!media) return
+
+				if (window.scrollY >= sectionBottom - 1) {
+					media.style.visibility = 'hidden'
+					media.style.pointerEvents = 'none'
+					return
+				}
+
+				media.style.visibility = 'visible'
+				media.style.pointerEvents = ''
 
 				const { cardTop } = getLayout(index)
 				const animationStart = sectionTop + cardTop + 5

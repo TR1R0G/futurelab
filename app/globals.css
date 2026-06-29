@@ -443,18 +443,23 @@ main {
 }
 
 .ecosystem-section {
-	height: 443px;
+	--ecosystem-card-height: 443px;
+	--ecosystem-black-space: 80px;
+
+	height: calc(var(--ecosystem-card-height) + var(--ecosystem-black-space));
 }
 
 .ecosystem-wrapper {
+	top: 50%;
+	transform: translateY(-50%);
 	left: -105px;
 	width: 1727px;
-	height: 443px;
+	height: var(--ecosystem-card-height);
 }
 
 .ecosystem-track {
 	width: 1727px;
-	height: 443px;
+	height: var(--ecosystem-card-height);
 }
 
 .academy-section {
@@ -516,7 +521,7 @@ main {
 
 @media (min-width: 640px) {
 	.ecosystem-section {
-		height: 495px;
+		height: 100svh;
 	}
 
 	.ecosystem-wrapper {
@@ -595,7 +600,7 @@ main {
 
 @media (min-width: 768px) {
 	.ecosystem-section {
-		height: 600px;
+		height: 100svh;
 	}
 
 	.ecosystem-wrapper {
@@ -684,7 +689,7 @@ main {
 
 @media (min-width: 768px) and (max-width: 899px) {
 	.ecosystem-section {
-		height: 495px;
+		height: 100svh;
 	}
 
 	.ecosystem-wrapper {
@@ -752,10 +757,11 @@ main {
 
 @media (min-width: 1200px) {
 	.ecosystem-section {
-		height: 642px;
+		height: 100svh;
 	}
 
 	.ecosystem-wrapper {
+		top: 50%;
 		left: 0;
 		width: 100%;
 		height: 642px;
@@ -826,18 +832,21 @@ main {
 }
 
 @media (min-width: 1600px) {
-	.ecosystem-section {
-		height: 717px;
-	}
+		.ecosystem-section {
+			--ecosystem-card-height: 717px;
 
-	.ecosystem-wrapper {
-		width: 100%;
-		height: 717px;
-	}
+			height: 100svh;
+		}
+
+		.ecosystem-wrapper {
+			top: 50%;
+			width: 100%;
+			height: var(--ecosystem-card-height);
+		}
 
 	.ecosystem-track {
 		width: 2781px;
-		height: 717px;
+		height: var(--ecosystem-card-height);
 	}
 
 	.academy-section {
@@ -1586,6 +1595,220 @@ main {
 
 	.hero-light {
 		top: 393px;
+	}
+}
+
+@media (min-width: 1200px) and (max-width: 1599px) and (max-height: 820px) {
+	.hero-copy {
+		top: 260px;
+	}
+
+	.hero-title {
+		font-size: 64px;
+		line-height: 72px;
+	}
+
+	.hero-description {
+		left: max(36px, calc((100vw - 1920px) / 2 + 0.5px + 320px));
+		top: 610px;
+		width: 320px;
+	}
+
+	.hero-action-panel {
+		top: 612px;
+		width: 270px;
+	}
+
+	.hero-image {
+		top: 482px;
+		width: 150px;
+		height: 263px;
+	}
+
+	.hero-light {
+		top: 318px;
+	}
+
+	.ecosystem-section,
+	.realized-projects-section {
+		height: 100svh !important;
+	}
+
+	.ecosystem-wrapper {
+		top: 50%;
+	}
+
+	.academy-pin {
+		justify-content: flex-start !important;
+		padding-top: 72px !important;
+		padding-bottom: 0 !important;
+	}
+
+	.academy-heading h2 {
+		font-size: 58px !important;
+		line-height: 64px !important;
+	}
+
+	.academy-heading p {
+		margin-top: 42px !important;
+		font-size: 27px !important;
+		line-height: 33px !important;
+	}
+
+	.academy-card-stage {
+		margin-top: -18px !important;
+		transform: scale(0.78) !important;
+		transform-origin: top center !important;
+	}
+
+	.program-card {
+		height: 792px !important;
+	}
+
+	.program-card > div:first-child {
+		height: 585px !important;
+	}
+
+	.program-card > div:first-child > div:first-child {
+		height: 382px !important;
+	}
+
+	.program-card h3 {
+		top: 420px !important;
+	}
+
+	.program-card > div:first-child p {
+		top: 512px !important;
+	}
+
+	.program-card > div:last-child {
+		top: 618px !important;
+	}
+
+	.programs-section {
+		margin-top: -45svh !important;
+		height: 980px !important;
+	}
+
+	.realized-projects-section {
+		--realized-card-scale: 0.62 !important;
+		--realized-card-width: 433px !important;
+		--realized-card-height: 542px !important;
+		--realized-top-padding: 58px !important;
+		--realized-card-gap: 34px !important;
+	}
+
+	.contact-section {
+		height: 620px !important;
+	}
+}
+
+@media (min-width: 900px) and (max-width: 1199px) and (max-height: 820px) {
+	.ecosystem-section,
+	.realized-projects-section {
+		height: 100svh !important;
+	}
+
+	.ecosystem-wrapper {
+		top: 50%;
+	}
+
+	.academy-pin {
+		justify-content: flex-start !important;
+		padding-top: 68px !important;
+		padding-bottom: 0 !important;
+	}
+
+	.academy-heading h2 {
+		font-size: 54px !important;
+		line-height: 60px !important;
+	}
+
+	.academy-heading p {
+		margin-top: 36px !important;
+		font-size: 24px !important;
+		line-height: 30px !important;
+	}
+
+	.academy-card-stage {
+		margin-top: -20px !important;
+		transform: scale(0.72) !important;
+		transform-origin: top center !important;
+	}
+
+	.hero-copy {
+		top: 250px;
+	}
+
+	.hero-title {
+		font-size: 52px;
+		line-height: 59px;
+	}
+
+	.hero-description {
+		top: 560px;
+		font-size: 18px;
+		line-height: 1.45;
+	}
+
+	.hero-action-panel {
+		top: 575px;
+	}
+
+	.hero-image {
+		top: 492px;
+		width: 135px;
+		height: 237px;
+	}
+
+	.hero-light {
+		top: 340px;
+	}
+
+	.programs-section {
+		margin-top: -45svh !important;
+		height: 900px !important;
+	}
+
+	.realized-projects-section {
+		--realized-card-scale: 0.56 !important;
+		--realized-card-width: 391px !important;
+		--realized-card-height: 489px !important;
+		--realized-top-padding: 52px !important;
+		--realized-card-gap: 30px !important;
+	}
+
+	.contact-section {
+		height: 760px !important;
+	}
+}
+
+@media (min-width: 900px) and (max-width: 1199px) and (max-height: 650px) {
+	.hero-copy {
+		top: 220px;
+	}
+
+	.hero-title {
+		font-size: 46px;
+		line-height: 52px;
+	}
+
+	.hero-description {
+		top: 438px;
+	}
+
+	.hero-action-panel {
+		top: 438px;
+	}
+
+	.hero-image {
+		top: 380px;
+		width: 117px;
+		height: 205px;
+	}
+
+	.hero-light {
+		top: 270px;
 	}
 }
 

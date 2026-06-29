@@ -21,8 +21,8 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 		title === 'Единая экосистема разработки и роста'
 			? 'Единая экосистема\nразработки\nи роста'
 			: title === 'Unified ecosystem for development and growth'
-			? 'Unified ecosystem\nfor development\nand growth'
-			: title
+				? 'Unified ecosystem\nfor development\nand growth'
+				: title
 
 	useEffect(() => {
 		registerGsapPlugins()
@@ -68,13 +68,15 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 		<section
 			ref={sectionRef}
 			className='ecosystem-section relative w-full overflow-hidden bg-black'
-			style={{
-				'--ecosystem-block-height': `${ECOSYSTEM_BLOCK_HEIGHT}px`,
-			} as CSSProperties}
+			style={
+				{
+					'--ecosystem-block-height': `${ECOSYSTEM_BLOCK_HEIGHT}px`,
+				} as CSSProperties
+			}
 		>
 			<div
 				ref={wrapperRef}
-				className='ecosystem-wrapper absolute left-0 top-0 overflow-hidden rounded-[28px] bg-[#B24ECC] md:rounded-[35px] lg:rounded-[35px]'
+				className='ecosystem-wrapper absolute left-0 overflow-hidden rounded-[28px] bg-[#B24ECC] md:rounded-[35px] lg:rounded-[35px]'
 			>
 				<div
 					ref={trackRef}
@@ -141,23 +143,31 @@ function EcosystemFeature({
 	const compact = [
 		{
 			icon: 'left-[420px] top-[72px] md:left-[532px] md:top-[86px]',
-			title: 'left-[420px] top-[155px] w-[190px] md:left-[532px] md:top-[203px] md:w-[260px]',
-			description: 'left-[420px] top-[222px] w-[180px] md:left-[532px] md:top-[300px] md:w-[260px]',
+			title:
+				'left-[420px] top-[155px] w-[190px] md:left-[532px] md:top-[203px] md:w-[260px]',
+			description:
+				'left-[420px] top-[222px] w-[180px] md:left-[532px] md:top-[300px] md:w-[260px]',
 		},
 		{
 			icon: 'left-[710px] top-[72px] md:left-[878px] md:top-[86px]',
-			title: 'left-[710px] top-[155px] w-[220px] md:left-[878px] md:top-[203px] md:w-[310px]',
-			description: 'left-[710px] top-[222px] w-[220px] md:left-[878px] md:top-[300px] md:w-[310px]',
+			title:
+				'left-[710px] top-[155px] w-[220px] md:left-[878px] md:top-[203px] md:w-[310px]',
+			description:
+				'left-[710px] top-[222px] w-[220px] md:left-[878px] md:top-[300px] md:w-[310px]',
 		},
 		{
 			icon: 'left-[1050px] top-[72px] md:left-[1274px] md:top-[86px]',
-			title: 'left-[1050px] top-[155px] w-[190px] md:left-[1274px] md:top-[203px] md:w-[260px]',
-			description: 'left-[1050px] top-[222px] w-[190px] md:left-[1274px] md:top-[300px] md:w-[260px]',
+			title:
+				'left-[1050px] top-[155px] w-[190px] md:left-[1274px] md:top-[203px] md:w-[260px]',
+			description:
+				'left-[1050px] top-[222px] w-[190px] md:left-[1274px] md:top-[300px] md:w-[260px]',
 		},
 	][index] ?? {
 		icon: 'left-[420px] top-[72px] md:left-[532px] md:top-[86px]',
-		title: 'left-[420px] top-[155px] w-[190px] md:left-[532px] md:top-[203px] md:w-[260px]',
-		description: 'left-[420px] top-[222px] w-[180px] md:left-[532px] md:top-[300px] md:w-[260px]',
+		title:
+			'left-[420px] top-[155px] w-[190px] md:left-[532px] md:top-[203px] md:w-[260px]',
+		description:
+			'left-[420px] top-[222px] w-[180px] md:left-[532px] md:top-[300px] md:w-[260px]',
 	}
 
 	return (
