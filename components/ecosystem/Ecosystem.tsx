@@ -67,35 +67,35 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 	return (
 		<section
 			ref={sectionRef}
-			className='ecosystem-section relative h-auto w-full overflow-hidden bg-black py-16 lg:h-screen lg:py-0'
+			className='ecosystem-section relative w-full overflow-hidden bg-black'
 			style={{
 				'--ecosystem-block-height': `${ECOSYSTEM_BLOCK_HEIGHT}px`,
 			} as CSSProperties}
 		>
 			<div
 				ref={wrapperRef}
-				className='relative mx-5 overflow-hidden rounded-[28px] bg-[#B24ECC] md:mx-8 md:rounded-[35px] lg:absolute lg:left-0 lg:top-[calc((100svh-var(--ecosystem-block-height))/2)] lg:m-0 lg:h-[var(--ecosystem-block-height)] lg:w-full'
+				className='ecosystem-wrapper absolute left-0 top-0 overflow-hidden rounded-[28px] bg-[#B24ECC] md:rounded-[35px] lg:rounded-[35px]'
 			>
 				<div
 					ref={trackRef}
-					className='ecosystem-track relative min-h-[720px] w-full overflow-hidden rounded-[28px] bg-[#B24ECC] px-8 py-12 md:rounded-[35px] md:px-12 md:py-16 lg:h-[717px] lg:min-h-[717px] lg:w-[2781px] lg:p-0'
+					className='ecosystem-track relative overflow-hidden rounded-[28px] bg-[#B24ECC] md:rounded-[35px] lg:rounded-[35px]'
 				>
-					<div className='lg:absolute lg:left-[242px] lg:top-[100px] lg:w-[615px]'>
-						<h2 className='font-heading whitespace-pre-line text-[42px] font-bold leading-[1.08] tracking-[-0.03em] text-white md:text-[54px] lg:text-[65px] lg:leading-[73px]'>
+					<div className='absolute left-[135px] top-[54px] w-[260px] md:left-[155px] md:top-[86px] md:w-[420px] lg:left-[242px] lg:top-[100px] lg:w-[615px]'>
+						<h2 className='font-heading whitespace-pre-line text-[21px] font-bold leading-[1.05] tracking-[-0.01em] text-white md:text-[40px] md:leading-[44px] lg:text-[65px] lg:leading-[73px]'>
 							{displayTitle}
 						</h2>
 					</div>
 
-					<p className='mt-8 max-w-[455px] text-[18px] font-medium leading-[1.35] text-white md:text-[21px] lg:absolute lg:left-[242px] lg:top-[359px] lg:mt-0 lg:text-[23px] lg:leading-[28px]'>
+					<p className='absolute left-[135px] top-[188px] w-[260px] text-[11px] font-medium leading-[1.22] text-white md:left-[155px] md:top-[240px] md:w-[430px] md:text-[16px] md:leading-[20px] lg:left-[242px] lg:top-[359px] lg:w-[455px] lg:text-[23px] lg:leading-[28px]'>
 						{subtitle}
 					</p>
 
 					<EcosystemIcon
 						src='/images/block3/icon1.svg'
-						className='mt-16 lg:absolute lg:left-[242px] lg:top-[534px] lg:mt-0'
+						className='absolute left-[135px] top-[330px] md:left-[155px] md:top-[365px] lg:left-[242px] lg:top-[534px]'
 					/>
 
-					<div className='mt-16 grid gap-12 md:grid-cols-3 lg:mt-0 lg:block'>
+					<div>
 						{cards.map((card, index) => (
 							<EcosystemFeature key={card.title} card={card} index={index} />
 						))}
@@ -138,20 +138,41 @@ function EcosystemFeature({
 	index: number
 }) {
 	const position = desktopPositions[index] ?? desktopPositions[0]
+	const compact = [
+		{
+			icon: 'left-[420px] top-[72px] md:left-[532px] md:top-[86px]',
+			title: 'left-[420px] top-[155px] w-[190px] md:left-[532px] md:top-[203px] md:w-[260px]',
+			description: 'left-[420px] top-[222px] w-[180px] md:left-[532px] md:top-[300px] md:w-[260px]',
+		},
+		{
+			icon: 'left-[710px] top-[72px] md:left-[878px] md:top-[86px]',
+			title: 'left-[710px] top-[155px] w-[220px] md:left-[878px] md:top-[203px] md:w-[310px]',
+			description: 'left-[710px] top-[222px] w-[220px] md:left-[878px] md:top-[300px] md:w-[310px]',
+		},
+		{
+			icon: 'left-[1050px] top-[72px] md:left-[1274px] md:top-[86px]',
+			title: 'left-[1050px] top-[155px] w-[190px] md:left-[1274px] md:top-[203px] md:w-[260px]',
+			description: 'left-[1050px] top-[222px] w-[190px] md:left-[1274px] md:top-[300px] md:w-[260px]',
+		},
+	][index] ?? {
+		icon: 'left-[420px] top-[72px] md:left-[532px] md:top-[86px]',
+		title: 'left-[420px] top-[155px] w-[190px] md:left-[532px] md:top-[203px] md:w-[260px]',
+		description: 'left-[420px] top-[222px] w-[180px] md:left-[532px] md:top-[300px] md:w-[260px]',
+	}
 
 	return (
-		<article className='relative min-h-[280px] lg:static'>
+		<article className='static'>
 			<EcosystemIcon
 				src={iconMap[card.icon] ?? iconMap.workspace}
-				className={`lg:absolute ${position.icon}`}
+				className={`absolute ${compact.icon} ${position.icon}`}
 			/>
 			<h3
-				className={`mt-10 max-w-[452px] text-[28px] font-semibold leading-[1.18] text-white lg:absolute lg:mt-0 lg:text-[33px] lg:leading-[40px] ${position.title}`}
+				className={`absolute text-[14px] font-semibold leading-[1.16] text-white md:text-[24px] md:leading-[29px] lg:text-[33px] lg:leading-[40px] ${compact.title} ${position.title}`}
 			>
 				{card.title}
 			</h3>
 			<p
-				className={`mt-7 max-w-[452px] text-[18px] font-medium leading-[1.35] text-white md:text-[21px] lg:absolute lg:mt-0 lg:text-[23px] lg:leading-[28px] ${position.description}`}
+				className={`absolute text-[11px] font-medium leading-[1.22] text-white md:text-[16px] md:leading-[20px] lg:text-[23px] lg:leading-[28px] ${compact.description} ${position.description}`}
 			>
 				{card.description}
 			</p>
@@ -172,7 +193,7 @@ function EcosystemIcon({
 			alt=''
 			width={83}
 			height={84}
-			className={`h-[83px] w-[83px] ${className}`}
+			className={`h-[42px] w-[42px] md:h-[64px] md:w-[64px] lg:h-[83px] lg:w-[83px] ${className}`}
 			aria-hidden='true'
 		/>
 	)

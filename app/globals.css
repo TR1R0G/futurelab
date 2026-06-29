@@ -442,6 +442,145 @@ main {
 	padding-top: 14vh;
 }
 
+.ecosystem-section {
+	height: 443px;
+}
+
+.ecosystem-wrapper {
+	left: -105px;
+	width: 1727px;
+	height: 443px;
+}
+
+.ecosystem-track {
+	width: 1727px;
+	height: 443px;
+}
+
+.academy-section {
+	height: 751px;
+}
+
+.infrastructure-section {
+	height: 2280px;
+}
+
+.programs-section {
+	height: 2186px;
+}
+
+.programs-grid {
+	max-width: 300px;
+}
+
+.directions-section {
+	height: 2231px;
+	min-height: 0;
+	overflow: hidden !important;
+}
+
+.solutions-section,
+.solutions-inner {
+	height: 4269px !important;
+	min-height: 4269px !important;
+}
+
+.realized-projects-section {
+	height: 791px !important;
+}
+
+.post-realized-cta {
+	height: 310px;
+	padding-top: 55px !important;
+	padding-bottom: 55px !important;
+}
+
+.experience-section {
+	height: 1576px !important;
+}
+
+.contact-section {
+	height: 692px !important;
+	margin-top: 0;
+}
+
+.footer-section {
+	height: 355px !important;
+}
+
+@media (max-width: 639px) {
+	.footer-copyright {
+		margin-top: 22px !important;
+	}
+}
+
+@media (min-width: 640px) {
+	.ecosystem-section {
+		height: 495px;
+	}
+
+	.ecosystem-wrapper {
+		left: -116px;
+		width: 1760px;
+		height: 495px;
+	}
+
+	.ecosystem-track {
+		width: 1760px;
+		height: 495px;
+	}
+
+	.academy-section {
+		height: 687px;
+	}
+
+	.infrastructure-section {
+		height: 1888px;
+	}
+
+	.programs-section {
+		height: 1554px;
+	}
+
+	.programs-grid {
+		max-width: 690px;
+	}
+
+	.directions-section {
+		height: 2144px;
+		min-height: 0;
+	}
+
+	.solutions-section,
+	.solutions-inner {
+		height: 4257px !important;
+		min-height: 4257px !important;
+	}
+
+	.realized-projects-section {
+		height: 657px !important;
+	}
+
+	.post-realized-cta {
+		height: 402px;
+		padding-top: 110px !important;
+		padding-bottom: 110px !important;
+	}
+
+	.experience-section {
+		height: 1279px !important;
+	}
+
+	.contact-section {
+		height: 639px !important;
+		margin-top: 0;
+	}
+
+	.footer-section {
+		height: 385px !important;
+	}
+}
+
 @media (min-width: 640px) {
 	.ecosystem-title-panel {
 		width: 60vw;
@@ -455,6 +594,71 @@ main {
 }
 
 @media (min-width: 768px) {
+	.ecosystem-section {
+		height: 600px;
+	}
+
+	.ecosystem-wrapper {
+		left: -100px;
+		width: 2240px;
+		height: 600px;
+	}
+
+	.ecosystem-track {
+		width: 2240px;
+		height: 600px;
+	}
+
+	.academy-section {
+		height: 841px;
+	}
+
+	.infrastructure-section {
+		height: 2120px;
+	}
+
+	.programs-section {
+		height: 772px;
+	}
+
+	.programs-grid {
+		max-width: 930px;
+	}
+
+	.directions-section {
+		height: 2278px;
+		min-height: 0;
+	}
+
+	.solutions-section,
+	.solutions-inner {
+		height: 5264px !important;
+		min-height: 5264px !important;
+	}
+
+	.realized-projects-section {
+		height: 788px !important;
+	}
+
+	.post-realized-cta {
+		height: 485px;
+		padding-top: 130px !important;
+		padding-bottom: 130px !important;
+	}
+
+	.experience-section {
+		height: 1201px !important;
+	}
+
+	.contact-section {
+		height: 704px !important;
+		margin-top: 0;
+	}
+
+	.footer-section {
+		height: 385px !important;
+	}
+
 	.ecosystem-title-panel {
 		width: 50vw;
 		min-width: 420px;
@@ -478,7 +682,140 @@ main {
 	}
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) and (max-width: 899px) {
+	.ecosystem-section {
+		height: 495px;
+	}
+
+	.ecosystem-wrapper {
+		left: -116px;
+		width: 1760px;
+		height: 495px;
+	}
+
+	.ecosystem-track {
+		width: 1760px;
+		height: 495px;
+	}
+
+	.academy-section {
+		height: 687px;
+	}
+
+	.infrastructure-section {
+		height: 1888px;
+	}
+
+	.programs-section {
+		height: 1554px;
+	}
+
+	.programs-grid {
+		max-width: 690px;
+	}
+
+	.directions-section {
+		height: 2144px;
+		min-height: 0;
+	}
+
+	.solutions-section,
+	.solutions-inner {
+		height: 4257px !important;
+		min-height: 4257px !important;
+	}
+
+	.realized-projects-section {
+		height: 657px !important;
+	}
+
+	.post-realized-cta {
+		height: 402px;
+		padding-top: 110px !important;
+		padding-bottom: 110px !important;
+	}
+
+	.experience-section {
+		height: 1279px !important;
+		margin-top: 4px;
+	}
+
+	.contact-section {
+		height: 639px !important;
+		margin-top: 0;
+	}
+
+	.footer-section {
+		height: 385px !important;
+	}
+}
+
+@media (min-width: 1200px) {
+	.ecosystem-section {
+		height: 642px;
+	}
+
+	.ecosystem-wrapper {
+		left: 0;
+		width: 100%;
+		height: 642px;
+	}
+
+	.ecosystem-track {
+		width: 2240px;
+		height: 642px;
+	}
+
+	.academy-section {
+		height: 905px;
+	}
+
+	.infrastructure-section {
+		height: 2208px;
+	}
+
+	.programs-section {
+		height: 873px;
+	}
+
+	.programs-grid {
+		max-width: 1170px;
+	}
+
+	.directions-section {
+		height: 2460px;
+		min-height: 0;
+	}
+
+	.solutions-section,
+	.solutions-inner {
+		height: 5875px !important;
+		min-height: 5875px !important;
+	}
+
+	.realized-projects-section {
+		height: 989px !important;
+	}
+
+	.post-realized-cta {
+		height: 529px;
+		padding-top: 138px !important;
+		padding-bottom: 138px !important;
+	}
+
+	.experience-section {
+		height: 1329px !important;
+	}
+
+	.contact-section {
+		height: 532px !important;
+		margin-top: 0;
+	}
+
+	.footer-section {
+		height: 385px !important;
+	}
+
 	.ecosystem-title-panel {
 		width: 42vw;
 	}
@@ -488,7 +825,71 @@ main {
 	}
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1600px) {
+	.ecosystem-section {
+		height: 717px;
+	}
+
+	.ecosystem-wrapper {
+		width: 100%;
+		height: 717px;
+	}
+
+	.ecosystem-track {
+		width: 2781px;
+		height: 717px;
+	}
+
+	.academy-section {
+		height: 1001px;
+	}
+
+	.infrastructure-section {
+		height: 2421px;
+	}
+
+	.programs-section {
+		height: 1032px;
+	}
+
+	.programs-grid {
+		max-width: 1436px;
+	}
+
+	.directions-section {
+		height: 2878px;
+		min-height: 0;
+	}
+
+	.solutions-section,
+	.solutions-inner {
+		height: 6838px !important;
+		min-height: 6838px !important;
+	}
+
+	.realized-projects-section {
+		height: 1006px !important;
+	}
+
+	.post-realized-cta {
+		height: 578px;
+		padding-top: 162px !important;
+		padding-bottom: 162px !important;
+	}
+
+	.experience-section {
+		height: 1384px !important;
+	}
+
+	.contact-section {
+		height: 738px !important;
+		margin-top: -56px;
+	}
+
+	.footer-section {
+		height: 385px !important;
+	}
+
 	.ecosystem-title-panel {
 		width: 38vw;
 	}
@@ -822,6 +1223,29 @@ main {
 }
 
 @media (min-width: 900px) and (max-width: 1199px) {
+	.contact-content {
+		max-width: 930px !important;
+	}
+
+	.contact-card {
+		width: 930px !important;
+	}
+
+	.contact-card > div:first-child {
+		left: 70px !important;
+		width: 350px !important;
+	}
+
+	.contact-item-mail {
+		left: 470px !important;
+		width: 250px !important;
+	}
+
+	.contact-item-telegram {
+		left: 760px !important;
+		width: 170px !important;
+	}
+
 	.hero-section {
 		height: 1771px;
 		min-height: 1771px;
