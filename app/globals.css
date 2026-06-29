@@ -11,6 +11,8 @@ html,
 body {
 	background: var(--background);
 	color: var(--foreground);
+	max-width: 100vw;
+	overflow-x: clip;
 }
 
 html {
@@ -24,7 +26,12 @@ html.is-preloading body {
 }
 
 body {
-	overflow-x: hidden;
+	overflow-x: clip;
+}
+
+main {
+	max-width: 100vw;
+	overflow-x: clip;
 }
 
 .font-heading,
@@ -1011,6 +1018,12 @@ body {
 		top: 483px;
 		width: 581.03px;
 		height: 508.64px;
+	}
+}
+
+@media (min-width: 1200px) and (max-width: 1366px) {
+	.hero-header {
+		left: calc((100vw - 967px) / 2);
 	}
 }
 
