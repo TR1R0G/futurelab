@@ -481,7 +481,7 @@ main {
 .directions-section {
 	height: 2231px;
 	min-height: 0;
-	overflow: hidden !important;
+	overflow: visible !important;
 }
 
 .solutions-section,
@@ -631,7 +631,7 @@ main {
 	}
 
 	.directions-section {
-		height: 2278px;
+		height: 3200px;
 		min-height: 0;
 	}
 
@@ -789,7 +789,7 @@ main {
 	}
 
 	.directions-section {
-		height: 2460px;
+		height: 2900px;
 		min-height: 0;
 	}
 
@@ -866,7 +866,7 @@ main {
 	}
 
 	.directions-section {
-		height: 2878px;
+		height: 3200px;
 		min-height: 0;
 	}
 

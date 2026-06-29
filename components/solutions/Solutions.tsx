@@ -275,7 +275,7 @@ export function Solutions({ title, description, cards }: SolutionsProps) {
 	return (
 		<section
 			ref={sectionRef}
-			className='solutions-section relative z-[120] isolate -mt-20 overflow-hidden bg-black px-5 py-24 md:px-8 lg:-mt-[270px] lg:px-0 lg:py-0'
+			className='solutions-section relative z-[120] isolate -mt-20 overflow-hidden bg-black px-5 py-24 md:px-8 lg:mt-[60px] lg:px-0 lg:py-0'
 			style={{ minHeight: `${sectionHeight}px` }}
 		>
 			<div

@@ -140,7 +140,7 @@ export function Directions({
 				sourceSelector='.directions-inline-image'
 			/>
 
-			<div className='directions-post-image relative z-[100] flex min-h-[50svh] flex-col justify-center bg-black pb-28 pt-28 md:pb-32 md:pt-32 lg:pb-36 lg:pt-36'>
+			<div className='directions-post-image relative z-[100] flex min-h-[36svh] flex-col justify-center bg-black pb-20 pt-20 md:pb-24 md:pt-24 lg:pb-28 lg:pt-28'>
 				<CTACard
 					variant='wide'
 					text={ctaText}
@@ -148,7 +148,7 @@ export function Directions({
 				/>
 
 				<div
-					className='mx-auto mt-[140px] h-1 w-[calc(100%_-_40px)] max-w-[1436px] rounded-sm bg-[linear-gradient(90deg,#4B0E5B_0%,#A91E83_29.9%,#FD9A34_65.67%,#F9EB44_100%)] md:mt-[180px] md:w-[calc(100%_-_64px)] lg:mt-[210px]'
+					className='mx-auto mt-[90px] h-1 w-[calc(100%_-_40px)] max-w-[1436px] rounded-sm bg-[linear-gradient(90deg,#4B0E5B_0%,#A91E83_29.9%,#FD9A34_65.67%,#F9EB44_100%)] md:mt-[110px] md:w-[calc(100%_-_64px)] lg:mt-[130px]'
 					aria-hidden='true'
 				/>
 			</div>
