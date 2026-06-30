@@ -35,8 +35,7 @@ main {
 }
 
 .font-heading,
-.hero-title,
-.directions-statement-copy {
+.hero-title {
 	font-family: var(--font-sansation), var(--font-golos-text), sans-serif;
 }
 
@@ -810,11 +809,11 @@ main {
 	}
 
 	.academy-programs-stage {
-		top: clamp(285px, 39svh, 395px);
+		top: clamp(270px, 31svh, 340px);
 	}
 
 	.academy-programs-scale {
-		transform: scale(0.82);
+		transform: scale(0.74);
 	}
 
 	.infrastructure-section {
@@ -895,7 +894,7 @@ main {
 	}
 
 	.academy-programs-stage {
-		top: clamp(360px, 44svh, 470px);
+		top: clamp(390px, 38svh, 430px);
 	}
 
 	.academy-programs-scale {
@@ -954,6 +953,16 @@ main {
 
 	.ecosystem-card {
 		width: 28vw;
+	}
+}
+
+@media (min-width: 1600px) and (max-height: 1000px) {
+	.academy-programs-stage {
+		top: 390px !important;
+	}
+
+	.academy-programs-scale {
+		transform: scale(1) !important;
 	}
 }
 
@@ -1711,7 +1720,7 @@ main {
 	}
 
 	.academy-programs-stage {
-		top: 276px !important;
+		top: 252px !important;
 	}
 
 	.academy-programs-scale {
@@ -1794,7 +1803,7 @@ main {
 	}
 
 	.academy-programs-stage {
-		top: 258px !important;
+		top: 238px !important;
 	}
 
 	.academy-programs-scale {
@@ -1850,7 +1859,7 @@ main {
 
 @media (min-width: 900px) and (max-width: 1199px) and (max-height: 650px) {
 	.academy-programs-stage {
-		top: 232px !important;
+		top: 224px !important;
 	}
 
 	.academy-programs-scale {

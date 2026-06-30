@@ -65,7 +65,7 @@ export function Directions({
 	return (
 		<section
 			ref={sectionRef}
-			className='directions-section relative z-[100] isolate overflow-visible bg-black px-5 pb-28 pt-20 md:px-8 md:pb-36 md:pt-24 lg:pb-44 lg:pt-20'
+			className='directions-section relative z-[80] isolate overflow-visible bg-black px-5 pb-28 pt-20 md:px-8 md:pb-36 md:pt-24 lg:pb-44 lg:pt-20 xl:pt-[380px]'
 		>
 			<div className='directions-board relative mx-auto h-auto max-w-[1436px] overflow-visible md:h-[398px]'>
 				<div
@@ -102,7 +102,7 @@ export function Directions({
 					aria-hidden='true'
 				/>
 
-				<div className='directions-statement-copy relative z-10 text-[32px] font-black leading-[1.48] tracking-[-0.03em] text-white md:text-[44px] lg:text-[52px]'>
+				<div className='directions-statement-copy relative z-10 text-[32px] font-semibold leading-[1.48] tracking-normal text-white md:text-[44px] lg:text-[55px] lg:leading-[78px]'>
 					{statement.linesBeforeImage.map(line => (
 						<p key={line} className='directions-statement-line'>
 							{line}
@@ -111,13 +111,13 @@ export function Directions({
 
 					<p className='directions-statement-line'>
 						{statement.imageLead}
-						<span className='directions-inline-image mx-5 inline-flex translate-y-[0.18em] overflow-hidden rounded-[12px] align-baseline shadow-[0_10px_34px_rgba(0,0,0,0.45)] md:mx-7'>
+						<span className='directions-inline-image mx-5 inline-flex translate-y-[0.18em] overflow-hidden rounded-[8px] align-baseline shadow-[0_10px_34px_rgba(0,0,0,0.45)] md:mx-7'>
 							<FadeInImage
 								src={statement.imageSrc}
 								alt={statement.imageAlt}
 								width={58}
 								height={88}
-								className='h-[58px] w-[38px] object-cover md:h-[78px] md:w-[52px] lg:h-[88px] lg:w-[58px]'
+								className='h-[58px] w-[38px] object-cover md:h-[78px] md:w-[52px] lg:h-[91px] lg:w-[52px]'
 								unoptimized
 							/>
 						</span>

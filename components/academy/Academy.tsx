@@ -14,38 +14,45 @@ interface AcademyProps {
 
 const cardStyles = [
   {
-    color: "#FFD13D",
-    x: "-230px",
+    color: "#FFCC40",
+    x: "-220px",
     y: "18px",
-    rotate: "-17deg",
+    rotate: "-19deg",
+    zIndex: 6,
+  },
+  {
+    color: "#FFD240",
+    x: "-142px",
+    y: "8px",
+    rotate: "12.42deg",
     zIndex: 5,
   },
   {
-    color: "#FFD643",
-    x: "-95px",
-    y: "8px",
-    rotate: "12deg",
+    color: "#FFE240",
+    x: "-29px",
+    y: "26px",
+    rotate: "-0.53deg",
     zIndex: 4,
   },
   {
-    color: "#FFE93A",
-    x: "35px",
-    y: "26px",
-    rotate: "0deg",
+    color: "#FFFF40",
+    x: "39px",
+    y: "13px",
+    rotate: "-11.81deg",
     zIndex: 3,
   },
   {
-    color: "#FCFF19",
-    x: "165px",
-    y: "13px",
-    rotate: "-8deg",
-    zIndex: 2,
+    color: "#FFFF19",
+    x: "127px",
+    y: "8px",
+    rotate: "-8.17deg",
+    zIndex: 1,
   },
   {
-    color: "#DFFF2D",
-    x: "300px",
+    color: "#DCFF40",
+    x: "213px",
     y: "30px",
-    rotate: "22deg",
+    rotate: "24.31deg",
     zIndex: 1,
   },
 ] as const;
@@ -86,12 +93,14 @@ export function Academy({ title, subtitle, cards, programCards }: AcademyProps) 
         );
         const lastCardIndex = cardShells.length - 1;
         const lastCardExitStart = lastCardIndex * 1.16 + 0.54;
+        const cardExitDuration = 0.82;
 
         gsap.set(cardShells, { y: 0, opacity: 1, rotate: 0 });
         if (programsStage) {
           gsap.set(programsStage, {
-            autoAlpha: 0,
-            y: () => window.innerHeight * 0.72,
+            opacity: 1,
+            visibility: "hidden",
+            y: () => window.innerHeight * 0.42,
             willChange: "transform",
           });
         }
@@ -131,22 +140,37 @@ export function Academy({ title, subtitle, cards, programCards }: AcademyProps) 
               y: () => -window.innerHeight * 1.18 - index * 36,
               x: () => focusedX + (index - 2) * -28,
               rotate: () => focusedRotate + ([-8, 7, -5, 6, -7][index] ?? -6),
-              duration: 0.82,
+              duration: cardExitDuration,
             },
             index * 1.16 + 0.54
+          );
+
+          cardsTimeline.set(
+            cardShell,
+            {
+              autoAlpha: 0,
+            },
+            index * 1.16 + 0.54 + cardExitDuration
           );
         });
 
         if (programsStage) {
+          cardsTimeline.set(
+            programsStage,
+            {
+              visibility: "visible",
+            },
+            lastCardExitStart + cardExitDuration + 0.04
+          );
+
           cardsTimeline.to(
             programsStage,
             {
-              autoAlpha: 1,
               y: 0,
-              duration: 1.18,
+              duration: 1.28,
               ease: "power2.out",
             },
-            lastCardExitStart + 0.1
+            lastCardExitStart + cardExitDuration + 0.04
           );
         }
       });
@@ -161,17 +185,17 @@ export function Academy({ title, subtitle, cards, programCards }: AcademyProps) 
   return (
     <section
       ref={sectionRef}
-      className="academy-section relative z-[100] min-h-[560svh] bg-black"
+      className="academy-section relative z-[200] min-h-[560svh] bg-black"
     >
       <div
         ref={pinRef}
-        className="academy-pin sticky top-0 z-[110] box-border flex h-[100svh] flex-col justify-start overflow-visible pb-16 pt-[clamp(56px,10svh,120px)] md:pb-20 lg:pb-24"
+        className="academy-pin sticky top-0 z-[210] box-border flex h-[100svh] flex-col justify-start overflow-visible bg-black pb-16 pt-[clamp(56px,10svh,120px)] md:pb-20 lg:pb-24"
       >
-        <div className="academy-heading relative z-[600] mx-auto w-full max-w-[1436px] px-5 md:px-8">
-          <h2 className="font-heading max-w-[980px] text-[42px] font-bold leading-[1.06] tracking-[-0.02em] text-white md:text-6xl lg:text-[72px]">
+        <div className="academy-heading relative z-[600] mx-auto w-full max-w-[1436px] px-5 md:px-8 xl:px-0">
+          <h2 className="font-heading max-w-[805px] text-[42px] font-bold leading-none tracking-normal text-white md:text-6xl lg:text-[65px]">
             {title}
           </h2>
-          <p className="mt-10 max-w-[1040px] text-xl font-semibold leading-[1.23] text-[#A6A6A6] md:text-2xl lg:mt-20 lg:text-[31px]">
+          <p className="mt-10 max-w-[845px] text-xl font-medium leading-[1.2] text-[#C4C4C4] md:text-2xl lg:mt-[37px] lg:text-[25px]">
             {subtitle}
           </p>
         </div>
@@ -192,13 +216,13 @@ export function Academy({ title, subtitle, cards, programCards }: AcademyProps) 
                 }}
               >
                 <article
-                  className="academy-card flex h-[330px] w-[300px] items-center justify-center rounded-[34px] px-8 text-center shadow-[0_18px_50px_rgba(0,0,0,0.18)]"
+                  className="academy-card flex h-[280px] w-[280px] items-center justify-center rounded-[35px] px-[29px] text-center shadow-[0_18px_50px_rgba(0,0,0,0.18)]"
                   style={{
                     backgroundColor: style.color,
                     transform: `translate(calc(-50% + ${style.x}), calc(-50% + ${style.y})) rotate(${style.rotate})`,
                   }}
                 >
-                  <h3 className="max-w-[245px] text-[27px] font-black leading-[1.1] tracking-[-0.03em] text-black md:text-[30px]">
+                  <h3 className="max-w-[221px] text-[25px] font-semibold leading-normal tracking-normal text-black">
                     {card.title}
                   </h3>
                 </article>
@@ -207,7 +231,7 @@ export function Academy({ title, subtitle, cards, programCards }: AcademyProps) 
           })}
         </div>
 
-        <div className="academy-programs-stage pointer-events-auto absolute left-1/2 z-[650] w-full max-w-[1436px] -translate-x-1/2 px-5 md:px-8">
+        <div className="academy-programs-stage pointer-events-auto absolute left-1/2 z-[800] w-full max-w-[1436px] -translate-x-1/2 px-5 md:px-8 xl:px-0">
           <div className="academy-programs-scale">
             <div className="programs-grid mx-auto grid max-w-[1436px] gap-8 md:grid-cols-3 md:gap-10">
               {programCards.map((card) => (

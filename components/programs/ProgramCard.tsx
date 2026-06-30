@@ -14,7 +14,7 @@ export function ProgramCard({ card }: ProgramCardProps) {
       />
 
       <div className="relative z-10 bg-[#1D1D1D] md:rounded-[35px] xl:absolute xl:left-0 xl:top-0 xl:h-[692px] xl:w-full">
-        <div className="relative aspect-square overflow-hidden rounded-t-[34px] bg-[#8F08C5] md:rounded-t-[35px] xl:h-[450px] xl:w-full">
+        <div className="relative aspect-square overflow-hidden rounded-[34px] bg-[#8F08C5] md:rounded-[35px] xl:h-[450px] xl:w-full">
           <Image
             src={card.image}
             alt={card.imageAlt}
