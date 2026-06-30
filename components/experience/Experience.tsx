@@ -11,23 +11,24 @@ interface ExperienceProps {
   buttonText: string;
 }
 
-const mosaicRows = [
-  { offset: true, images: ["/images/block6/optimized/image1.webp", "/images/block6/optimized/image2.webp"] },
-  {
-    offset: false,
-    images: ["/images/block6/optimized/image3.webp", "/images/optimized/office.webp", "/images/block6/optimized/image1.webp"],
-  },
-  { offset: true, images: ["/images/block6/optimized/image2.webp", "/images/block6/optimized/image3.webp"] },
-  {
-    offset: false,
-    images: ["/images/optimized/office.webp", "/images/block6/optimized/image1.webp", "/images/block6/optimized/image2.webp"],
-  },
-  { offset: true, images: ["/images/block6/optimized/image3.webp", "/images/block6/optimized/image3.webp"] },
-  {
-    offset: false,
-    images: ["/images/block6/optimized/image1.webp", "/images/block6/optimized/image2.webp", "/images/optimized/office.webp"],
-  },
-  { offset: true, images: ["/images/block6/optimized/image2.webp", "/images/block6/optimized/image1.webp"] },
+const mosaicTiles = [
+  { src: "/images/block7/row1/01.png", left: 125, top: 0, width: 268 },
+  { src: "/images/block7/row1/02.png", left: 414, top: 0, width: 222 },
+  { src: "/images/block7/row2/01.png", left: 0, top: 181, width: 268 },
+  { src: "/images/block7/row2/02.png", left: 288, top: 181, width: 268 },
+  { src: "/images/block7/row2/03.png", left: 576, top: 181, width: 60 },
+  { src: "/images/block7/row3/01.png", left: 125, top: 362, width: 268 },
+  { src: "/images/block7/row3/02.png", left: 413, top: 362, width: 223 },
+  { src: "/images/block7/row4/01.png", left: 0, top: 543, width: 268 },
+  { src: "/images/block7/row4/02.png", left: 288, top: 543, width: 268 },
+  { src: "/images/block7/row4/03.png", left: 576, top: 543, width: 60 },
+  { src: "/images/block7/row5/01.png", left: 125, top: 725, width: 268 },
+  { src: "/images/block7/row5/02.png", left: 413, top: 725, width: 223 },
+  { src: "/images/block7/row6/01.png", left: 0, top: 906, width: 268 },
+  { src: "/images/block7/row6/02.png", left: 288, top: 906, width: 268 },
+  { src: "/images/block7/row6/03.png", left: 576, top: 906, width: 60 },
+  { src: "/images/block7/row7/01.png", left: 125, top: 1087, width: 268 },
+  { src: "/images/block7/row7/02.png", left: 414, top: 1087, width: 222 },
 ];
 
 export function Experience({
@@ -77,12 +78,16 @@ export function Experience({
 
 function StatCard({ value, label }: { value: string; label: string }) {
   return (
-    <article className="experience-stat-card relative h-[281px] w-full overflow-hidden rounded-[35px] bg-[linear-gradient(46.02deg,#4B0E5B_-1.84%,#A91E83_28.61%,#FD9A34_65.03%,#F9EB44_100%)] md:w-auto lg:w-[452px]">
+    <article className="experience-stat-card relative h-[281px] w-full overflow-hidden rounded-[35px] bg-white md:w-auto lg:w-[452px]">
+      <span
+        className="absolute left-0 top-0 h-[281px] w-[83px] bg-[linear-gradient(46.02deg,#4B0E5B_-1.84%,#A91E83_28.61%,#FD9A34_65.03%,#F9EB44_100%)]"
+        aria-hidden="true"
+      />
       <div className="experience-stat-card-inner absolute left-[7px] top-[7px] h-[267px] w-[calc(100%-14px)] rounded-[28px] bg-white lg:w-[438px]">
-        <h3 className="experience-stat-card-title absolute left-8 top-[23px] w-[calc(100%-64px)] text-[25px] font-semibold leading-[1.7] text-black lg:left-[33px] lg:w-[372px]">
+        <h3 className="experience-stat-card-title absolute left-8 top-[30px] w-[calc(100%-64px)] text-[25px] font-semibold leading-[1.7] text-black lg:left-[33px] lg:w-[372px]">
           {value}
         </h3>
-        <p className="experience-stat-card-label absolute left-8 top-[86px] w-[calc(100%-64px)] whitespace-pre-line text-[21px] font-medium leading-[1.7] text-[#4C4C4C] lg:left-[33px] lg:top-[86px] lg:w-[372px] lg:text-[23px]">
+        <p className="experience-stat-card-label absolute left-8 top-[93px] w-[calc(100%-64px)] whitespace-pre-line text-[21px] font-medium leading-[1.7] text-[#4C4C4C] lg:left-[33px] lg:top-[93px] lg:w-[372px] lg:text-[23px]">
           {label}
         </p>
       </div>
@@ -93,40 +98,31 @@ function StatCard({ value, label }: { value: string; label: string }) {
 function MosaicBackground() {
   return (
     <div
-      className="pointer-events-none absolute left-[calc(50%+324px)] top-[67px] z-0 hidden h-[1250px] w-[844px] opacity-45 lg:block"
+      className="pointer-events-none absolute left-[calc(50%+324px)] top-[67px] z-0 hidden h-[1250px] w-[844px] lg:block"
       aria-hidden="true"
     >
-      <div className="absolute inset-0 z-20 bg-black/35" />
       <div className="absolute inset-y-0 left-0 z-30 w-[260px] bg-gradient-to-r from-black via-black/85 to-transparent" />
       <div className="absolute inset-y-0 right-0 z-30 w-[120px] bg-gradient-to-l from-black via-black/35 to-transparent" />
       <div className="absolute inset-x-0 top-0 z-30 h-[120px] bg-gradient-to-b from-black to-transparent" />
       <div className="absolute inset-x-0 bottom-0 z-30 h-[160px] bg-gradient-to-t from-black to-transparent" />
 
-      <div className="flex flex-col gap-[18px]">
-        {mosaicRows.map((row, rowIndex) => (
-          <div
-            key={rowIndex}
-            className={`flex gap-5 ${row.offset ? "ml-[125px]" : ""}`}
-          >
-            {row.images.map((src, imageIndex) => (
-              <div
-                key={`${rowIndex}-${imageIndex}-${src}`}
-                className="relative h-[163px] w-[268px] shrink-0 overflow-hidden rounded-[15px]"
-              >
-                <FadeInImage
-                  src={src}
-                  alt=""
-                  fill
-                  sizes="268px"
-                  className="object-cover"
-                  aria-hidden="true"
-                  unoptimized
-                />
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
+      {mosaicTiles.map(image => (
+        <div
+          key={image.src}
+          className="absolute h-[163px] overflow-hidden rounded-[15px]"
+          style={{ left: image.left, top: image.top, width: image.width }}
+        >
+          <FadeInImage
+            src={image.src}
+            alt=""
+            fill
+            sizes={`${image.width}px`}
+            className="object-cover"
+            aria-hidden="true"
+            unoptimized
+          />
+        </div>
+      ))}
     </div>
   );
 }
