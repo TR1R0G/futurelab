@@ -502,6 +502,29 @@ main {
 	height: 791px !important;
 }
 
+.realized-project-card {
+	border-radius: calc(35px * var(--realized-card-scale, 1));
+}
+
+.realized-project-card::before {
+	content: '';
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 0;
+	height: calc(41px * var(--realized-card-scale, 1));
+	border-radius: 0 0 calc(35px * var(--realized-card-scale, 1)) calc(35px * var(--realized-card-scale, 1));
+	background: linear-gradient(
+		65.17deg,
+		#4b0e5b -2.47%,
+		#a91e83 18.71%,
+		#fd9a34 44.05%,
+		#f9eb44 68.37%
+	);
+	pointer-events: none;
+}
+
 .post-realized-cta {
 	height: 310px;
 	padding-top: 55px !important;

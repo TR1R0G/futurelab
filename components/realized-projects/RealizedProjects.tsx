@@ -122,8 +122,8 @@ export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
 
 function ProjectCard({ project }: { project: RealizedProject }) {
   return (
-    <article className="relative h-[874px] w-[698px] shrink-0 origin-top-left overflow-hidden rounded-[35px] bg-[linear-gradient(65.17deg,#4B0E5B_-2.47%,#A91E83_18.71%,#FD9A34_44.05%,#F9EB44_68.37%)] lg:h-[var(--realized-card-height,874px)] lg:w-[var(--realized-card-width,698px)]">
-      <div className="relative h-[868px] w-[698px] origin-top-left rounded-[35px] bg-[#1D1D1D] lg:scale-[var(--realized-card-scale,1)]">
+    <article className="realized-project-card relative h-[874px] w-[698px] shrink-0 origin-top-left overflow-hidden bg-[#1D1D1D] lg:h-[var(--realized-card-height,874px)] lg:w-[var(--realized-card-width,698px)]">
+      <div className="relative z-10 h-[868px] w-[698px] origin-top-left rounded-[35px] bg-[#1D1D1D] lg:scale-[var(--realized-card-scale,1)]">
         <h3 className="absolute left-10 top-10 w-[618px] text-[40px] font-semibold leading-[48px] text-[#DE5CFF]">
           {project.title}
         </h3>
