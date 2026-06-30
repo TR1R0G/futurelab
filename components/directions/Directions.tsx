@@ -16,12 +16,34 @@ interface DirectionsProps {
 }
 
 const chipLayout = [
-	'left-[592px] top-[236px] w-[174px] rotate-[-27.71deg]',
-	'left-[755px] top-[301px] w-[249px] rotate-0',
-	'left-[836px] top-[166px] w-[450px] rotate-[-7.33deg]',
-	'left-[1004px] top-[209px] w-[425px] rotate-[-15.1deg]',
-	'left-[1127px] top-[60px] w-[277px] rotate-[14.17deg]',
-]
+	{
+		outer: 'left-[592px] top-[236px] h-[145.529px] w-[187.99px]',
+		chip: 'w-[174px] rotate-[-27.71deg]',
+	},
+	{
+		outer: 'left-[755px] top-[301px] h-[73px] w-[249px]',
+		chip: 'w-[249px]',
+	},
+	{
+		outer: 'left-[836px] top-[166px] h-[129.824px] w-[455.636px]',
+		chip: 'w-[450px] rotate-[-7.33deg]',
+	},
+	{
+		outer: 'left-[1004px] top-[209px] h-[181.184px] w-[429.344px]',
+		chip: 'w-[425px] rotate-[-15.1deg]',
+	},
+	{
+		outer: 'left-[1127px] top-[60px] h-[138.6px] w-[286.442px]',
+		chip: 'w-[277px] rotate-[14.17deg]',
+	},
+] as const
+
+const gradientByLabel: Partial<Record<string, string>> = {
+	'AR / VR':
+		'linear-gradient(90.31142938099543deg, rgb(75, 14, 91) 0%, rgb(169, 30, 131) 23.033%, rgb(253, 154, 52) 58.393%, rgb(249, 235, 68) 100%)',
+	'Web-технологии':
+		'linear-gradient(90.8273010027987deg, rgb(75, 14, 91) 0%, rgb(169, 30, 131) 21.739%, rgb(253, 154, 52) 57.973%, rgb(249, 235, 68) 100%)',
+}
 
 export function Directions({
 	title,
@@ -69,7 +91,11 @@ export function Directions({
 		>
 			<div className='directions-board relative mx-auto h-auto max-w-[1436px] overflow-visible md:h-[398px]'>
 				<div
-					className='pointer-events-none absolute left-0 top-[7px] hidden h-[391px] w-full rounded-[35px] bg-[linear-gradient(65.17deg,#4B0E5B_-2.47%,#A91E83_18.71%,#FD9A34_44.05%,#F9EB44_68.37%)] md:block'
+					className='pointer-events-none absolute left-0 top-[7px] hidden h-[391px] w-full rounded-[35px] md:block'
+					style={{
+						backgroundImage:
+							'linear-gradient(30.47874796640454deg, rgb(75, 14, 91) 2.4712%, rgb(169, 30, 131) 18.71%, rgb(253, 154, 52) 44.047%, rgb(249, 235, 68) 68.37%)',
+					}}
 					aria-hidden='true'
 				/>
 				<div className='relative min-h-[420px] overflow-visible rounded-[35px] bg-[#1D1D1D] p-8 md:h-[391px] md:min-h-0 md:p-0'>
@@ -87,9 +113,12 @@ export function Directions({
 						{chips.map((chip, index) => (
 							<div
 								key={chip.label}
-								className={`directions-chip-slot directions-chip-slot-${index} absolute h-[73px] ${chipLayout[index]}`}
+								className={`directions-chip-slot directions-chip-slot-${index} absolute flex items-center justify-center ${chipLayout[index].outer}`}
 							>
-								<DirectionChip chip={chip} />
+								<DirectionChip
+									chip={chip}
+									className={chipLayout[index].chip}
+								/>
 							</div>
 						))}
 					</div>
@@ -156,14 +185,21 @@ export function Directions({
 	)
 }
 
-function DirectionChip({ chip }: { chip: DirectionsContent['chips'][number] }) {
+function DirectionChip({
+	chip,
+	className = 'w-full',
+}: {
+	chip: DirectionsContent['chips'][number]
+	className?: string
+}) {
 	const baseClass =
-		'directions-chip flex h-[58px] w-full items-center justify-center rounded-full px-7 text-center text-[20px] font-medium leading-[1.7] md:h-[73px] md:rounded-[36.5px] md:text-[23px]'
+		'directions-chip flex h-[58px] items-center justify-center rounded-full px-7 text-center text-[20px] font-medium leading-[1.7] md:h-[73px] md:rounded-[36.5px] md:text-[23px]'
 
 	if (chip.variant === 'gradient') {
 		return (
 			<div
-				className={`${baseClass} bg-[linear-gradient(104deg,#A91E83_0%,#FD9A34_55%,#F9EB44_100%)] text-black`}
+				className={`${baseClass} ${className} text-black`}
+				style={{ backgroundImage: gradientByLabel[chip.label] }}
 			>
 				{chip.label}
 			</div>
@@ -173,7 +209,7 @@ function DirectionChip({ chip }: { chip: DirectionsContent['chips'][number] }) {
 	if (chip.variant === 'outline') {
 		return (
 			<div
-				className={`${baseClass} border-2 border-white/80 bg-transparent text-white`}
+				className={`${baseClass} ${className} border-2 border-[#EBEBEB] bg-[#1D1D1D] text-[#EBEBEB]`}
 			>
 				{chip.label}
 			</div>
@@ -181,7 +217,7 @@ function DirectionChip({ chip }: { chip: DirectionsContent['chips'][number] }) {
 	}
 
 	return (
-		<div className={`${baseClass} bg-[#F2F3F7] text-[#4C4C4C]`}>
+		<div className={`${baseClass} ${className} bg-[#F2F3F7] text-[#4C4C4C]`}>
 			{chip.label}
 		</div>
 	)

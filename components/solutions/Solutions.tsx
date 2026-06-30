@@ -4,7 +4,7 @@ import { gsap, registerGsapPlugins } from '@/lib/gsap'
 import type { SolutionsContent } from '@/lib/mdx'
 import { FadeInImage } from '@/components/media/FadeInImage'
 import Image from 'next/image'
-import type { CSSProperties } from 'react'
+import type { CSSProperties, RefObject } from 'react'
 import { useEffect, useRef } from 'react'
 
 interface SolutionsProps {
@@ -31,6 +31,7 @@ type Rect = {
 export function Solutions({ title, description, cards }: SolutionsProps) {
 	const sectionRef = useRef<HTMLElement>(null)
 	const mediaRefs = useRef<Array<HTMLDivElement | null>>([])
+	const cursorRef = useRef<HTMLDivElement | null>(null)
 
 	useEffect(() => {
 		registerGsapPlugins()
@@ -269,6 +270,69 @@ export function Solutions({ title, description, cards }: SolutionsProps) {
 		}
 	}, [cards.length])
 
+	useEffect(() => {
+		const section = sectionRef.current
+		const cursor = cursorRef.current
+		if (!section || !cursor) return
+
+		const mediaQuery = window.matchMedia('(min-width: 361px) and (pointer: fine)')
+		let frame = 0
+		let cursorX = 0
+		let cursorY = 0
+
+		const setCursor = () => {
+			frame = 0
+			cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`
+		}
+
+		const requestCursorUpdate = () => {
+			if (frame) return
+			frame = window.requestAnimationFrame(setCursor)
+		}
+
+		const showCursor = () => {
+			if (!mediaQuery.matches) return
+			cursor.dataset.visible = 'true'
+		}
+
+		const hideCursor = () => {
+			cursor.dataset.visible = 'false'
+		}
+
+		const moveCursor = (event: PointerEvent) => {
+			if (!mediaQuery.matches) return
+			cursorX = event.clientX
+			cursorY = event.clientY
+			requestCursorUpdate()
+		}
+
+		const syncMediaState = () => {
+			if (!mediaQuery.matches) hideCursor()
+		}
+
+		const cards = Array.from(
+			section.querySelectorAll<HTMLElement>('.solutions-card-outline'),
+		)
+
+		cards.forEach(card => {
+			card.addEventListener('pointerenter', showCursor)
+			card.addEventListener('pointermove', moveCursor)
+			card.addEventListener('pointerleave', hideCursor)
+		})
+		mediaQuery.addEventListener('change', syncMediaState)
+		syncMediaState()
+
+		return () => {
+			if (frame) window.cancelAnimationFrame(frame)
+			cards.forEach(card => {
+				card.removeEventListener('pointerenter', showCursor)
+				card.removeEventListener('pointermove', moveCursor)
+				card.removeEventListener('pointerleave', hideCursor)
+			})
+			mediaQuery.removeEventListener('change', syncMediaState)
+		}
+	}, [])
+
 	const sectionHeight =
 		SOLUTION_CARD_TOP + cards.length * SOLUTION_BLOCK_HEIGHT + SOLUTION_TRAILING_SPACE
 
@@ -317,6 +381,11 @@ export function Solutions({ title, description, cards }: SolutionsProps) {
 						</div>
 					)
 				})}
+
+				<LearnMoreCursor
+					cursorRef={cursorRef}
+					label={cards[0]?.cta ?? 'Узнать больше'}
+				/>
 			</div>
 		</section>
 	)
@@ -392,6 +461,53 @@ function LearnMoreButton({ label }: { label: string }) {
 				aria-hidden='true'
 			/>
 		</button>
+	)
+}
+
+function LearnMoreCursor({
+	cursorRef,
+	label,
+}: {
+	cursorRef: RefObject<HTMLDivElement | null>
+	label: string
+}) {
+	return (
+		<div
+			ref={cursorRef}
+			className='learn-more-cursor pointer-events-none fixed left-0 top-0 z-[500] hidden h-[252.42px] w-[252.42px] text-white'
+			data-visible='false'
+			aria-hidden='true'
+		>
+			<span className='absolute left-[22.21px] top-[22.21px] h-[207px] w-[207px] rounded-full bg-[#0051FF]' />
+			<svg
+				className='learn-more-title-ring absolute left-[18.21px] top-[18.21px] h-[216px] w-[216px] overflow-visible'
+				viewBox='0 0 216 216'
+			>
+				<defs>
+					<path
+						id='learn-more-cursor-circle'
+						d='M108 108 m -75 0 a 75 75 0 1 1 150 0 a 75 75 0 1 1 -150 0'
+					/>
+				</defs>
+				<text className='fill-white text-[24px] font-semibold tracking-[0.035em]'>
+					<textPath
+						href='#learn-more-cursor-circle'
+						startOffset='0%'
+						textLength='465'
+						lengthAdjust='spacing'
+					>
+						{label} • {label} • {label} •
+					</textPath>
+				</text>
+			</svg>
+			<Image
+				src='/images/block6/arrow.svg'
+				alt=''
+				width={28}
+				height={28}
+				className='absolute left-[112.21px] top-[112.2px] h-[28px] w-[28px]'
+			/>
+		</div>
 	)
 }
 

@@ -829,7 +829,7 @@ main {
 	}
 
 	.directions-section {
-		height: 2900px;
+		height: 3600px;
 		min-height: 0;
 	}
 
@@ -914,7 +914,7 @@ main {
 	}
 
 	.directions-section {
-		height: 3200px;
+		height: 3900px;
 		min-height: 0;
 	}
 
@@ -2065,6 +2065,36 @@ main {
 	transform: rotate(-48deg);
 	transform-origin: center;
 	animation: learn-more-title-spin 10s linear infinite;
+}
+
+.learn-more-cursor {
+	opacity: 0;
+	scale: 0.82;
+	transition:
+		opacity 180ms ease,
+		scale 180ms ease;
+	will-change: transform, opacity, scale;
+}
+
+.learn-more-cursor[data-visible='true'] {
+	opacity: 1;
+	scale: 1;
+}
+
+@media (min-width: 361px) {
+	.learn-more-button {
+		display: none !important;
+	}
+}
+
+@media (min-width: 361px) and (pointer: fine) {
+	.solutions-card-outline {
+		cursor: none;
+	}
+
+	.learn-more-cursor {
+		display: block;
+	}
 }
 
 @keyframes learn-more-title-spin {
