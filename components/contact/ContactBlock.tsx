@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 interface ContactBlockProps {
   title: string;
   cardTitle: string;
@@ -83,9 +85,20 @@ function ContactItem({
 }) {
   return (
     <div className={`contact-item ${className ?? ""}`}>
-      <div className="flex h-[55px] w-[55px] items-center justify-center rounded-[13px] bg-[#0051FF]">
-        {icon === "mail" ? <MailIcon /> : <TelegramIcon />}
-      </div>
+      {icon === "mail" ? (
+        <div className="flex h-[55px] w-[55px] items-center justify-center rounded-[13px] bg-[#0051FF]">
+          <MailIcon />
+        </div>
+      ) : (
+        <Image
+          src="/images/telegram.svg"
+          alt=""
+          width={55}
+          height={55}
+          className="h-[55px] w-[55px]"
+          aria-hidden="true"
+        />
+      )}
       <p className="mt-[26px] text-[21px] font-medium leading-[26px] text-[#4C4C4C] md:text-[22px]">
         {title}
       </p>
@@ -112,30 +125,6 @@ function MailIcon() {
       <path
         d="M3.8 4.1L13.2 12.2C14 12.9 15.1 12.9 15.9 12.2L25.3 4.1"
         fill="#0051FF"
-      />
-    </svg>
-  );
-}
-
-function TelegramIcon() {
-  return (
-    <svg
-      width="31"
-      height="28"
-      viewBox="0 0 31 28"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M29.3 1.6C29.7 1.4 30.2 1.8 30.1 2.3L25.8 26.2C25.7 26.9 24.8 27.2 24.3 26.7L16.6 19.3L12.8 23C12.4 23.4 11.7 23.2 11.6 22.6L10.2 16.8L1.5 13.9C0.8 13.7 0.8 12.7 1.5 12.4L29.3 1.6Z"
-        fill="white"
-      />
-      <path
-        d="M11 16.3L24 7.9L14.1 18.5"
-        stroke="#0051FF"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
       />
     </svg>
   );
