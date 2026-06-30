@@ -69,38 +69,12 @@ export function ImageGallery() {
         );
         if (!firstSet) return;
 
-        const items = gsap.utils.toArray<HTMLElement>(
-          ".infrastructure-gallery-item",
-          gallery
-        );
-        const moveItemsAlongCurve = () => {
-          const galleryRect = gallery.getBoundingClientRect();
-          const galleryCenter = galleryRect.left + galleryRect.width / 2;
-          const maxDistance = galleryRect.width * 0.52;
-
-          items.forEach((item) => {
-            const itemRect = item.getBoundingClientRect();
-            const itemCenter = itemRect.left + itemRect.width / 2;
-            const distanceProgress = Math.min(
-              1,
-              Math.abs(itemCenter - galleryCenter) / maxDistance
-            );
-            const curveProgress = distanceProgress * distanceProgress;
-            const y = -26 * curveProgress;
-
-            gsap.set(item, { y });
-          });
-        };
-
-        moveItemsAlongCurve();
-
         const tween = gsap.to(track, {
           x: () => -firstSet.offsetWidth,
           duration: 28,
           ease: "none",
           repeat: -1,
           invalidateOnRefresh: true,
-          onUpdate: moveItemsAlongCurve,
         });
 
         const slowDown = () => tween.timeScale(0.28);
@@ -116,7 +90,6 @@ export function ImageGallery() {
           gallery.removeEventListener("focusin", slowDown);
           gallery.removeEventListener("focusout", speedUp);
           tween.kill();
-          gsap.set(items, { clearProps: "transform" });
         };
       });
     }, gallery);
@@ -188,14 +161,32 @@ export function ImageGallery() {
         className="pointer-events-none absolute inset-y-0 right-0 z-10 w-[242px] bg-[linear-gradient(90deg,rgba(0,0,0,0)_0%,#000_100%)]"
         aria-hidden="true"
       />
-      <div
-        className="pointer-events-none absolute inset-x-0 top-0 z-20 h-[26px] bg-black"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-[26px] bg-black"
-        aria-hidden="true"
-      />
+      <GalleryCurveOverlay position="top" />
+      <GalleryCurveOverlay position="bottom" />
     </div>
+  );
+}
+
+function GalleryCurveOverlay({ position }: { position: "top" | "bottom" }) {
+  const isTop = position === "top";
+
+  return (
+    <svg
+      className={`pointer-events-none absolute inset-x-0 z-20 h-[48px] w-full ${
+        isTop ? "top-[72px]" : "bottom-0"
+      }`}
+      viewBox="0 0 1920 48"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+    >
+      <path
+        d={
+          isTop
+            ? "M0 0H1920C1440 22 480 22 0 0Z"
+            : "M0 48C480 26 1440 26 1920 48H0Z"
+        }
+        fill="black"
+      />
+    </svg>
   );
 }
