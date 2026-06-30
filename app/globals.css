@@ -194,17 +194,17 @@ main {
 
 .hero-description {
 	left: 50px;
-	top: 424px;
+	top: 476px;
 	width: 270px;
 	color: rgba(255, 255, 255, 0.78);
 	font-size: 18px;
-	font-weight: 750;
+	font-weight: 500;
 	line-height: 1.48;
 }
 
 .hero-action-panel {
 	left: 55px;
-	top: 592px;
+	top: 644px;
 	width: 250px;
 }
 
@@ -1142,7 +1142,7 @@ main {
 
 	.hero-description {
 		left: 30px;
-		top: 373px;
+		top: 425px;
 		width: 300px;
 		font-size: 16px;
 		line-height: 150%;
@@ -1150,7 +1150,7 @@ main {
 
 	.hero-action-panel {
 		left: 60px;
-		top: 505px;
+		top: 553px;
 		width: 240px;
 	}
 

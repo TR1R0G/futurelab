@@ -20,7 +20,7 @@ export function ContactBlock({
       <ContactGlow />
 
       <div className="contact-content relative z-10 mx-auto max-w-[1438px]">
-        <h2 className="font-heading text-[42px] font-bold leading-[1.08] tracking-[-0.03em] text-black md:text-[50px] lg:absolute lg:left-0 lg:top-[206px] lg:w-[698px] lg:text-[55px] lg:leading-[62px]">
+        <h2 className="font-heading text-[42px] font-bold leading-[1.08] tracking-normal text-black md:text-[50px] lg:absolute lg:left-0 lg:top-[206px] lg:w-[698px] lg:text-[55px] lg:leading-[62px]">
           {title}
         </h2>
 

@@ -98,7 +98,7 @@ export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
       className="realized-projects-section overflow-hidden bg-black pb-28 pt-20 md:pb-36 md:pt-28 lg:h-[100svh] lg:pb-0 lg:pt-[var(--realized-top-padding,120px)]"
     >
       <div className="realized-title-frame mx-auto max-w-[1436px]">
-        <h2 className="font-heading text-[42px] font-bold leading-tight tracking-[-0.03em] text-white md:text-[55px] md:leading-[62px]">
+        <h2 className="font-heading text-[42px] font-bold leading-tight tracking-normal text-white md:text-[55px] md:leading-[62px]">
           {title}
         </h2>
       </div>

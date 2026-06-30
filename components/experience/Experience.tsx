@@ -43,7 +43,7 @@ export function Experience({
       <MosaicBackground />
 
       <div className="experience-content relative z-10 mx-auto max-w-[1438px]">
-        <h2 className="font-heading max-w-[944px] text-[42px] font-bold leading-[1.08] tracking-[-0.03em] text-white md:text-[50px] lg:absolute lg:left-0 lg:top-[150px] lg:text-[55px] lg:leading-[62px]">
+        <h2 className="font-heading max-w-[944px] text-[36px] font-bold leading-[1.08] tracking-normal text-white min-[380px]:text-[42px] md:text-[50px] lg:absolute lg:left-0 lg:top-[150px] lg:text-[55px] lg:leading-[62px]">
           {title}
         </h2>
 

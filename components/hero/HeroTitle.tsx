@@ -53,7 +53,7 @@ export function HeroTitle({ title }: HeroTitleProps) {
       className="hero-title font-bold text-white"
     >
       {titleLines.map((line, index) => (
-        <span key={line} className="block whitespace-nowrap">
+        <span key={line} className="block whitespace-normal sm:whitespace-nowrap">
           {line}
           {index < titleLines.length - 1 ? " " : ""}
         </span>
