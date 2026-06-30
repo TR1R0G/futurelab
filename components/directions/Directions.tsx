@@ -125,13 +125,52 @@ export function Directions({
 				</div>
 			</div>
 
-			<div className='directions-statement sticky top-[12svh] mx-auto mt-32 max-w-[1420px] text-center md:mt-44 lg:mt-52'>
+			<div className='directions-statement sticky top-[12svh] mx-auto mt-32 max-w-[1436px] text-center md:mt-44 lg:mt-52'>
 				<div
-					className='pointer-events-none absolute left-1/2 top-1/2 h-[620px] w-[960px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_32%_48%,rgba(254,158,52,0.58),transparent_34%),radial-gradient(circle_at_53%_43%,rgba(177,58,202,0.58),transparent_36%),radial-gradient(circle_at_66%_35%,rgba(42,143,255,0.42),transparent_36%)] blur-[90px]'
+					className='directions-statement-light pointer-events-none absolute -top-[228px] left-1/2 hidden h-[755.68px] w-[872.67px] lg:block'
+					style={{
+						filter: 'blur(175px)',
+						transform: 'translateX(calc(-50% - 70.67px)) rotate(-12.33deg)',
+					}}
 					aria-hidden='true'
-				/>
+				>
+					<span
+						className='absolute h-[700.62px] w-[231.6px] bg-[#3FA1FC]'
+						style={{
+							left: '225.23px',
+							top: '183.61px',
+							transform: 'rotate(55.69deg)',
+						}}
+					/>
+					<span
+						className='absolute h-[674.38px] w-[231.6px] bg-[#FCCC01]'
+						style={{
+							left: '107.48px',
+							top: '449.7px',
+							transform: 'matrix(-0.17, 0.99, 0.99, 0.17, 0, 0)',
+						}}
+					/>
+					<span
+						className='absolute h-[578.17px] w-[293.53px] bg-[#DA7FCE]'
+						style={{
+							left: '107.48px',
+							top: '117.86px',
+							transform: 'matrix(-0.7, 0.71, 0.71, 0.7, 0, 0)',
+						}}
+					/>
+				</div>
 
 				<div className='directions-statement-copy relative z-10 text-[32px] font-semibold leading-[1.48] tracking-normal text-white md:text-[44px] lg:text-[55px] lg:leading-[78px]'>
+					<span className='directions-inline-image pointer-events-none absolute left-1/2 top-[155px] z-20 hidden h-[91px] w-[52px] translate-x-[90px] overflow-hidden rounded-[8px] lg:block'>
+						<FadeInImage
+							src={statement.imageSrc}
+							alt={statement.imageAlt}
+							fill
+							sizes='52px'
+							className='object-cover'
+							unoptimized
+						/>
+					</span>
 					{statement.linesBeforeImage.map(line => (
 						<p key={line} className='directions-statement-line'>
 							{line}
@@ -140,7 +179,11 @@ export function Directions({
 
 					<p className='directions-statement-line'>
 						{statement.imageLead}
-						<span className='directions-inline-image mx-5 inline-flex translate-y-[0.18em] overflow-hidden rounded-[8px] align-baseline shadow-[0_10px_34px_rgba(0,0,0,0.45)] md:mx-7'>
+						<span
+							className='directions-inline-image-spacer mx-5 inline-block h-0 w-[38px] md:mx-7 md:w-[52px]'
+							aria-hidden='true'
+						/>
+						<span className='directions-inline-image mx-5 inline-flex translate-y-[0.18em] overflow-hidden rounded-[8px] align-baseline shadow-[0_10px_34px_rgba(0,0,0,0.45)] md:mx-7 lg:hidden'>
 							<FadeInImage
 								src={statement.imageSrc}
 								alt={statement.imageAlt}

@@ -36,10 +36,19 @@ export function ExpandedImageScreen({
     const fullSizeAt = 0.82;
     const clamp = (value: number) => Math.min(1, Math.max(0, value));
 
+    const getSourceElements = () =>
+      sourceSelector
+        ? Array.from(document.querySelectorAll<HTMLElement>(sourceSelector))
+        : [];
+
+    const getVisibleSourceElement = () =>
+      getSourceElements().find((source) => {
+        const rect = source.getBoundingClientRect();
+        return rect.width > 0 && rect.height > 0;
+      }) ?? null;
+
     const readSourceRect = () => {
-      const source = sourceSelector
-        ? document.querySelector<HTMLElement>(sourceSelector)
-        : null;
+      const source = getVisibleSourceElement();
       const rect = source?.getBoundingClientRect();
 
       if (rect && rect.width > 0 && rect.height > 0) {
@@ -100,16 +109,12 @@ export function ExpandedImageScreen({
         const movingText = movingTextSelector
           ? document.querySelector<HTMLElement>(movingTextSelector)
           : null;
-        const sourceImage = sourceSelector
-          ? document.querySelector<HTMLElement>(sourceSelector)
-          : null;
-
         let frameId = 0;
         let startRect = readSourceRect();
         let hasStartRect = false;
 
         const resetStartRect = () => {
-          gsap.set(sourceImage, { opacity: 1 });
+          gsap.set(getSourceElements(), { opacity: 1 });
           gsap.set(frame, { autoAlpha: 0 });
           startRect = readSourceRect();
           hasStartRect = true;
@@ -141,7 +146,7 @@ export function ExpandedImageScreen({
           const easedProgress = positionEase(imageProgress);
           const rect = mixRect(startRect, target, easedProgress);
 
-          gsap.set(sourceImage, { opacity: 0 });
+          gsap.set(getSourceElements(), { opacity: 0 });
           gsap.set(frame, {
             ...rect,
             autoAlpha: 1,
