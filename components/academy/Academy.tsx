@@ -1,13 +1,15 @@
 "use client";
 
-import type { AcademyContent } from "@/lib/mdx";
+import type { AcademyContent, ProgramsContent } from "@/lib/mdx";
 import { gsap, registerGsapPlugins } from "@/lib/gsap";
 import { useEffect, useRef } from "react";
+import { ProgramCard } from "@/components/programs/ProgramCard";
 
 interface AcademyProps {
   title: string;
   subtitle: string;
   cards: AcademyContent["cards"];
+  programCards: ProgramsContent["cards"];
 }
 
 const cardStyles = [
@@ -48,7 +50,7 @@ const cardStyles = [
   },
 ] as const;
 
-export function Academy({ title, subtitle, cards }: AcademyProps) {
+export function Academy({ title, subtitle, cards, programCards }: AcademyProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
 
@@ -57,9 +59,6 @@ export function Academy({ title, subtitle, cards }: AcademyProps) {
 
     const section = sectionRef.current;
     const pin = pinRef.current;
-    const programsSection = document.querySelector<HTMLElement>(
-      ".programs-section"
-    );
     if (!section || !pin) return;
 
     const media = gsap.matchMedia();
@@ -82,13 +81,17 @@ export function Academy({ title, subtitle, cards }: AcademyProps) {
         const cardShells = gsap.utils.toArray<HTMLElement>(
           ".academy-card-shell"
         );
+        const programsStage = section.querySelector<HTMLElement>(
+          ".academy-programs-stage"
+        );
         const lastCardIndex = cardShells.length - 1;
         const lastCardExitStart = lastCardIndex * 1.16 + 0.54;
 
         gsap.set(cardShells, { y: 0, opacity: 1, rotate: 0 });
-        if (programsSection) {
-          gsap.set(programsSection, {
-            y: () => window.innerHeight * 0.6,
+        if (programsStage) {
+          gsap.set(programsStage, {
+            autoAlpha: 0,
+            y: () => window.innerHeight * 0.72,
             willChange: "transform",
           });
         }
@@ -134,14 +137,16 @@ export function Academy({ title, subtitle, cards }: AcademyProps) {
           );
         });
 
-        if (programsSection) {
+        if (programsStage) {
           cardsTimeline.to(
-            programsSection,
+            programsStage,
             {
+              autoAlpha: 1,
               y: 0,
-              duration: 1.82,
+              duration: 1.18,
+              ease: "power2.out",
             },
-            lastCardExitStart - 1.1
+            lastCardExitStart + 0.1
           );
         }
       });
@@ -156,13 +161,13 @@ export function Academy({ title, subtitle, cards }: AcademyProps) {
   return (
     <section
       ref={sectionRef}
-      className="academy-section relative min-h-[560svh] bg-black"
+      className="academy-section relative z-[100] min-h-[560svh] bg-black"
     >
       <div
         ref={pinRef}
-        className="academy-pin sticky top-0 z-40 flex min-h-[100svh] flex-col justify-center overflow-visible py-16 md:py-20 lg:py-24"
+        className="academy-pin sticky top-0 z-[110] box-border flex h-[100svh] flex-col justify-start overflow-visible pb-16 pt-[clamp(56px,10svh,120px)] md:pb-20 lg:pb-24"
       >
-        <div className="academy-heading relative z-[500] mx-auto w-full max-w-[1436px] px-5 md:px-8">
+        <div className="academy-heading relative z-[600] mx-auto w-full max-w-[1436px] px-5 md:px-8">
           <h2 className="font-heading max-w-[980px] text-[42px] font-bold leading-[1.06] tracking-[-0.02em] text-white md:text-6xl lg:text-[72px]">
             {title}
           </h2>
@@ -172,7 +177,7 @@ export function Academy({ title, subtitle, cards }: AcademyProps) {
         </div>
 
         <div
-          className="academy-card-stage relative mx-auto mt-8 h-[440px] w-full max-w-[980px] scale-[0.52] sm:scale-75 md:mt-16 md:h-[520px] md:scale-90 lg:mt-24 lg:scale-100"
+          className="academy-card-stage relative z-[700] mx-auto mt-8 h-[440px] w-full max-w-[980px] scale-[0.52] sm:scale-75 md:mt-16 md:h-[520px] md:scale-90 lg:mt-24 lg:scale-100"
           aria-label="Преимущества академии и акселерации"
         >
           {cards.map((card, index) => {
@@ -200,6 +205,16 @@ export function Academy({ title, subtitle, cards }: AcademyProps) {
               </div>
             );
           })}
+        </div>
+
+        <div className="academy-programs-stage pointer-events-auto absolute left-1/2 z-[650] w-full max-w-[1436px] -translate-x-1/2 px-5 md:px-8">
+          <div className="academy-programs-scale">
+            <div className="programs-grid mx-auto grid max-w-[1436px] gap-8 md:grid-cols-3 md:gap-10">
+              {programCards.map((card) => (
+                <ProgramCard key={card.title} card={card} />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>

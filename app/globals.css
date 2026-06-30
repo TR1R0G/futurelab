@@ -466,6 +466,15 @@ main {
 	height: 751px;
 }
 
+.academy-programs-stage {
+	top: clamp(300px, 42svh, 420px);
+}
+
+.academy-programs-scale {
+	transform: scale(0.78);
+	transform-origin: top center;
+}
+
 .infrastructure-section {
 	height: 2280px;
 }
@@ -537,6 +546,14 @@ main {
 
 	.academy-section {
 		height: 687px;
+	}
+
+	.academy-programs-stage {
+		top: clamp(260px, 40svh, 330px);
+	}
+
+	.academy-programs-scale {
+		transform: scale(0.68);
 	}
 
 	.infrastructure-section {
@@ -616,6 +633,14 @@ main {
 
 	.academy-section {
 		height: 841px;
+	}
+
+	.academy-programs-stage {
+		top: clamp(280px, 41svh, 360px);
+	}
+
+	.academy-programs-scale {
+		transform: scale(0.72);
 	}
 
 	.infrastructure-section {
@@ -707,6 +732,14 @@ main {
 		height: 687px;
 	}
 
+	.academy-programs-stage {
+		top: clamp(260px, 40svh, 330px);
+	}
+
+	.academy-programs-scale {
+		transform: scale(0.68);
+	}
+
 	.infrastructure-section {
 		height: 1888px;
 	}
@@ -774,6 +807,14 @@ main {
 
 	.academy-section {
 		height: 905px;
+	}
+
+	.academy-programs-stage {
+		top: clamp(285px, 39svh, 395px);
+	}
+
+	.academy-programs-scale {
+		transform: scale(0.82);
 	}
 
 	.infrastructure-section {
@@ -851,6 +892,14 @@ main {
 
 	.academy-section {
 		height: 1001px;
+	}
+
+	.academy-programs-stage {
+		top: clamp(360px, 44svh, 470px);
+	}
+
+	.academy-programs-scale {
+		transform: scale(1);
 	}
 
 	.infrastructure-section {
@@ -1661,6 +1710,14 @@ main {
 		transform-origin: top center !important;
 	}
 
+	.academy-programs-stage {
+		top: 276px !important;
+	}
+
+	.academy-programs-scale {
+		transform: scale(0.58) !important;
+	}
+
 	.program-card {
 		height: 792px !important;
 	}
@@ -1686,7 +1743,7 @@ main {
 	}
 
 	.programs-section {
-		margin-top: -45svh !important;
+		margin-top: 0 !important;
 		height: 980px !important;
 	}
 
@@ -1736,6 +1793,14 @@ main {
 		transform-origin: top center !important;
 	}
 
+	.academy-programs-stage {
+		top: 258px !important;
+	}
+
+	.academy-programs-scale {
+		transform: scale(0.54) !important;
+	}
+
 	.hero-copy {
 		top: 250px;
 	}
@@ -1766,7 +1831,7 @@ main {
 	}
 
 	.programs-section {
-		margin-top: -45svh !important;
+		margin-top: 0 !important;
 		height: 900px !important;
 	}
 
@@ -1784,6 +1849,14 @@ main {
 }
 
 @media (min-width: 900px) and (max-width: 1199px) and (max-height: 650px) {
+	.academy-programs-stage {
+		top: 232px !important;
+	}
+
+	.academy-programs-scale {
+		transform: scale(0.42) !important;
+	}
+
 	.hero-copy {
 		top: 220px;
 	}

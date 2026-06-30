@@ -2,7 +2,6 @@ import { Hero } from "@/components/hero/Hero";
 import { Ecosystem } from "@/components/ecosystem/Ecosystem";
 import { Infrastructure } from "@/components/infrastructure/Infrastructure";
 import { Academy } from "@/components/academy/Academy";
-import { Programs } from "@/components/programs/Programs";
 import { Directions } from "@/components/directions/Directions";
 import { Solutions } from "@/components/solutions/Solutions";
 import { RealizedProjects } from "@/components/realized-projects/RealizedProjects";
@@ -81,8 +80,8 @@ export default async function Home({ searchParams }: HomeProps) {
         title={academyContent.title}
         subtitle={academyContent.subtitle}
         cards={academyContent.cards}
+        programCards={programsContent.cards}
       />
-      <Programs cards={programsContent.cards} />
       <Directions
         title={directionsContent.title}
         chips={directionsContent.chips}
