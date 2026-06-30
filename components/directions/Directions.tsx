@@ -209,6 +209,7 @@ export function Directions({
 				alt={statement.imageAlt}
 				className='-mt-[58svh]'
 				movingTextSelector='.directions-statement-copy'
+				fadingElementSelector='.directions-statement-light'
 				sourceSelector='.directions-inline-image'
 			/>
 

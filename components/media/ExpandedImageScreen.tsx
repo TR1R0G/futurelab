@@ -10,6 +10,7 @@ interface ExpandedImageScreenProps {
   alt: string;
   className?: string;
   movingTextSelector?: string;
+  fadingElementSelector?: string;
   sourceSelector?: string;
 }
 
@@ -18,6 +19,7 @@ export function ExpandedImageScreen({
   alt,
   className = "",
   movingTextSelector,
+  fadingElementSelector,
   sourceSelector,
 }: ExpandedImageScreenProps) {
   const sectionRef = useRef<HTMLElement>(null);
@@ -109,6 +111,9 @@ export function ExpandedImageScreen({
         const movingText = movingTextSelector
           ? document.querySelector<HTMLElement>(movingTextSelector)
           : null;
+        const fadingElements = fadingElementSelector
+          ? Array.from(document.querySelectorAll<HTMLElement>(fadingElementSelector))
+          : [];
         let frameId = 0;
         let startRect = readSourceRect();
         let hasStartRect = false;
@@ -133,6 +138,7 @@ export function ExpandedImageScreen({
             if (movingText) {
               gsap.set(movingText, { y: 0, opacity: 1 });
             }
+            gsap.set(fadingElements, { opacity: 1 });
             gsap.set(gradient, { opacity: 0, scale: 0.72 });
             return;
           }
@@ -152,8 +158,9 @@ export function ExpandedImageScreen({
             autoAlpha: 1,
             borderRadius: mix(12, 35, easedProgress),
           });
+          const gradientFadeOut = clamp((progress - 0.82) / 0.18);
           gsap.set(gradient, {
-            opacity: easedProgress,
+            opacity: mix(easedProgress, 0, gradientFadeOut),
             scale: mix(0.72, 1, easedProgress),
           });
 
@@ -169,6 +176,9 @@ export function ExpandedImageScreen({
             gsap.set(movingText, {
               y: textY,
               opacity: mix(1, 0.16, positionEase(secondPhase)),
+            });
+            gsap.set(fadingElements, {
+              opacity: mix(1, 0, positionEase(secondPhase)),
             });
           }
         };
@@ -208,14 +218,14 @@ export function ExpandedImageScreen({
     return () => {
       ctx.revert();
     };
-  }, [movingTextSelector, sourceSelector]);
+  }, [fadingElementSelector, movingTextSelector, sourceSelector]);
 
   return (
     <section
       ref={sectionRef}
       className={`expanded-image-section relative z-[90] ml-[calc(50%_-_50vw)] h-[220svh] w-screen bg-transparent ${className}`}
     >
-      <div className="sticky top-0 h-[100svh] overflow-hidden bg-transparent">
+      <div className="expanded-image-stage sticky top-0 h-[100svh] overflow-hidden bg-transparent">
         <div ref={gradientRef} className="video-gradient-field absolute inset-0">
           <GradientOrb variant="video" />
         </div>
