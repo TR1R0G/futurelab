@@ -68,116 +68,111 @@ export function Academy({ title, subtitle, cards, programCards }: AcademyProps) 
     const pin = pinRef.current;
     if (!section || !pin) return;
 
-    const media = gsap.matchMedia();
-
     const ctx = gsap.context(() => {
-      media.add("(prefers-reduced-motion: no-preference)", () => {
-        gsap.from(".academy-heading > *", {
-          y: 46,
-          opacity: 0,
-          duration: 0.85,
-          stagger: 0.14,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: section,
-            start: "top 78%",
-            once: true,
-          },
-        });
-
-        const cardShells = gsap.utils.toArray<HTMLElement>(
-          ".academy-card-shell"
-        );
-        const programsStage = section.querySelector<HTMLElement>(
-          ".academy-programs-stage"
-        );
-        const lastCardIndex = cardShells.length - 1;
-        const lastCardExitStart = lastCardIndex * 1.16 + 0.54;
-        const cardExitDuration = 0.82;
-
-        gsap.set(cardShells, { y: 0, opacity: 1, rotate: 0 });
-        if (programsStage) {
-          gsap.set(programsStage, {
-            opacity: 1,
-            visibility: "hidden",
-            y: () => window.innerHeight * 0.42,
-            willChange: "transform",
-          });
-        }
-
-        const cardsTimeline = gsap.timeline({
-          defaults: { ease: "power2.in" },
-          scrollTrigger: {
-            trigger: section,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: 1,
-            invalidateOnRefresh: true,
-          },
-        });
-
-        cardShells.forEach((cardShell, index) => {
-          const style = cardStyles[index % cardStyles.length];
-          const focusedX = -parseFloat(style.x);
-          const focusedRotate = -parseFloat(style.rotate);
-
-          cardsTimeline.set(cardShell, { zIndex: 100 + index }, index * 1.16);
-
-          cardsTimeline.to(
-            cardShell,
-            {
-              x: focusedX,
-              rotate: focusedRotate,
-              duration: 0.32,
-              ease: "power2.out",
-            },
-            index * 1.16
-          );
-
-          cardsTimeline.to(
-            cardShell,
-            {
-              y: () => -window.innerHeight * 1.18 - index * 36,
-              x: () => focusedX + (index - 2) * -28,
-              rotate: () => focusedRotate + ([-8, 7, -5, 6, -7][index] ?? -6),
-              duration: cardExitDuration,
-            },
-            index * 1.16 + 0.54
-          );
-
-          cardsTimeline.set(
-            cardShell,
-            {
-              autoAlpha: 0,
-            },
-            index * 1.16 + 0.54 + cardExitDuration
-          );
-        });
-
-        if (programsStage) {
-          cardsTimeline.set(
-            programsStage,
-            {
-              visibility: "visible",
-            },
-            lastCardExitStart + cardExitDuration + 0.04
-          );
-
-          cardsTimeline.to(
-            programsStage,
-            {
-              y: 0,
-              duration: 1.28,
-              ease: "power2.out",
-            },
-            lastCardExitStart + cardExitDuration + 0.04
-          );
-        }
+      gsap.from(".academy-heading > *", {
+        y: 46,
+        opacity: 0,
+        duration: 0.85,
+        stagger: 0.14,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: section,
+          start: "top 78%",
+          once: true,
+        },
       });
+
+      const cardShells = gsap.utils.toArray<HTMLElement>(
+        ".academy-card-shell"
+      );
+      const programsStage = section.querySelector<HTMLElement>(
+        ".academy-programs-stage"
+      );
+      const lastCardIndex = cardShells.length - 1;
+      const lastCardExitStart = lastCardIndex * 1.16 + 0.54;
+      const cardExitDuration = 0.82;
+
+      gsap.set(cardShells, { y: 0, opacity: 1, rotate: 0 });
+      if (programsStage) {
+        gsap.set(programsStage, {
+          opacity: 1,
+          visibility: "hidden",
+          y: () => window.innerHeight * 0.42,
+          willChange: "transform",
+        });
+      }
+
+      const cardsTimeline = gsap.timeline({
+        defaults: { ease: "power2.in" },
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      cardShells.forEach((cardShell, index) => {
+        const style = cardStyles[index % cardStyles.length];
+        const focusedX = -parseFloat(style.x);
+        const focusedRotate = -parseFloat(style.rotate);
+
+        cardsTimeline.set(cardShell, { zIndex: 100 + index }, index * 1.16);
+
+        cardsTimeline.to(
+          cardShell,
+          {
+            x: focusedX,
+            rotate: focusedRotate,
+            duration: 0.32,
+            ease: "power2.out",
+          },
+          index * 1.16
+        );
+
+        cardsTimeline.to(
+          cardShell,
+          {
+            y: () => -window.innerHeight * 1.18 - index * 36,
+            x: () => focusedX + (index - 2) * -28,
+            rotate: () => focusedRotate + ([-8, 7, -5, 6, -7][index] ?? -6),
+            duration: cardExitDuration,
+          },
+          index * 1.16 + 0.54
+        );
+
+        cardsTimeline.set(
+          cardShell,
+          {
+            autoAlpha: 0,
+          },
+          index * 1.16 + 0.54 + cardExitDuration
+        );
+      });
+
+      if (programsStage) {
+        cardsTimeline.set(
+          programsStage,
+          {
+            visibility: "visible",
+          },
+          lastCardExitStart + cardExitDuration + 0.04
+        );
+
+        cardsTimeline.to(
+          programsStage,
+          {
+            y: 0,
+            duration: 1.28,
+            ease: "power2.out",
+          },
+          lastCardExitStart + cardExitDuration + 0.04
+        );
+      }
     }, section);
 
     return () => {
-      media.revert();
       ctx.revert();
     };
   }, []);
@@ -231,7 +226,10 @@ export function Academy({ title, subtitle, cards, programCards }: AcademyProps) 
           })}
         </div>
 
-        <div className="academy-programs-stage pointer-events-auto absolute left-1/2 z-[800] w-full max-w-[1436px] -translate-x-1/2 px-5 md:px-8 xl:px-0">
+        <div
+          className="academy-programs-stage pointer-events-auto absolute left-1/2 z-[800] w-full max-w-[1436px] -translate-x-1/2 px-5 md:px-8 xl:px-0"
+          style={{ visibility: "hidden" }}
+        >
           <div className="academy-programs-scale">
             <div className="programs-grid mx-auto grid max-w-[1436px] gap-8 md:grid-cols-3 md:gap-10">
               {programCards.map((card) => (

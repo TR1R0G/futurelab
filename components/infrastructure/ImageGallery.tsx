@@ -61,41 +61,37 @@ export function ImageGallery() {
     const track = trackRef.current;
     if (!gallery || !track) return;
 
-    const media = gsap.matchMedia();
     const ctx = gsap.context(() => {
-      media.add("(prefers-reduced-motion: no-preference)", () => {
-        const firstSet = track.querySelector<HTMLElement>(
-          "[data-gallery-set='original']"
-        );
-        if (!firstSet) return;
+      const firstSet = track.querySelector<HTMLElement>(
+        "[data-gallery-set='original']"
+      );
+      if (!firstSet) return;
 
-        const tween = gsap.to(track, {
-          x: () => -firstSet.offsetWidth,
-          duration: 28,
-          ease: "none",
-          repeat: -1,
-          invalidateOnRefresh: true,
-        });
-
-        const slowDown = () => tween.timeScale(0.28);
-        const speedUp = () => tween.timeScale(1);
-        gallery.addEventListener("pointerenter", slowDown);
-        gallery.addEventListener("pointerleave", speedUp);
-        gallery.addEventListener("focusin", slowDown);
-        gallery.addEventListener("focusout", speedUp);
-
-        return () => {
-          gallery.removeEventListener("pointerenter", slowDown);
-          gallery.removeEventListener("pointerleave", speedUp);
-          gallery.removeEventListener("focusin", slowDown);
-          gallery.removeEventListener("focusout", speedUp);
-          tween.kill();
-        };
+      const tween = gsap.to(track, {
+        x: () => -firstSet.offsetWidth,
+        duration: 28,
+        ease: "none",
+        repeat: -1,
+        invalidateOnRefresh: true,
       });
+
+      const slowDown = () => tween.timeScale(0.28);
+      const speedUp = () => tween.timeScale(1);
+      gallery.addEventListener("pointerenter", slowDown);
+      gallery.addEventListener("pointerleave", speedUp);
+      gallery.addEventListener("focusin", slowDown);
+      gallery.addEventListener("focusout", speedUp);
+
+      return () => {
+        gallery.removeEventListener("pointerenter", slowDown);
+        gallery.removeEventListener("pointerleave", speedUp);
+        gallery.removeEventListener("focusin", slowDown);
+        gallery.removeEventListener("focusout", speedUp);
+        tween.kill();
+      };
     }, gallery);
 
     return () => {
-      media.revert();
       ctx.revert();
     };
   }, []);

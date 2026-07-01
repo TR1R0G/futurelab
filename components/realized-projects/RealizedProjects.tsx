@@ -25,65 +25,80 @@ export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
 
     const media = gsap.matchMedia();
     const ctx = gsap.context(() => {
-      media.add(
-        "(min-width: 1024px) and (prefers-reduced-motion: no-preference)",
-        () => {
-          const setViewportFit = () => {
-            const titleHeight = 62;
-            const topPadding = Math.min(120, Math.max(40, window.innerHeight * 0.09));
-            const cardGap = Math.min(70, Math.max(32, window.innerHeight * 0.055));
-            const bottomPadding = Math.min(48, Math.max(24, window.innerHeight * 0.035));
-            const availableCardHeight =
-              window.innerHeight - topPadding - titleHeight - cardGap - bottomPadding;
-            const scale = Math.min(1, Math.max(0.55, availableCardHeight / 874));
+      const setViewportFit = () => {
+        const title = section.querySelector<HTMLElement>(".realized-title-frame h2");
+        const titleHeight = title?.getBoundingClientRect().height ?? 62;
+        const topPadding = Math.min(120, Math.max(56, window.innerHeight * 0.09));
+        const cardGap = Math.min(70, Math.max(36, window.innerHeight * 0.055));
+        const bottomPadding = Math.min(96, Math.max(44, window.innerHeight * 0.05));
+        const horizontalPadding = window.innerWidth >= 768 ? 64 : 40;
+        const availableCardHeight =
+          window.innerHeight - topPadding - titleHeight - cardGap - bottomPadding;
+        const widthScale = (window.innerWidth - horizontalPadding) / 698;
+        const heightScale = availableCardHeight / 874;
+        const scale = Math.min(
+          1,
+          Math.max(0.48, Math.min(widthScale, heightScale))
+        );
+        const cardHeight = 874 * scale;
+        const cardWidth = 698 * scale;
+        const sectionHeight = topPadding + titleHeight + cardGap + cardHeight + bottomPadding;
 
-            section.style.setProperty("--realized-top-padding", `${topPadding}px`);
-            section.style.setProperty("--realized-card-gap", `${cardGap}px`);
-            section.style.setProperty("--realized-card-scale", String(scale));
-            section.style.setProperty("--realized-card-width", `${698 * scale}px`);
-            section.style.setProperty("--realized-card-height", `${874 * scale}px`);
-          };
+        section.style.setProperty("--realized-top-padding", `${topPadding}px`);
+        section.style.setProperty("--realized-card-gap", `${cardGap}px`);
+        section.style.setProperty("--realized-bottom-padding", `${bottomPadding}px`);
+        section.style.setProperty("--realized-card-scale", String(scale));
+        section.style.setProperty("--realized-card-width", `${cardWidth}px`);
+        section.style.setProperty("--realized-card-height", `${cardHeight}px`);
+        section.style.setProperty(
+          "--realized-section-height",
+          `${Math.max(window.innerHeight, sectionHeight)}px`
+        );
+      };
 
-          const getScrollDistance = () => {
-            const wrapperRect = wrapper.getBoundingClientRect();
-            const trackRect = track.getBoundingClientRect();
-            const sideSpace = trackRect.left - wrapperRect.left;
+      const getScrollDistance = () => {
+        const wrapperRect = wrapper.getBoundingClientRect();
+        const trackRect = track.getBoundingClientRect();
+        const sideSpace = trackRect.left - wrapperRect.left;
 
-            return Math.max(
-              0,
-              track.scrollWidth - wrapper.clientWidth + sideSpace * 2
-            );
-          };
+        return Math.max(
+          0,
+          track.scrollWidth - wrapper.clientWidth + sideSpace * 2
+        );
+      };
 
-          setViewportFit();
+      setViewportFit();
 
-          const tween = gsap.to(track, {
-            x: () => -getScrollDistance(),
-            ease: "none",
-            scrollTrigger: {
-              trigger: section,
-              start: "top top",
-              end: () => `+=${getScrollDistance()}`,
-              pin: true,
-              scrub: 1,
-              anticipatePin: 1,
-              invalidateOnRefresh: true,
-            },
-          });
+      const handleResize = () => {
+        setViewportFit();
+        ScrollTrigger.refresh();
+      };
 
-          const handleResize = () => {
-            setViewportFit();
-            ScrollTrigger.refresh();
-          };
+      window.addEventListener("resize", handleResize);
 
-          window.addEventListener("resize", handleResize);
+      media.add("(min-width: 1024px)", () => {
+        const tween = gsap.to(track, {
+          x: () => -getScrollDistance(),
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: () => `+=${getScrollDistance()}`,
+            pin: true,
+            scrub: 1,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+          },
+        });
 
-          return () => {
-            window.removeEventListener("resize", handleResize);
-            tween.kill();
-          };
-        }
-      );
+        return () => {
+          tween.kill();
+        };
+      });
+
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
     }, section);
 
     return () => {
@@ -95,7 +110,7 @@ export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
   return (
     <section
       ref={sectionRef}
-      className="realized-projects-section overflow-hidden bg-black pb-28 pt-20 md:pb-36 md:pt-28 lg:h-[100svh] lg:pb-0 lg:pt-[var(--realized-top-padding,120px)]"
+      className="realized-projects-section overflow-hidden bg-black pb-[var(--realized-bottom-padding,112px)] pt-[var(--realized-top-padding,80px)]"
     >
       <div className="realized-title-frame mx-auto max-w-[1436px]">
         <h2 className="font-heading text-[42px] font-bold leading-tight tracking-normal text-white md:text-[55px] md:leading-[62px]">
@@ -122,8 +137,8 @@ export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
 
 function ProjectCard({ project }: { project: RealizedProject }) {
   return (
-    <article className="realized-project-card relative h-[874px] w-[698px] shrink-0 origin-top-left overflow-hidden bg-[#1D1D1D] lg:h-[var(--realized-card-height,874px)] lg:w-[var(--realized-card-width,698px)]">
-      <div className="relative z-10 h-[868px] w-[698px] origin-top-left rounded-[35px] bg-[#1D1D1D] lg:scale-[var(--realized-card-scale,1)]">
+    <article className="realized-project-card relative h-[var(--realized-card-height,874px)] w-[var(--realized-card-width,698px)] shrink-0 origin-top-left overflow-hidden bg-[#1D1D1D]">
+      <div className="relative z-10 h-[868px] w-[698px] origin-top-left scale-[var(--realized-card-scale,1)] rounded-[35px] bg-[#1D1D1D]">
         <h3 className="absolute left-10 top-10 w-[618px] text-[40px] font-semibold leading-[48px] text-[#DE5CFF]">
           {project.title}
         </h3>

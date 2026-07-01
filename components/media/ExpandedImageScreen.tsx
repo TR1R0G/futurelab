@@ -105,114 +105,108 @@ export function ExpandedImageScreen({
     };
 
     const ctx = gsap.context(() => {
-      const media = gsap.matchMedia();
+      const movingText = movingTextSelector
+        ? document.querySelector<HTMLElement>(movingTextSelector)
+        : null;
+      const fadingElements = fadingElementSelector
+        ? Array.from(document.querySelectorAll<HTMLElement>(fadingElementSelector))
+        : [];
+      let frameId = 0;
+      let startRect = readSourceRect();
+      let hasStartRect = false;
 
-      media.add("(prefers-reduced-motion: no-preference)", () => {
-        const movingText = movingTextSelector
-          ? document.querySelector<HTMLElement>(movingTextSelector)
-          : null;
-        const fadingElements = fadingElementSelector
-          ? Array.from(document.querySelectorAll<HTMLElement>(fadingElementSelector))
-          : [];
-        let frameId = 0;
-        let startRect = readSourceRect();
-        let hasStartRect = false;
+      const resetStartRect = () => {
+        gsap.set(getSourceElements(), { opacity: 1 });
+        gsap.set(frame, { autoAlpha: 0 });
+        startRect = readSourceRect();
+        hasStartRect = true;
+      };
 
-        const resetStartRect = () => {
-          gsap.set(getSourceElements(), { opacity: 1 });
-          gsap.set(frame, { autoAlpha: 0 });
+      const update = () => {
+        frameId = 0;
+
+        const maxScroll = Math.max(1, section.offsetHeight - window.innerHeight);
+        const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+        const progress = clamp((window.scrollY - sectionTop) / maxScroll);
+        const target = readTargetRect();
+
+        if (progress <= 0.001) {
+          resetStartRect();
+          if (movingText) {
+            gsap.set(movingText, { y: 0, opacity: 1 });
+          }
+          gsap.set(fadingElements, { opacity: 1 });
+          gsap.set(gradient, { opacity: 0, scale: 0.72 });
+          return;
+        }
+
+        if (!hasStartRect) {
           startRect = readSourceRect();
           hasStartRect = true;
-        };
+        }
 
-        const update = () => {
-          frameId = 0;
+        const imageProgress = clamp(progress / fullSizeAt);
+        const easedProgress = positionEase(imageProgress);
+        const rect = mixRect(startRect, target, easedProgress);
 
-          const maxScroll = Math.max(1, section.offsetHeight - window.innerHeight);
-          const sectionTop = section.getBoundingClientRect().top + window.scrollY;
-          const progress = clamp((window.scrollY - sectionTop) / maxScroll);
-          const target = readTargetRect();
-
-          if (progress <= 0.001) {
-            resetStartRect();
-            if (movingText) {
-              gsap.set(movingText, { y: 0, opacity: 1 });
-            }
-            gsap.set(fadingElements, { opacity: 1 });
-            gsap.set(gradient, { opacity: 0, scale: 0.72 });
-            return;
-          }
-
-          if (!hasStartRect) {
-            startRect = readSourceRect();
-            hasStartRect = true;
-          }
-
-          const imageProgress = clamp(progress / fullSizeAt);
-          const easedProgress = positionEase(imageProgress);
-          const rect = mixRect(startRect, target, easedProgress);
-
-          gsap.set(getSourceElements(), { opacity: 0 });
-          gsap.set(frame, {
-            ...rect,
-            autoAlpha: 1,
-            borderRadius: mix(12, 35, easedProgress),
-          });
-          const gradientFadeOut = clamp((progress - 0.82) / 0.18);
-          gsap.set(gradient, {
-            opacity: mix(easedProgress, 0, gradientFadeOut),
-            scale: mix(0.72, 1, easedProgress),
-          });
-
-          if (movingText) {
-            const firstPhase = clamp(progress / 0.42);
-            const secondPhase = clamp((progress - 0.42) / 0.5);
-            const textY = mix(
-              mix(0, -window.innerHeight * 0.08, positionEase(firstPhase)),
-              -window.innerHeight * 0.78,
-              positionEase(secondPhase)
-            );
-
-            gsap.set(movingText, {
-              y: textY,
-              opacity: mix(1, 0.16, positionEase(secondPhase)),
-            });
-            gsap.set(fadingElements, {
-              opacity: mix(1, 0, positionEase(secondPhase)),
-            });
-          }
-        };
-
-        const requestUpdate = () => {
-          if (frameId) return;
-          frameId = window.requestAnimationFrame(update);
-        };
-
-        const handleResize = () => {
-          hasStartRect = false;
-          resetStartRect();
-          requestUpdate();
-        };
-
+        gsap.set(getSourceElements(), { opacity: 0 });
         gsap.set(frame, {
-          force3D: true,
-          willChange: "left, top, width, height, border-radius, opacity",
+          ...rect,
+          autoAlpha: 1,
+          borderRadius: mix(12, 35, easedProgress),
+        });
+        const gradientFadeOut = clamp((progress - 0.82) / 0.18);
+        gsap.set(gradient, {
+          opacity: mix(easedProgress, 0, gradientFadeOut),
+          scale: mix(0.72, 1, easedProgress),
         });
 
+        if (movingText) {
+          const firstPhase = clamp(progress / 0.42);
+          const secondPhase = clamp((progress - 0.42) / 0.5);
+          const textY = mix(
+            mix(0, -window.innerHeight * 0.08, positionEase(firstPhase)),
+            -window.innerHeight * 0.78,
+            positionEase(secondPhase)
+          );
+
+          gsap.set(movingText, {
+            y: textY,
+            opacity: mix(1, 0.16, positionEase(secondPhase)),
+          });
+          gsap.set(fadingElements, {
+            opacity: mix(1, 0, positionEase(secondPhase)),
+          });
+        }
+      };
+
+      const requestUpdate = () => {
+        if (frameId) return;
+        frameId = window.requestAnimationFrame(update);
+      };
+
+      const handleResize = () => {
+        hasStartRect = false;
         resetStartRect();
-        update();
+        requestUpdate();
+      };
 
-        window.addEventListener("scroll", requestUpdate, { passive: true });
-        window.addEventListener("resize", handleResize);
-
-        return () => {
-          if (frameId) window.cancelAnimationFrame(frameId);
-          window.removeEventListener("scroll", requestUpdate);
-          window.removeEventListener("resize", handleResize);
-        };
+      gsap.set(frame, {
+        force3D: true,
+        willChange: "left, top, width, height, border-radius, opacity",
       });
 
-      return () => media.revert();
+      resetStartRect();
+      update();
+
+      window.addEventListener("scroll", requestUpdate, { passive: true });
+      window.addEventListener("resize", handleResize);
+
+      return () => {
+        if (frameId) window.cancelAnimationFrame(frameId);
+        window.removeEventListener("scroll", requestUpdate);
+        window.removeEventListener("resize", handleResize);
+      };
     }, section);
 
     return () => {
