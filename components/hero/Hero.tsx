@@ -86,6 +86,7 @@ export function Hero({
         const gradientTop = Math.round(
           (vh - visualGroupHeight * visualScale) / 2 + 22 * visualScale
         );
+        const gradientScale = (visualGroupHeight * visualScale) / 508.64;
 
         if (width >= 1600) {
           const frameOffset = (width - 1920) / 2;
@@ -99,7 +100,7 @@ export function Hero({
             image: { top: imageTop, width: imageWidth, height: imageHeight },
             description: { left: desktopDescriptionLeft, top: Math.round(centerY - 120), width: 402 },
             actions: { right: desktopActionsRight, top: Math.round(centerY - 115), width: 329 },
-            gradientScale: 1,
+            gradientScale,
             gradientTop,
           };
         }
@@ -125,7 +126,7 @@ export function Hero({
               top: Math.round(centerY - 113),
               width: 270,
             },
-            gradientScale: 1.256,
+            gradientScale,
             gradientTop: Math.round((vh - 631.91) / 2 - 60),
           };
         }
@@ -142,7 +143,7 @@ export function Hero({
             },
             description: { left: 35, top: Math.round(centerY - 225), width: 210 },
             actions: { right: 35, top: Math.round(centerY - 177), width: 210 },
-            gradientScale: 1.256,
+            gradientScale,
             gradientTop: Math.round((vh - 631.91) / 2 - 60),
           };
         }
@@ -159,7 +160,7 @@ export function Hero({
             },
             description: { left: 155, top: Math.round(centerY - 225), width: 210 },
             actions: { right: Math.max(0, width - 845), top: Math.round(centerY - 177), width: 210 },
-            gradientScale: 1.256,
+            gradientScale,
             gradientTop: Math.round((vh - 631.91) / 2 - 60),
           };
         }
@@ -167,7 +168,7 @@ export function Hero({
         return {
           image: { top: 64, width: 300, height: 525 },
           hideText: true,
-          gradientScale: 1.512,
+          gradientScale,
           gradientTop: 120,
         };
       };
