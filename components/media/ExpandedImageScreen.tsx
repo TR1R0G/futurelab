@@ -8,6 +8,7 @@ import { gsap, registerGsapPlugins } from "@/lib/gsap";
 interface ExpandedImageScreenProps {
   src: string;
   alt: string;
+  videoSrc?: string;
   className?: string;
   movingTextSelector?: string;
   fadingElementSelector?: string;
@@ -17,6 +18,7 @@ interface ExpandedImageScreenProps {
 export function ExpandedImageScreen({
   src,
   alt,
+  videoSrc,
   className = "",
   movingTextSelector,
   fadingElementSelector,
@@ -228,14 +230,31 @@ export function ExpandedImageScreen({
           ref={frameRef}
           className="absolute z-10 h-[min(86svh,928px)] w-[min(85vw,calc(min(86svh,928px)*0.57112))] overflow-hidden rounded-[35px] opacity-0 shadow-2xl shadow-black/45"
         >
-          <FadeInImage
-            src={src}
-            alt={alt}
-            fill
-            className="object-cover"
-            sizes="85vw"
-            unoptimized
-          />
+          {videoSrc ? (
+            <video
+              key={videoSrc}
+              className="h-full w-full object-cover"
+              aria-label={alt}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              poster={src}
+              disablePictureInPicture
+            >
+              <source src={videoSrc} type="video/mp4" />
+            </video>
+          ) : (
+            <FadeInImage
+              src={src}
+              alt={alt}
+              fill
+              className="object-cover"
+              sizes="85vw"
+              unoptimized
+            />
+          )}
         </div>
       </div>
     </section>

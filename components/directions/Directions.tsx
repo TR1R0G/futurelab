@@ -1,10 +1,9 @@
 'use client'
 
 import { CTACard } from '@/components/infrastructure/CTACard'
-import { FadeInImage } from '@/components/media/FadeInImage'
 import { ExpandedImageScreen } from '@/components/media/ExpandedImageScreen'
 import { gsap, registerGsapPlugins } from '@/lib/gsap'
-import type { DirectionsContent } from '@/lib/mdx'
+import type { DirectionsContent, Language } from '@/lib/mdx'
 import { useEffect, useRef } from 'react'
 
 interface DirectionsProps {
@@ -13,6 +12,7 @@ interface DirectionsProps {
 	statement: DirectionsContent['statement']
 	ctaText: string
 	ctaButton: string
+	language: Language
 }
 
 const chipLayout = [
@@ -51,8 +51,13 @@ export function Directions({
 	statement,
 	ctaText,
 	ctaButton,
+	language,
 }: DirectionsProps) {
 	const sectionRef = useRef<HTMLElement>(null)
+	const academyVideoSrc =
+		language === 'en'
+			? '/videos/academy/academy-en.mp4'
+			: '/videos/academy/academy-ru.mp4'
 
 	useEffect(() => {
 		registerGsapPlugins()
@@ -162,13 +167,10 @@ export function Directions({
 
 				<div className='directions-statement-copy relative z-10 text-[32px] font-semibold leading-[1.48] tracking-normal text-white md:text-[44px] lg:text-[55px] lg:leading-[78px]'>
 					<span className='directions-inline-image pointer-events-none absolute left-1/2 top-[155px] z-20 hidden h-[91px] w-[52px] translate-x-[90px] overflow-hidden rounded-[8px] lg:block'>
-						<FadeInImage
-							src={statement.imageSrc}
-							alt={statement.imageAlt}
-							fill
-							sizes='52px'
-							className='object-cover'
-							unoptimized
+						<AcademyInlineVideo
+							src={academyVideoSrc}
+							poster={statement.imageSrc}
+							label={statement.imageAlt}
 						/>
 					</span>
 					{statement.linesBeforeImage.map(line => (
@@ -184,13 +186,11 @@ export function Directions({
 							aria-hidden='true'
 						/>
 						<span className='directions-inline-image mx-5 inline-flex translate-y-[0.18em] overflow-hidden rounded-[8px] align-baseline shadow-[0_10px_34px_rgba(0,0,0,0.45)] md:mx-7 lg:hidden'>
-							<FadeInImage
-								src={statement.imageSrc}
-								alt={statement.imageAlt}
-								width={58}
-								height={88}
-								className='h-[58px] w-[38px] object-cover md:h-[78px] md:w-[52px] lg:h-[91px] lg:w-[52px]'
-								unoptimized
+							<AcademyInlineVideo
+								src={academyVideoSrc}
+								poster={statement.imageSrc}
+								label={statement.imageAlt}
+								className='h-[58px] w-[38px] md:h-[78px] md:w-[52px] lg:h-[91px] lg:w-[52px]'
 							/>
 						</span>
 						{statement.imageTail}
@@ -206,6 +206,7 @@ export function Directions({
 
 			<ExpandedImageScreen
 				src={statement.imageSrc}
+				videoSrc={academyVideoSrc}
 				alt={statement.imageAlt}
 				className='-mt-[58svh]'
 				movingTextSelector='.directions-statement-copy'
@@ -226,6 +227,35 @@ export function Directions({
 				/>
 			</div>
 		</section>
+	)
+}
+
+function AcademyInlineVideo({
+	src,
+	poster,
+	label,
+	className = 'h-full w-full',
+}: {
+	src: string
+	poster: string
+	label: string
+	className?: string
+}) {
+	return (
+		<video
+			key={src}
+			className={`${className} object-cover`}
+			aria-label={label}
+			autoPlay
+			muted
+			loop
+			playsInline
+			preload='auto'
+			poster={poster}
+			disablePictureInPicture
+		>
+			<source src={src} type='video/mp4' />
+		</video>
 	)
 }
 
