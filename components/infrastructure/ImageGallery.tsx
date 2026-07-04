@@ -4,51 +4,82 @@ import { gsap, registerGsapPlugins } from "@/lib/gsap";
 import { FadeInImage } from "@/components/media/FadeInImage";
 import { useEffect, useRef } from "react";
 
-const galleryItems = [
+const GALLERY_GAP = 20;
+
+const carouselPath = (path: string) => encodeURI(path);
+
+const gallerySourceItems = [
   {
-    src: "/images/block4/carousel/optimized/presentation.webp",
+    src: carouselPath("/images/block4/carousel/Shourum.jpeg"),
     alt: "Современное пространство FutureLab",
-    left: 0,
     width: 552,
     position: "50% 50%",
   },
   {
-    src: "/images/block4/carousel/optimized/team.webp",
-    alt: "Команда за совместной работой",
-    left: 572,
+    src: carouselPath("/images/block4/carousel/Вертикальные/IMG_3752.JPG"),
+    alt: "Вертикальное фото пространства FutureLab",
     width: 306,
     position: "50% 50%",
   },
   {
-    src: "/images/block4/carousel/optimized/lab.webp",
+    src: carouselPath("/images/block4/carousel/IMG_2708.JPG"),
+    alt: "Коворкинг зона FutureLab",
+    width: 552,
+    position: "50% 50%",
+  },
+  {
+    src: carouselPath("/images/block4/carousel/Вертикальные/IMG game.png"),
+    alt: "Игровая зона FutureLab",
+    width: 306,
+    position: "50% 50%",
+  },
+  {
+    src: carouselPath("/images/block4/carousel/IMG_2723.JPG"),
+    alt: "Команда за совместной работой в FutureLab",
+    width: 552,
+    position: "50% 50%",
+  },
+  {
+    src: carouselPath("/images/block4/carousel/Вертикальные/IMG game2.png"),
+    alt: "Вертикальное фото игровой зоны FutureLab",
+    width: 306,
+    position: "50% 50%",
+  },
+  {
+    src: carouselPath("/images/block4/carousel/koworking zone.jpeg"),
+    alt: "Коворкинг пространство FutureLab",
+    width: 552,
+    position: "50% 50%",
+  },
+  {
+    src: carouselPath("/images/block4/carousel/Вертикальные/IMG_4442.JPG"),
+    alt: "Вертикальное фото участника FutureLab",
+    width: 306,
+    position: "50% 50%",
+  },
+  {
+    src: carouselPath("/images/block4/carousel/terrassa.jpeg"),
+    alt: "Терраса FutureLab",
+    width: 552,
+    position: "50% 50%",
+  },
+  {
+    src: carouselPath("/images/block4/carousel/ARVR lab.jpeg"),
     alt: "Технологическая лаборатория FutureLab",
-    left: 898,
     width: 552,
-    position: "50% 50%",
-  },
-  {
-    src: "/images/block4/carousel/optimized/zone.webp",
-    alt: "Презентационная зона FutureLab",
-    left: 1470,
-    width: 552,
-    position: "50% 50%",
-  },
-  {
-    src: "/images/block4/carousel/optimized/workspace.webp",
-    alt: "Рабочая зона FutureLab",
-    left: 2042,
-    width: 306,
     position: "50% 50%",
   },
 ];
 
-const galleryBackplates = [
-  { left: 0, width: 552 },
-  { left: 572, width: 291 },
-  { left: 898, width: 552 },
-  { left: 1470, width: 552 },
-  { left: 2042, width: 306 },
-];
+const galleryItems = gallerySourceItems.map((item, index) => ({
+  ...item,
+  left: gallerySourceItems
+    .slice(0, index)
+    .reduce((offset, previous) => offset + previous.width + GALLERY_GAP, 0),
+}));
+
+const gallerySetWidth =
+  galleryItems.reduce((offset, item) => offset + item.width + GALLERY_GAP, 0);
 
 export function ImageGallery() {
   const galleryRef = useRef<HTMLDivElement>(null);
@@ -110,12 +141,13 @@ export function ImageGallery() {
           <div
             key={setIndex}
             data-gallery-set={setIndex === 0 ? "original" : "clone"}
-            className="relative h-[396px] w-[2368px] shrink-0"
+            className="relative h-[396px] shrink-0"
+            style={{ width: gallerySetWidth }}
             aria-hidden={setIndex === 1}
           >
-            {galleryBackplates.map((backplate) => (
+            {galleryItems.map((backplate) => (
               <div
-                key={`${setIndex}-backplate-${backplate.left}`}
+                key={`${setIndex}-backplate-${backplate.src}`}
                 className="absolute top-0 h-[396px]"
                 style={{
                   left: backplate.left,
@@ -141,7 +173,6 @@ export function ImageGallery() {
                   className="object-cover"
                   style={{ objectPosition: image.position }}
                   sizes={`${image.width}px`}
-                  unoptimized
                 />
               </div>
             ))}
