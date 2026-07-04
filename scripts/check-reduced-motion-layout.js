@@ -27,7 +27,7 @@ async function run() {
       reducedMotion: "reduce",
     });
 
-    await page.goto(baseUrl, { waitUntil: "networkidle" });
+    await page.goto(baseUrl, { waitUntil: "domcontentloaded" });
     await page.waitForTimeout(700);
 
     const state = await page.evaluate(({ viewport }) => {
