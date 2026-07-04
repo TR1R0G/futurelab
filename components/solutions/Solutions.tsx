@@ -22,6 +22,7 @@ const SOLUTION_BLOCK_HEIGHT = 2020.92
 const SOLUTION_TRAILING_SPACE = 220
 const SOLUTION_IMAGE_FINAL_AT = 0.82
 const MUSEUM_VIDEO_SRC = '/videos/museum/museum.mp4'
+const TEMURIDS_VIDEO_SRC = '/videos/temurids/temurids.mp4'
 
 type Rect = {
 	left: number
@@ -35,6 +36,7 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 	const mediaRefs = useRef<Array<HTMLDivElement | null>>([])
 	const cursorRef = useRef<HTMLDivElement | null>(null)
 	const museumHref = `/museum?lang=${language}`
+	const temuridsHref = `/temurids?lang=${language}`
 
 	useEffect(() => {
 		registerGsapPlugins()
@@ -365,12 +367,23 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 						SOLUTION_EXPANDED_GLOW_TOP + index * SOLUTION_BLOCK_HEIGHT
 					const imageTop = SOLUTION_CARD_IMAGE_TOP + index * SOLUTION_BLOCK_HEIGHT
 					const isMuseumCard = index === 0
+					const isTemuridsCard = index === 2
+					const href = isMuseumCard
+						? museumHref
+						: isTemuridsCard
+							? temuridsHref
+							: undefined
+					const videoSrc = isMuseumCard
+						? MUSEUM_VIDEO_SRC
+						: isTemuridsCard
+							? TEMURIDS_VIDEO_SRC
+							: undefined
 
 					return (
 						<div key={card.title}>
 							<SolutionCard
 								card={card}
-								href={isMuseumCard ? museumHref : undefined}
+								href={href}
 								className='mt-16 md:mt-20 lg:absolute lg:left-0 lg:mt-0'
 								style={{ top }}
 							/>
@@ -381,7 +394,7 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 								}}
 								image={card.image}
 								imageAlt={card.imageAlt}
-								videoSrc={isMuseumCard ? MUSEUM_VIDEO_SRC : undefined}
+								videoSrc={videoSrc}
 								top={imageTop}
 							/>
 						</div>
