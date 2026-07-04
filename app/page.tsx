@@ -94,6 +94,7 @@ export default async function Home({ searchParams }: HomeProps) {
         title={solutionsContent.title}
         description={solutionsContent.description}
         cards={solutionsContent.cards}
+        language={language}
       />
       <RealizedProjects
         title={realizedProjectsContent.title}

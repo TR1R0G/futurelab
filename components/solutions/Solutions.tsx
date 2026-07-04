@@ -1,7 +1,7 @@
 'use client'
 
 import { gsap, registerGsapPlugins } from '@/lib/gsap'
-import type { SolutionsContent } from '@/lib/mdx'
+import type { Language, SolutionsContent } from '@/lib/mdx'
 import { FadeInImage } from '@/components/media/FadeInImage'
 import Image from 'next/image'
 import type { CSSProperties, RefObject } from 'react'
@@ -11,6 +11,7 @@ interface SolutionsProps {
 	title: string
 	description: string
 	cards: SolutionsContent['cards']
+	language: Language
 }
 
 const SOLUTION_CARD_TOP = 555
@@ -20,6 +21,7 @@ const SOLUTION_EXPANDED_IMAGE_TOP = 1598
 const SOLUTION_BLOCK_HEIGHT = 2020.92
 const SOLUTION_TRAILING_SPACE = 220
 const SOLUTION_IMAGE_FINAL_AT = 0.82
+const MUSEUM_VIDEO_SRC = '/videos/museum/museum.mp4'
 
 type Rect = {
 	left: number
@@ -28,10 +30,11 @@ type Rect = {
 	height: number
 }
 
-export function Solutions({ title, description, cards }: SolutionsProps) {
+export function Solutions({ title, description, cards, language }: SolutionsProps) {
 	const sectionRef = useRef<HTMLElement>(null)
 	const mediaRefs = useRef<Array<HTMLDivElement | null>>([])
 	const cursorRef = useRef<HTMLDivElement | null>(null)
+	const museumHref = `/museum?lang=${language}`
 
 	useEffect(() => {
 		registerGsapPlugins()
@@ -361,11 +364,13 @@ export function Solutions({ title, description, cards }: SolutionsProps) {
 					const expandedTop =
 						SOLUTION_EXPANDED_GLOW_TOP + index * SOLUTION_BLOCK_HEIGHT
 					const imageTop = SOLUTION_CARD_IMAGE_TOP + index * SOLUTION_BLOCK_HEIGHT
+					const isMuseumCard = index === 0
 
 					return (
 						<div key={card.title}>
 							<SolutionCard
 								card={card}
+								href={isMuseumCard ? museumHref : undefined}
 								className='mt-16 md:mt-20 lg:absolute lg:left-0 lg:mt-0'
 								style={{ top }}
 							/>
@@ -376,6 +381,7 @@ export function Solutions({ title, description, cards }: SolutionsProps) {
 								}}
 								image={card.image}
 								imageAlt={card.imageAlt}
+								videoSrc={isMuseumCard ? MUSEUM_VIDEO_SRC : undefined}
 								top={imageTop}
 							/>
 						</div>
@@ -393,18 +399,18 @@ export function Solutions({ title, description, cards }: SolutionsProps) {
 
 function SolutionCard({
 	card,
+	href,
 	className = '',
 	style,
 }: {
 	card: SolutionsContent['cards'][number]
+	href?: string
 	className?: string
 	style?: CSSProperties
 }) {
-	return (
-		<article
-			className={`solutions-card-outline relative min-h-[680px] overflow-visible rounded-[35px] bg-black lg:h-[680px] lg:w-full ${className}`}
-			style={style}
-		>
+	const classNames = `solutions-card-outline relative block min-h-[680px] overflow-visible rounded-[35px] bg-black lg:h-[680px] lg:w-full ${className}`
+	const content = (
+		<>
 			<div className='relative z-20 px-8 pt-14 md:px-[72px] md:pt-[86px] lg:px-0 lg:pt-0'>
 				<h3 className='text-[38px] font-semibold leading-tight text-[#DE5CFF] md:text-[48px] lg:absolute lg:left-[121px] lg:top-[88px] lg:w-[760px] lg:text-[55px] lg:leading-[66px]'>
 					{card.title}
@@ -418,15 +424,36 @@ function SolutionCard({
 			<LearnMoreButton label={card.cta} />
 
 			<CollapsedGlow />
+		</>
+	)
+
+	if (href) {
+		return (
+			<a
+				href={href}
+				className={classNames}
+				style={style}
+				aria-label={`${card.cta}: ${card.title}`}
+			>
+				{content}
+			</a>
+		)
+	}
+
+	return (
+		<article
+			className={classNames}
+			style={style}
+		>
+			{content}
 		</article>
 	)
 }
 
 function LearnMoreButton({ label }: { label: string }) {
 	return (
-		<button
-			type='button'
-			aria-label={label}
+		<span
+			aria-hidden='true'
 			className='learn-more-button absolute left-[1107px] top-[160px] z-30 hidden h-[252.42px] w-[252.42px] text-white transition-transform hover:scale-[1.03] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0051FF] active:scale-[0.98] lg:block'
 		>
 			<span className='absolute left-[22.21px] top-[22.21px] h-[207px] w-[207px] rounded-full bg-[#0051FF]' />
@@ -460,7 +487,7 @@ function LearnMoreButton({ label }: { label: string }) {
 				className='absolute left-[112.21px] top-[112.2px] h-[28px] w-[28px]'
 				aria-hidden='true'
 			/>
-		</button>
+		</span>
 	)
 }
 
@@ -534,11 +561,13 @@ function TransitionMedia({
 	mediaRef,
 	image,
 	imageAlt,
+	videoSrc,
 	top,
 }: {
 	mediaRef: (element: HTMLDivElement | null) => void
 	image: string
 	imageAlt: string
+	videoSrc?: string
 	top: number
 }) {
 	return (
@@ -547,14 +576,31 @@ function TransitionMedia({
 			className='solutions-transition-media relative z-20 mt-20 h-[391px] w-full overflow-hidden rounded-[35px] shadow-2xl shadow-black/40 lg:absolute lg:left-[371px] lg:top-[1059px] lg:mt-0 lg:h-[391px] lg:w-[694px]'
 			style={{ top }}
 		>
-			<FadeInImage
-				src={image}
-				alt={imageAlt}
-				fill
-				sizes='(min-width: 1024px) 1436px, calc(100vw - 40px)'
-				className='object-cover'
-				unoptimized
-			/>
+			{videoSrc ? (
+				<video
+					key={videoSrc}
+					className='h-full w-full object-cover'
+					aria-label={imageAlt}
+					autoPlay
+					muted
+					loop
+					playsInline
+					preload='auto'
+					poster={image}
+					disablePictureInPicture
+				>
+					<source src={videoSrc} type='video/mp4' />
+				</video>
+			) : (
+				<FadeInImage
+					src={image}
+					alt={imageAlt}
+					fill
+					sizes='(min-width: 1024px) 1436px, calc(100vw - 40px)'
+					className='object-cover'
+					unoptimized
+				/>
+			)}
 		</div>
 	)
 }
