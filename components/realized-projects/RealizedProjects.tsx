@@ -2,7 +2,7 @@
 
 import { gsap, registerGsapPlugins, ScrollTrigger } from "@/lib/gsap";
 import { FadeInImage } from "@/components/media/FadeInImage";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { RealizedProject } from "@/lib/mdx";
 
 interface RealizedProjectsProps {
@@ -147,33 +147,98 @@ function ProjectCard({ project }: { project: RealizedProject }) {
           {project.description}
         </p>
 
-        <div className="absolute left-10 top-[496px] h-[332px] w-[618px] overflow-hidden rounded-[10px]">
-          <FadeInImage
-            src={project.image}
-            alt={project.imageAlt}
-            fill
-            sizes="618px"
-            className="object-cover"
-            unoptimized
-          />
-          <PlayButton />
-        </div>
+        <ProjectMedia project={project} />
       </div>
     </article>
   );
 }
 
-function PlayButton() {
+function ProjectMedia({ project }: { project: RealizedProject }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const handlePlay = async () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (video.ended) {
+      video.currentTime = 0;
+    }
+
+    try {
+      await video.play();
+      setIsPlaying(true);
+    } catch {
+      setIsPlaying(false);
+    }
+  };
+
+  return (
+    <div className="absolute left-10 top-[496px] h-[332px] w-[618px] overflow-hidden rounded-[10px]">
+      {project.video ? (
+        <video
+          ref={videoRef}
+          className="h-full w-full object-cover"
+          poster={project.image}
+          preload="metadata"
+          playsInline
+          controls
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          onEnded={() => setIsPlaying(false)}
+          aria-label={project.imageAlt}
+        >
+          <source src={project.video} type="video/mp4" />
+        </video>
+      ) : (
+        <FadeInImage
+          src={project.image}
+          alt={project.imageAlt}
+          fill
+          sizes="618px"
+          className="object-cover"
+          unoptimized
+        />
+      )}
+
+      {project.video ? (
+        !isPlaying && <PlayButton onClick={handlePlay} />
+      ) : (
+        <PlayIcon />
+      )}
+    </div>
+  );
+}
+
+function PlayButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       type="button"
       aria-label="Смотреть видео"
+      onClick={onClick}
       className="absolute left-1/2 top-1/2 flex h-[60px] w-[60px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 transition-transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80 active:scale-95"
     >
-      <span
-        className="ml-1 h-0 w-0 border-y-[13px] border-l-[20px] border-y-transparent border-l-white"
-        aria-hidden="true"
-      />
+      <PlayTriangle />
     </button>
+  );
+}
+
+function PlayIcon() {
+  return (
+    <span
+      className="pointer-events-none absolute left-1/2 top-1/2 flex h-[60px] w-[60px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/50"
+      aria-hidden="true"
+    >
+      <PlayTriangle />
+    </span>
+  );
+}
+
+function PlayTriangle() {
+  return (
+    <span
+      className="ml-1 h-0 w-0 border-y-[13px] border-l-[20px] border-y-transparent border-l-white"
+      aria-hidden="true"
+    />
   );
 }

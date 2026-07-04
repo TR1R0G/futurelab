@@ -145,6 +145,7 @@ export interface RealizedProject {
   description: string;
   image: string;
   imageAlt: string;
+  video?: string;
 }
 
 export interface RealizedProjectsContent {
