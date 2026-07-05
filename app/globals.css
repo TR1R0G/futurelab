@@ -1209,6 +1209,21 @@ main {
 }
 
 @media (min-width: 640px) and (max-width: 899px) {
+	.hero-header {
+		width: calc(100vw - 80px);
+	}
+
+	.hero-brand-shell {
+		flex: 1 1 auto;
+		width: auto;
+		min-width: 0;
+	}
+
+	.hero-language {
+		position: static;
+		flex: 0 0 auto;
+	}
+
 	.hero-section {
 		height: 1771px;
 		min-height: 1771px;
@@ -1244,9 +1259,10 @@ main {
 	}
 
 	.hero-language {
-		position: absolute;
-		left: 594px;
-		top: 22px;
+		position: static;
+		left: auto;
+		top: auto;
+		flex: 0 0 auto;
 		gap: 18px;
 		font-size: 15px;
 		line-height: 18px;
@@ -1257,9 +1273,11 @@ main {
 	}
 
 	.hero-copy {
-		left: 155px;
+		--hero-tablet-inline: clamp(40px, calc((100vw - 640px) * 0.54 + 40px), 155px);
+
+		left: var(--hero-tablet-inline);
 		top: 256px;
-		width: 690px;
+		width: calc(100vw - var(--hero-tablet-inline) - 40px);
 	}
 
 	.hero-title {
@@ -1276,7 +1294,7 @@ main {
 	}
 
 	.hero-action-panel {
-		left: 635px;
+		left: min(635px, calc(100vw - 246px));
 		right: auto;
 		top: 742px;
 		width: 210px;
@@ -1348,9 +1366,9 @@ main {
 	}
 
 	.hero-header {
-		left: 195px;
+		left: clamp(36px, calc((100vw - 900px) * 1.282 + 36px), 195px);
 		top: 40px;
-		width: 767px;
+		width: min(767px, calc(100vw - 72px));
 		transform: none;
 		justify-content: flex-start;
 		gap: 64px;
@@ -1409,7 +1427,7 @@ main {
 	}
 
 	.hero-action-panel {
-		left: 755px;
+		left: min(755px, calc(100vw - 246px));
 		right: auto;
 		top: 742px;
 		width: 210px;
@@ -1928,6 +1946,14 @@ main {
 
 	.hero-light {
 		top: 270px;
+	}
+}
+
+@media (max-width: 1023px) {
+	.experience-section,
+	.contact-section {
+		height: auto !important;
+		min-height: 0 !important;
 	}
 }
 

@@ -53,7 +53,7 @@ export function Experience({
           ))}
         </div>
 
-        <div className="experience-stats mt-16 grid gap-5 md:grid-cols-3 lg:absolute lg:left-0 lg:top-[589px] lg:mt-0 lg:flex lg:gap-10">
+        <div className="experience-stats mt-16 grid gap-5 md:grid-cols-2 lg:absolute lg:left-0 lg:top-[589px] lg:mt-0 lg:flex lg:gap-10">
           {stats.map((stat) => (
             <StatCard key={stat.value} value={stat.value} label={stat.label} />
           ))}
@@ -80,12 +80,12 @@ export function Experience({
 
 function StatCard({ value, label }: { value: string; label: string }) {
   return (
-    <article className="experience-stat-card relative h-[281px] w-full overflow-hidden rounded-[35px] bg-white md:w-auto lg:w-[452px]">
+    <article className="experience-stat-card relative h-[320px] w-full overflow-hidden rounded-[35px] bg-white md:w-auto lg:h-[281px] lg:w-[452px]">
       <span
-        className="absolute left-0 top-0 h-[281px] w-[83px] bg-[linear-gradient(46.02deg,#4B0E5B_-1.84%,#A91E83_28.61%,#FD9A34_65.03%,#F9EB44_100%)]"
+        className="absolute left-0 top-0 h-full w-[83px] bg-[linear-gradient(46.02deg,#4B0E5B_-1.84%,#A91E83_28.61%,#FD9A34_65.03%,#F9EB44_100%)]"
         aria-hidden="true"
       />
-      <div className="experience-stat-card-inner absolute left-[7px] top-[7px] h-[267px] w-[calc(100%-14px)] rounded-[28px] bg-white lg:w-[438px]">
+      <div className="experience-stat-card-inner absolute bottom-[7px] left-[7px] top-[7px] w-[calc(100%-14px)] rounded-[28px] bg-white lg:w-[438px]">
         <h3 className="experience-stat-card-title absolute left-8 top-[30px] w-[calc(100%-64px)] text-[25px] font-semibold leading-[1.7] text-black lg:left-[33px] lg:w-[372px]">
           {value}
         </h3>
