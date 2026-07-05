@@ -7,6 +7,7 @@ const baseUrl = process.env.TEST_URL || "http://localhost:3000";
 const expectedVideos = [
   "/videos/solutions/interactive-exposition.mp4",
   "/videos/solutions/behbudi.mp4",
+  "/videos/solutions/webar.mp4",
 ];
 
 async function assertClickToPlay(page, index, expectedSrc) {
@@ -68,16 +69,6 @@ async function run() {
 
   for (const [index, expectedSrc] of expectedVideos.entries()) {
     await assertClickToPlay(page, index, expectedSrc);
-  }
-
-  const thirdVideoCount = await page
-    .locator(".realized-project-card")
-    .nth(2)
-    .locator("video")
-    .count();
-
-  if (thirdVideoCount !== 0) {
-    throw new Error("Unexpected video on third realized-project card");
   }
 
   await browser.close();
