@@ -18,7 +18,9 @@ export function Footer({ address }: { address: string }) {
           <FooterContact icon={<LocationIcon />}>
             {address}
           </FooterContact>
-          <FooterContact icon={<MailIcon />}>pr@nazzar.tech</FooterContact>
+          <FooterContact icon={<MailIcon />} href="mailto:pr@nazzar.tech">
+            pr@nazzar.tech
+          </FooterContact>
         </div>
 
         <div className="footer-line mt-16 h-px w-full bg-[#2F2F2F] lg:absolute lg:left-0 lg:top-[283px] lg:mt-0" />
@@ -33,9 +35,11 @@ export function Footer({ address }: { address: string }) {
 
 function FooterContact({
   icon,
+  href,
   children,
 }: {
   icon: ReactNode;
+  href?: string;
   children: ReactNode;
 }) {
   return (
@@ -43,7 +47,16 @@ function FooterContact({
       <span className="flex h-[18px] w-[17px] items-center justify-center text-white">
         {icon}
       </span>
-      <span>{children}</span>
+      {href ? (
+        <a
+          href={href}
+          className="transition-colors hover:text-[#0051FF] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+        >
+          {children}
+        </a>
+      ) : (
+        <span>{children}</span>
+      )}
     </div>
   );
 }

@@ -105,6 +105,7 @@ export default async function Home({ searchParams }: HomeProps) {
           variant="project"
           text={copy.projectCta.text}
           buttonText={copy.projectCta.buttonText}
+          href="#contacts"
         />
       </section>
       <Experience {...copy.experience} />

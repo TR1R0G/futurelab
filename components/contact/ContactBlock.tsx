@@ -16,7 +16,10 @@ export function ContactBlock({
   telegramTitle,
 }: ContactBlockProps) {
   return (
-    <section className="contact-section relative overflow-hidden bg-white px-5 py-24 text-black md:px-8 md:py-28 lg:h-[738px] lg:px-0 lg:py-0">
+    <section
+      id="contacts"
+      className="contact-section relative overflow-hidden bg-white px-5 py-24 text-black md:px-8 md:py-28 lg:h-[738px] lg:px-0 lg:py-0"
+    >
       <ContactGlow />
 
       <div className="contact-content relative z-10 mx-auto max-w-[1438px]">
@@ -44,6 +47,7 @@ export function ContactBlock({
             icon="mail"
             title={emailTitle}
             value="contact@future-lab.uz"
+            href="mailto:contact@future-lab.uz"
           />
 
           <ContactItem
@@ -51,6 +55,7 @@ export function ContactBlock({
             icon="telegram"
             title={telegramTitle}
             value="@nazzar_group"
+            href="https://t.me/nazzar_group"
           />
         </div>
       </div>
@@ -77,12 +82,16 @@ function ContactItem({
   icon,
   title,
   value,
+  href,
 }: {
   className?: string;
   icon: "mail" | "telegram";
   title: string;
   value: string;
+  href?: string;
 }) {
+  const isExternal = href?.startsWith("http");
+
   return (
     <div className={`contact-item ${className ?? ""}`}>
       {icon === "mail" ? (
@@ -103,7 +112,18 @@ function ContactItem({
         {title}
       </p>
       <p className="mt-[13px] text-[21px] font-medium leading-[26px] text-[#4C4C4C] md:text-[22px]">
-        {value}
+        {href ? (
+          <a
+            href={href}
+            target={isExternal ? "_blank" : undefined}
+            rel={isExternal ? "noopener noreferrer" : undefined}
+            className="transition-colors hover:text-[#0051FF] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0051FF]"
+          >
+            {value}
+          </a>
+        ) : (
+          value
+        )}
       </p>
     </div>
   );

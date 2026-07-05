@@ -36,9 +36,12 @@ export function HeroActions({ primaryCta, secondaryCta }: HeroActionsProps) {
       <button className="hero-button bg-[#0B5CFF] font-medium text-white transition-transform hover:scale-[1.01] hover:bg-[#0050f2] active:scale-[0.99]">
         {primaryCta}
       </button>
-      <button className="hero-button bg-[#0B5CFF] font-medium text-white transition-transform hover:scale-[1.01] hover:bg-[#0050f2] active:scale-[0.99]">
+      <a
+        href="#contacts"
+        className="hero-button bg-[#0B5CFF] font-medium text-white transition-transform hover:scale-[1.01] hover:bg-[#0050f2] active:scale-[0.99]"
+      >
         {secondaryCta}
-      </button>
+      </a>
     </div>
   );
 }

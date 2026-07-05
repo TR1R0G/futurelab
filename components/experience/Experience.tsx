@@ -65,12 +65,14 @@ export function Experience({
           ))}
         </div>
 
-        <button
-          type="button"
+        <a
+          href="https://www.nazzar.group/"
+          target="_blank"
+          rel="noopener noreferrer"
           className="mt-16 flex h-[55px] w-full max-w-[452px] items-center justify-center rounded-[13px] bg-[#0051FF] px-6 text-[22px] font-medium leading-[26px] text-white transition-transform hover:scale-[1.01] hover:bg-[#0050f2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0051FF] active:scale-[0.99] lg:absolute lg:left-1/2 lg:top-[1179px] lg:mt-0 lg:-translate-x-1/2"
         >
           {buttonText}
-        </button>
+        </a>
       </div>
     </section>
   );
