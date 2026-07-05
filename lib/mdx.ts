@@ -92,6 +92,7 @@ export interface ProgramCard {
   audience: string;
   age: string;
   cta: string;
+  ctaHref?: string;
 }
 
 export interface ProgramsContent {
@@ -133,6 +134,8 @@ export interface SolutionsContent {
     image: string;
     imageAlt: string;
     cta: string;
+    href?: string;
+    youtubeVideoId?: string;
   }[];
 }
 

@@ -31,6 +31,8 @@ type Rect = {
 	height: number
 }
 
+const isExternalHref = (href: string) => /^https?:\/\//.test(href)
+
 export function Solutions({ title, description, cards, language }: SolutionsProps) {
 	const sectionRef = useRef<HTMLElement>(null)
 	const mediaRefs = useRef<Array<HTMLDivElement | null>>([])
@@ -372,7 +374,7 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 						? museumHref
 						: isTemuridsCard
 							? temuridsHref
-							: undefined
+							: card.href
 					const videoSrc = isMuseumCard
 						? MUSEUM_VIDEO_SRC
 						: isTemuridsCard
@@ -395,6 +397,7 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 								image={card.image}
 								imageAlt={card.imageAlt}
 								videoSrc={videoSrc}
+								youtubeVideoId={card.youtubeVideoId}
 								top={imageTop}
 							/>
 						</div>
@@ -441,12 +444,16 @@ function SolutionCard({
 	)
 
 	if (href) {
+		const isExternal = isExternalHref(href)
+
 		return (
 			<a
 				href={href}
 				className={classNames}
 				style={style}
 				aria-label={`${card.cta}: ${card.title}`}
+				target={isExternal ? '_blank' : undefined}
+				rel={isExternal ? 'noopener noreferrer' : undefined}
 			>
 				{content}
 			</a>
@@ -575,21 +582,36 @@ function TransitionMedia({
 	image,
 	imageAlt,
 	videoSrc,
+	youtubeVideoId,
 	top,
 }: {
 	mediaRef: (element: HTMLDivElement | null) => void
 	image: string
 	imageAlt: string
 	videoSrc?: string
+	youtubeVideoId?: string
 	top: number
 }) {
+	const youtubeSrc = youtubeVideoId
+		? `https://www.youtube.com/embed/${youtubeVideoId}?autoplay=1&mute=1&loop=1&playlist=${youtubeVideoId}&controls=0&playsinline=1&rel=0&modestbranding=1`
+		: undefined
+
 	return (
 		<div
 			ref={mediaRef}
 			className='solutions-transition-media relative z-20 mt-20 h-[391px] w-full overflow-hidden rounded-[35px] shadow-2xl shadow-black/40 lg:absolute lg:left-[371px] lg:top-[1059px] lg:mt-0 lg:h-[391px] lg:w-[694px]'
 			style={{ top }}
 		>
-			{videoSrc ? (
+			{youtubeSrc ? (
+				<iframe
+					key={youtubeVideoId}
+					className='pointer-events-none h-full w-full'
+					src={youtubeSrc}
+					title={imageAlt}
+					allow='autoplay; encrypted-media; picture-in-picture; web-share'
+					allowFullScreen
+				/>
+			) : videoSrc ? (
 				<video
 					key={videoSrc}
 					className='h-full w-full object-cover'

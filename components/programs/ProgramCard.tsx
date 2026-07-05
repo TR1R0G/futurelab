@@ -5,7 +5,12 @@ interface ProgramCardProps {
   card: ProgramCardType;
 }
 
+const ctaClassName =
+  "mt-10 flex h-[55px] w-full items-center justify-center rounded-[13px] bg-[#1D1D1D] px-5 text-center text-[20px] font-medium leading-[26px] tracking-normal text-white transition-transform hover:scale-[1.01] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white active:scale-[0.99] md:text-[22px] xl:mt-0";
+
 export function ProgramCard({ card }: ProgramCardProps) {
+  const isExternalCta = card.ctaHref?.startsWith("http");
+
   return (
     <article className="program-card relative overflow-hidden rounded-[34px] bg-[#FFFF19] text-black shadow-[0_18px_60px_rgba(0,0,0,0.2)] md:rounded-[35px] xl:h-[932px] xl:w-[452px]">
       <div
@@ -40,12 +45,20 @@ export function ProgramCard({ card }: ProgramCardProps) {
           <p>{card.age}</p>
         </div>
 
-        <button
-          type="button"
-          className="mt-10 flex h-[55px] w-full items-center justify-center rounded-[13px] bg-[#1D1D1D] px-5 text-center text-[20px] font-medium leading-[26px] tracking-normal text-white transition-transform hover:scale-[1.01] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white active:scale-[0.99] md:text-[22px] xl:mt-0"
-        >
-          {card.cta}
-        </button>
+        {card.ctaHref ? (
+          <a
+            href={card.ctaHref}
+            className={ctaClassName}
+            target={isExternalCta ? "_blank" : undefined}
+            rel={isExternalCta ? "noopener noreferrer" : undefined}
+          >
+            {card.cta}
+          </a>
+        ) : (
+          <button type="button" className={ctaClassName}>
+            {card.cta}
+          </button>
+        )}
       </div>
     </article>
   );
