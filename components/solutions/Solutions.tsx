@@ -3,6 +3,7 @@
 import { gsap, registerGsapPlugins } from '@/lib/gsap'
 import type { Language, SolutionsContent } from '@/lib/mdx'
 import { FadeInImage } from '@/components/media/FadeInImage'
+import { useGlobalVideoSound } from '@/components/providers/SoundProvider'
 import Image from 'next/image'
 import type { CSSProperties, RefObject } from 'react'
 import { useEffect, useRef } from 'react'
@@ -592,9 +593,12 @@ function TransitionMedia({
 	youtubeVideoId?: string
 	top: number
 }) {
+	const videoRef = useRef<HTMLVideoElement>(null)
 	const youtubeSrc = youtubeVideoId
-		? `https://www.youtube.com/embed/${youtubeVideoId}?autoplay=1&mute=1&loop=1&playlist=${youtubeVideoId}&controls=0&playsinline=1&rel=0&modestbranding=1`
+		? `https://www.youtube.com/embed/${youtubeVideoId}?autoplay=1&mute=1&loop=1&playlist=${youtubeVideoId}&controls=0&playsinline=1&rel=0&modestbranding=1&enablejsapi=1`
 		: undefined
+
+	useGlobalVideoSound(videoRef, [videoSrc])
 
 	return (
 		<div
@@ -613,6 +617,7 @@ function TransitionMedia({
 				/>
 			) : videoSrc ? (
 				<video
+					ref={videoRef}
 					key={videoSrc}
 					className='h-full w-full object-cover'
 					aria-label={imageAlt}

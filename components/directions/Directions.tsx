@@ -2,6 +2,7 @@
 
 import { CTACard } from '@/components/infrastructure/CTACard'
 import { ExpandedImageScreen } from '@/components/media/ExpandedImageScreen'
+import { useGlobalVideoSound } from '@/components/providers/SoundProvider'
 import { gsap, registerGsapPlugins } from '@/lib/gsap'
 import type { DirectionsContent, Language } from '@/lib/mdx'
 import { useEffect, useRef } from 'react'
@@ -241,8 +242,13 @@ function AcademyInlineVideo({
 	label: string
 	className?: string
 }) {
+	const videoRef = useRef<HTMLVideoElement>(null)
+
+	useGlobalVideoSound(videoRef, [src])
+
 	return (
 		<video
+			ref={videoRef}
 			key={src}
 			className={`${className} object-cover`}
 			aria-label={label}

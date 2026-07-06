@@ -108,6 +108,7 @@ async function collectState(page) {
         if (style.position !== "fixed") return false;
         if (!isVisible(element)) return false;
         if (style.pointerEvents === "none") return false;
+        if (element.closest("[data-sound-toggle]")) return false;
         if (element.closest(".solutions-transition-media")) return false;
         if (element.matches(".realized-projects-section")) return false;
         return true;

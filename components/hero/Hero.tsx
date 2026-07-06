@@ -1,6 +1,7 @@
 'use client'
 
 import { gsap, registerGsapPlugins } from '@/lib/gsap'
+import { useGlobalVideoSound } from '@/components/providers/SoundProvider'
 import type { Language } from '@/lib/mdx'
 import Image from 'next/image'
 import type { RefObject } from 'react'
@@ -41,13 +42,14 @@ export function Hero({
 			? '/videos/block1/hero-en.mp4'
 			: '/videos/block1/hero-ru.mp4'
 
+	useGlobalVideoSound(videoRef, [heroVideoSrc])
+
 	useEffect(() => {
 		const video = videoRef.current
 		if (!video) return
 
-		video.muted = true
 		void video.play().catch(() => undefined)
-	}, [language])
+	}, [heroVideoSrc])
 
 	useEffect(() => {
 		registerGsapPlugins()

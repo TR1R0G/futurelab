@@ -3,6 +3,7 @@ import { Golos_Text, Onest, Sansation } from "next/font/google";
 import "./globals.css";
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
 import { PageLoadGate } from "@/components/providers/PageLoadGate";
+import { SoundProvider } from "@/components/providers/SoundProvider";
 
 const golosText = Golos_Text({
   variable: "--font-golos-text",
@@ -55,7 +56,9 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col bg-black font-sans text-white">
         <PageLoadGate>
-          <SmoothScroll>{children}</SmoothScroll>
+          <SoundProvider>
+            <SmoothScroll>{children}</SmoothScroll>
+          </SoundProvider>
         </PageLoadGate>
       </body>
     </html>

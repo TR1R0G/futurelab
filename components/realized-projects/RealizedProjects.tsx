@@ -2,6 +2,7 @@
 
 import { gsap, registerGsapPlugins, ScrollTrigger } from "@/lib/gsap";
 import { FadeInImage } from "@/components/media/FadeInImage";
+import { useGlobalVideoSound } from "@/components/providers/SoundProvider";
 import { useEffect, useRef, useState } from "react";
 import type { RealizedProject } from "@/lib/mdx";
 
@@ -156,6 +157,8 @@ function ProjectCard({ project }: { project: RealizedProject }) {
 function ProjectMedia({ project }: { project: RealizedProject }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+
+  useGlobalVideoSound(videoRef, [project.video]);
 
   const handlePlay = async () => {
     const video = videoRef.current;

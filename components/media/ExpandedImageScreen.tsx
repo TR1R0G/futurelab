@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { GradientOrb } from "@/components/hero/GradientOrb";
 import { FadeInImage } from "@/components/media/FadeInImage";
+import { useGlobalVideoSound } from "@/components/providers/SoundProvider";
 import { gsap, registerGsapPlugins } from "@/lib/gsap";
 
 interface ExpandedImageScreenProps {
@@ -27,6 +28,9 @@ export function ExpandedImageScreen({
   const sectionRef = useRef<HTMLElement>(null);
   const frameRef = useRef<HTMLDivElement>(null);
   const gradientRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useGlobalVideoSound(videoRef, [videoSrc]);
 
   useEffect(() => {
     registerGsapPlugins();
@@ -232,6 +236,7 @@ export function ExpandedImageScreen({
         >
           {videoSrc ? (
             <video
+              ref={videoRef}
               key={videoSrc}
               className="h-full w-full object-cover"
               aria-label={alt}
