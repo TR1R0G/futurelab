@@ -386,8 +386,8 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 							<SolutionCard
 								card={card}
 								href={href}
-								className='mt-16 md:mt-20 lg:absolute lg:left-0 lg:mt-0'
-								style={{ top }}
+								className='mt-16 md:mt-20 lg:absolute lg:left-0 lg:mt-0 lg:top-[var(--solutions-card-top)]'
+								style={{ '--solutions-card-top': `${top}px` } as CSSProperties}
 							/>
 							<ExpandedGlow top={expandedTop} />
 							<TransitionMedia
@@ -424,7 +424,7 @@ function SolutionCard({
 	className?: string
 	style?: CSSProperties
 }) {
-	const classNames = `solutions-card-outline relative block min-h-[680px] overflow-visible rounded-[35px] bg-black lg:h-[680px] lg:w-full ${className}`
+	const classNames = `solutions-card-outline relative block min-h-[560px] overflow-visible rounded-[35px] bg-black md:min-h-[600px] lg:h-[680px] lg:min-h-[680px] lg:w-full ${className}`
 	const content = (
 		<>
 			<div className='relative z-20 px-8 pt-14 md:px-[72px] md:pt-[86px] lg:px-0 lg:pt-0'>
@@ -599,8 +599,8 @@ function TransitionMedia({
 	return (
 		<div
 			ref={mediaRef}
-			className='solutions-transition-media relative z-20 mt-20 h-[391px] w-full overflow-hidden rounded-[35px] shadow-2xl shadow-black/40 lg:absolute lg:left-[371px] lg:top-[1059px] lg:mt-0 lg:h-[391px] lg:w-[694px]'
-			style={{ top }}
+			className='solutions-transition-media relative z-20 mt-20 aspect-video h-auto w-full overflow-hidden rounded-[35px] shadow-2xl shadow-black/40 lg:absolute lg:left-[371px] lg:top-[var(--solutions-media-top)] lg:mt-0 lg:h-[391px] lg:w-[694px]'
+			style={{ '--solutions-media-top': `${top}px` } as CSSProperties}
 		>
 			{youtubeSrc ? (
 				<iframe

@@ -18,21 +18,21 @@ export function ContactBlock({
   return (
     <section
       id="contacts"
-      className="contact-section relative overflow-hidden bg-white px-5 py-24 text-black md:px-8 md:py-28 lg:h-[738px] lg:px-0 lg:py-0"
+      className="contact-section relative overflow-hidden bg-white px-5 py-24 text-black md:px-8 md:py-28 min-[1440px]:h-[738px] min-[1440px]:px-0 min-[1440px]:py-0"
     >
       <ContactGlow />
 
       <div className="contact-content relative z-10 mx-auto max-w-[1438px]">
-        <h2 className="font-heading text-[42px] font-bold leading-[1.08] tracking-normal text-black md:text-[50px] lg:absolute lg:left-0 lg:top-[206px] lg:w-[698px] lg:text-[55px] lg:leading-[62px]">
+        <h2 className="font-heading text-[42px] font-bold leading-[1.08] tracking-normal text-black md:text-[50px] min-[1440px]:absolute min-[1440px]:left-0 min-[1440px]:top-[206px] min-[1440px]:w-[698px] min-[1440px]:text-[55px] min-[1440px]:leading-[62px]">
           {title}
         </h2>
 
-        <div className="contact-card mt-12 grid gap-10 rounded-[30px] bg-white px-7 py-10 shadow-[0_20px_50px_rgba(0,0,0,0.15)] md:mt-14 md:grid-cols-2 md:rounded-[35px] md:px-12 md:py-12 lg:absolute lg:left-0 lg:top-[308px] lg:mt-0 lg:h-[230px] lg:w-[1436px] lg:grid-cols-none lg:gap-0 lg:px-0 lg:py-0">
-          <div className="lg:absolute lg:left-[123px] lg:top-10 lg:w-[412px]">
+        <div className="contact-card mt-12 grid gap-10 rounded-[30px] bg-white px-7 py-10 shadow-[0_20px_50px_rgba(0,0,0,0.15)] md:mt-14 md:grid-cols-2 md:rounded-[35px] md:px-12 md:py-12 min-[1200px]:grid-cols-3 min-[1440px]:absolute min-[1440px]:left-0 min-[1440px]:top-[308px] min-[1440px]:mt-0 min-[1440px]:h-[230px] min-[1440px]:w-[1436px] min-[1440px]:grid-cols-none min-[1440px]:gap-0 min-[1440px]:px-0 min-[1440px]:py-0">
+          <div className="min-[1440px]:absolute min-[1440px]:left-[123px] min-[1440px]:top-10 min-[1440px]:w-[412px]">
             <h3 className="text-[26px] font-semibold leading-none text-black md:text-[30px]">
               {cardTitle}
             </h3>
-            <p className="mt-8 max-w-[412px] text-[21px] font-medium leading-[1.7] text-[#4C4C4C] md:text-[23px] lg:mt-[38px]">
+            <p className="mt-8 max-w-[412px] text-[21px] font-medium leading-[1.7] text-[#4C4C4C] md:text-[23px] min-[1440px]:mt-[38px]">
               {cardText.split("\n").map((line, index) => (
                 <span key={line}>
                   {line}
@@ -43,7 +43,7 @@ export function ContactBlock({
           </div>
 
           <ContactItem
-            className="contact-item-mail lg:absolute lg:left-[738px] lg:top-[34px] lg:w-[306px]"
+            className="contact-item-mail min-[1440px]:absolute min-[1440px]:left-[738px] min-[1440px]:top-[34px] min-[1440px]:w-[306px]"
             icon="mail"
             title={emailTitle}
             value="contact@future-lab.uz"
@@ -51,7 +51,7 @@ export function ContactBlock({
           />
 
           <ContactItem
-            className="contact-item-telegram lg:absolute lg:left-[1107px] lg:top-[34px] lg:w-[240px]"
+            className="contact-item-telegram min-[1440px]:absolute min-[1440px]:left-[1107px] min-[1440px]:top-[34px] min-[1440px]:w-[240px]"
             icon="telegram"
             title={telegramTitle}
             value="@nazzar_group"
@@ -66,7 +66,7 @@ export function ContactBlock({
 function ContactGlow() {
   return (
     <div
-      className="pointer-events-none absolute left-1/2 top-[378px] z-0 hidden h-[943.61px] w-[1825.34px] -translate-x-1/2 blur-[200px] lg:block"
+      className="pointer-events-none absolute left-1/2 top-[378px] z-0 hidden h-[943.61px] w-[1825.34px] -translate-x-1/2 blur-[200px] min-[1440px]:block"
       style={{ marginLeft: "-1.33px" }}
       aria-hidden="true"
     >
