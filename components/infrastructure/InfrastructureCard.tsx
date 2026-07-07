@@ -17,11 +17,11 @@ export function InfrastructureCard({ card }: InfrastructureCardProps) {
   const Icon = iconMap[card.icon] ?? ZonesIcon;
 
   return (
-    <article className="infrastructure-card relative flex min-h-[360px] flex-col rounded-[28px] bg-[#F2F2F5] p-7 md:min-h-[400px] md:p-7 lg:min-h-[470px] lg:rounded-[32px] lg:p-9">
-      <h3 className="max-w-[270px] text-[22px] font-bold leading-[1.15] text-[#A91FC3] lg:text-[26px]">
+    <article className="infrastructure-card relative flex min-h-[360px] flex-col rounded-[28px] bg-[#F2F2F5] p-7 md:min-h-[400px] md:p-7 lg:aspect-[452/636] lg:min-h-0 lg:rounded-[32px] lg:p-9">
+      <h3 className="w-[calc(66.666667%+37.333px)] text-[26px] font-semibold leading-[1.15] text-[#A91FC3] md:text-[28px] lg:w-[calc(66.666667%+48px)] lg:text-[33px]">
         {card.title}
       </h3>
-      <p className="mt-5 max-w-[280px] text-[15px] font-medium leading-[1.24] text-[#202024] lg:text-[17px]">
+      <p className="mt-5 w-[calc(80%+44.8px)] text-[18px] font-medium leading-[1.24] text-[#202024] md:text-[20px] lg:w-[calc(80%+57.6px)] lg:text-[23px]">
         {card.description}
       </p>
       <div className="mt-auto flex justify-end pt-8">
