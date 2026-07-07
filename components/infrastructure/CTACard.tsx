@@ -15,7 +15,7 @@ export function CTACard({
 }: CTACardProps) {
 	const isWide = variant === 'wide'
 	const isProject = variant === 'project'
-	const buttonClassName = `w-full bg-[#0051FF] px-6 text-white transition-transform hover:scale-[1.01] hover:bg-[#0050f2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0B5CFF] active:scale-[0.99] rounded-[13px] ${
+	const buttonClassName = `flex w-full items-center justify-center bg-[#0051FF] px-6 text-center text-white transition-transform hover:scale-[1.01] hover:bg-[#0050f2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0B5CFF] active:scale-[0.99] rounded-[13px] ${
 		isProject
 			? 'mt-10 h-[55px] max-w-[452px] text-[20px] font-medium leading-[26px] md:mt-12 md:text-[22px] lg:mt-[65px]'
 			: isWide

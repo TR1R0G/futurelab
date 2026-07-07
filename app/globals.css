@@ -213,7 +213,9 @@ main {
 }
 
 .hero-button {
-	display: block;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	height: 54px;
 	width: 100%;
 	border-radius: 8px;
