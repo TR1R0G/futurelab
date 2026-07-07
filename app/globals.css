@@ -2159,16 +2159,13 @@ main {
 
 .learn-more-cursor {
 	opacity: 0;
-	scale: 0.82;
-	transition:
-		opacity 180ms ease,
-		scale 180ms ease;
-	will-change: transform, opacity, scale;
+	scale: 1;
+	transition: opacity 180ms ease;
+	will-change: transform, opacity;
 }
 
 .learn-more-cursor[data-visible='true'] {
 	opacity: 1;
-	scale: 1;
 }
 
 @media (min-width: 361px) {

@@ -285,11 +285,12 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 
 		const mediaQuery = window.matchMedia('(min-width: 361px) and (pointer: fine)')
 		let frame = 0
-		let cursorX = 0
-		let cursorY = 0
+		let cursorX: number | null = null
+		let cursorY: number | null = null
 
 		const setCursor = () => {
 			frame = 0
+			if (cursorX === null || cursorY === null) return
 			cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`
 		}
 
@@ -298,20 +299,39 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 			frame = window.requestAnimationFrame(setCursor)
 		}
 
-		const showCursor = () => {
+		const setCursorPosition = (event: PointerEvent, immediate = false) => {
 			if (!mediaQuery.matches) return
+			cursorX = event.clientX
+			cursorY = event.clientY
+
+			if (immediate) {
+				if (frame) {
+					window.cancelAnimationFrame(frame)
+					frame = 0
+				}
+				setCursor()
+				return
+			}
+
+			requestCursorUpdate()
+		}
+
+		const showCursor = (event: PointerEvent) => {
+			if (!mediaQuery.matches) return
+			setCursorPosition(event, true)
 			cursor.dataset.visible = 'true'
 		}
 
 		const hideCursor = () => {
+			if (frame) {
+				window.cancelAnimationFrame(frame)
+				frame = 0
+			}
 			cursor.dataset.visible = 'false'
 		}
 
 		const moveCursor = (event: PointerEvent) => {
-			if (!mediaQuery.matches) return
-			cursorX = event.clientX
-			cursorY = event.clientY
-			requestCursorUpdate()
+			setCursorPosition(event)
 		}
 
 		const syncMediaState = () => {
@@ -524,6 +544,11 @@ function LearnMoreCursor({
 			ref={cursorRef}
 			className='learn-more-cursor pointer-events-none fixed left-0 top-0 z-[500] hidden h-[252.42px] w-[252.42px] text-white'
 			data-visible='false'
+			style={
+				{
+					transform: 'translate3d(-9999px, -9999px, 0) translate(-50%, -50%)',
+				} as CSSProperties
+			}
 			aria-hidden='true'
 		>
 			<span className='absolute left-[22.21px] top-[22.21px] h-[207px] w-[207px] rounded-full bg-[#0051FF]' />
