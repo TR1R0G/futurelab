@@ -215,7 +215,7 @@ export function Directions({
 				sourceSelector='.directions-inline-image'
 			/>
 
-			<div className='directions-post-image relative z-[100] flex min-h-[36svh] flex-col justify-center bg-black pb-20 pt-20 md:pb-24 md:pt-24 lg:pb-28 lg:pt-28'>
+			<div className='directions-post-image relative z-[100] flex min-h-[36svh] flex-col justify-center bg-black pt-20 md:pt-24 lg:pt-28'>
 				<CTACard
 					variant='wide'
 					text={ctaText}

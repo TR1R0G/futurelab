@@ -59,7 +59,7 @@ main {
 }
 
 .hero-stage {
-	height: 100svh;
+	height: 120svh;
 }
 
 .hero-header,
@@ -517,7 +517,8 @@ main {
 	left: 0;
 	z-index: 0;
 	height: calc(41px * var(--realized-card-scale, 1));
-	border-radius: 0 0 calc(35px * var(--realized-card-scale, 1)) calc(35px * var(--realized-card-scale, 1));
+	border-radius: 0 0 calc(35px * var(--realized-card-scale, 1))
+		calc(35px * var(--realized-card-scale, 1));
 	background: linear-gradient(
 		65.17deg,
 		#4b0e5b -2.47%,
@@ -670,7 +671,7 @@ main {
 	}
 
 	.infrastructure-section {
-		height: 2120px;
+		height: 2020px;
 	}
 
 	.programs-section {
@@ -846,7 +847,7 @@ main {
 	}
 
 	.infrastructure-section {
-		height: 2208px;
+		height: 2008px;
 	}
 
 	.programs-section {
@@ -902,17 +903,17 @@ main {
 }
 
 @media (min-width: 1600px) {
-		.ecosystem-section {
-			--ecosystem-card-height: 717px;
+	.ecosystem-section {
+		--ecosystem-card-height: 717px;
 
-			height: 100svh;
-		}
+		height: 100svh;
+	}
 
-		.ecosystem-wrapper {
-			top: 50%;
-			width: 100%;
-			height: var(--ecosystem-card-height);
-		}
+	.ecosystem-wrapper {
+		top: 50%;
+		width: 100%;
+		height: var(--ecosystem-card-height);
+	}
 
 	.ecosystem-track {
 		width: 2781px;
@@ -932,7 +933,7 @@ main {
 	}
 
 	.infrastructure-section {
-		height: 2421px;
+		height: 2000px;
 	}
 
 	.programs-section {
@@ -944,14 +945,14 @@ main {
 	}
 
 	.directions-section {
-		height: 3900px;
+		height: 3500px;
 		min-height: 0;
 	}
 
 	.solutions-section,
 	.solutions-inner {
-		height: 6838px !important;
-		min-height: 6838px !important;
+		height: 6638px !important;
+		min-height: 6638px !important;
 	}
 
 	.realized-projects-section {
@@ -1281,7 +1282,11 @@ main {
 	}
 
 	.hero-copy {
-		--hero-tablet-inline: clamp(40px, calc((100vw - 640px) * 0.54 + 40px), 155px);
+		--hero-tablet-inline: clamp(
+			40px,
+			calc((100vw - 640px) * 0.54 + 40px),
+			155px
+		);
 
 		left: var(--hero-tablet-inline);
 		top: 256px;
