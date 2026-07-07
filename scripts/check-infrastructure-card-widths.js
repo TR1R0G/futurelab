@@ -29,6 +29,9 @@ async function run() {
       const title = document.querySelector(".infrastructure-heading h2");
       const grid = document.querySelector(".infrastructure-cards");
       const cards = Array.from(document.querySelectorAll(".infrastructure-card"));
+      const cta = document.querySelector(".infrastructure-section .infrastructure-cta");
+      const ctaText = cta ? cta.querySelector("p") : null;
+      const ctaButton = cta ? cta.querySelector("a, button") : null;
 
       const rectOf = (element) => {
         const rect = element.getBoundingClientRect();
@@ -60,6 +63,29 @@ async function run() {
         titleLineRects: lineRects,
         grid: grid ? rectOf(grid) : null,
         gridComputedWidth: grid ? parseFloat(getComputedStyle(grid).width) : null,
+        cta: cta ? rectOf(cta) : null,
+        ctaComputedWidth: cta ? parseFloat(getComputedStyle(cta).width) : null,
+        ctaHeight: cta ? parseFloat(getComputedStyle(cta).height) : null,
+        ctaRadius: cta ? parseFloat(getComputedStyle(cta).borderTopLeftRadius) : null,
+        ctaBackground: cta ? getComputedStyle(cta).backgroundColor : null,
+        ctaText: ctaText
+          ? {
+              width: parseFloat(getComputedStyle(ctaText).width),
+              fontSize: parseFloat(getComputedStyle(ctaText).fontSize),
+              lineHeight: parseFloat(getComputedStyle(ctaText).lineHeight),
+              fontWeight: Number(getComputedStyle(ctaText).fontWeight),
+            }
+          : null,
+        ctaButton: ctaButton
+          ? {
+              width: parseFloat(getComputedStyle(ctaButton).width),
+              height: parseFloat(getComputedStyle(ctaButton).height),
+              radius: parseFloat(getComputedStyle(ctaButton).borderTopLeftRadius),
+              fontSize: parseFloat(getComputedStyle(ctaButton).fontSize),
+              lineHeight: parseFloat(getComputedStyle(ctaButton).lineHeight),
+              fontWeight: Number(getComputedStyle(ctaButton).fontWeight),
+            }
+          : null,
         cardWidths: cards.map((card) => parseFloat(getComputedStyle(card).width)),
         cardHeights: cards.map((card) => parseFloat(getComputedStyle(card).height)),
         cardText: cards.map((card) => {
@@ -91,6 +117,12 @@ async function run() {
       continue;
     }
 
+    if (!state.cta || !state.ctaText || !state.ctaButton) {
+      failures.push(`${viewport.name}: infrastructure CTA, text, or button was not found`);
+      await page.close();
+      continue;
+    }
+
     if (state.scrollWidth > state.viewportWidth + 1) {
       failures.push(
         `${viewport.name}: horizontal overflow ${state.scrollWidth}px for viewport ${state.viewportWidth}px`
@@ -100,6 +132,12 @@ async function run() {
     if (viewport.width < 1440 && state.gridComputedWidth > state.viewportWidth + 1) {
       failures.push(
         `${viewport.name}: infrastructure grid width ${state.gridComputedWidth}px exceeds viewport ${state.viewportWidth}px`
+      );
+    }
+
+    if (viewport.width < 1440 && state.ctaComputedWidth > state.viewportWidth - 32) {
+      failures.push(
+        `${viewport.name}: infrastructure CTA width ${state.ctaComputedWidth}px is not adaptive for viewport ${state.viewportWidth}px`
       );
     }
 
@@ -128,6 +166,90 @@ async function run() {
       if (Math.abs(state.titleComputedWidth - 800) > 3) {
         failures.push(
           `${viewport.name}: infrastructure title width ${state.titleComputedWidth}px, expected about 800px`
+        );
+      }
+
+      if (Math.abs(state.ctaComputedWidth - 1190) > 2) {
+        failures.push(
+          `${viewport.name}: infrastructure CTA width ${state.ctaComputedWidth}px, expected about 1190px`
+        );
+      }
+
+      if (Math.abs(state.ctaHeight - 253) > 2) {
+        failures.push(
+          `${viewport.name}: infrastructure CTA height ${state.ctaHeight}px, expected about 253px`
+        );
+      }
+
+      if (Math.abs(state.ctaRadius - 35) > 1) {
+        failures.push(
+          `${viewport.name}: infrastructure CTA radius ${state.ctaRadius}px, expected about 35px`
+        );
+      }
+
+      if (state.ctaBackground !== "rgb(242, 243, 247)") {
+        failures.push(
+          `${viewport.name}: infrastructure CTA background ${state.ctaBackground}, expected rgb(242, 243, 247)`
+        );
+      }
+
+      if (Math.abs(state.ctaText.width - 1078) > 3) {
+        failures.push(
+          `${viewport.name}: infrastructure CTA text width ${state.ctaText.width}px, expected about 1078px`
+        );
+      }
+
+      if (Math.abs(state.ctaText.fontSize - 33) > 0.5) {
+        failures.push(
+          `${viewport.name}: infrastructure CTA text font size ${state.ctaText.fontSize}px, expected 33px`
+        );
+      }
+
+      if (Math.abs(state.ctaText.lineHeight - 40) > 0.5) {
+        failures.push(
+          `${viewport.name}: infrastructure CTA text line height ${state.ctaText.lineHeight}px, expected 40px`
+        );
+      }
+
+      if (state.ctaText.fontWeight !== 600) {
+        failures.push(
+          `${viewport.name}: infrastructure CTA text font weight ${state.ctaText.fontWeight}, expected 600`
+        );
+      }
+
+      if (Math.abs(state.ctaButton.width - 452) > 2) {
+        failures.push(
+          `${viewport.name}: infrastructure CTA button width ${state.ctaButton.width}px, expected about 452px`
+        );
+      }
+
+      if (Math.abs(state.ctaButton.height - 55) > 1) {
+        failures.push(
+          `${viewport.name}: infrastructure CTA button height ${state.ctaButton.height}px, expected about 55px`
+        );
+      }
+
+      if (Math.abs(state.ctaButton.radius - 13) > 1) {
+        failures.push(
+          `${viewport.name}: infrastructure CTA button radius ${state.ctaButton.radius}px, expected about 13px`
+        );
+      }
+
+      if (Math.abs(state.ctaButton.fontSize - 22) > 0.5) {
+        failures.push(
+          `${viewport.name}: infrastructure CTA button font size ${state.ctaButton.fontSize}px, expected 22px`
+        );
+      }
+
+      if (Math.abs(state.ctaButton.lineHeight - 26) > 0.5) {
+        failures.push(
+          `${viewport.name}: infrastructure CTA button line height ${state.ctaButton.lineHeight}px, expected 26px`
+        );
+      }
+
+      if (state.ctaButton.fontWeight !== 500) {
+        failures.push(
+          `${viewport.name}: infrastructure CTA button font weight ${state.ctaButton.fontWeight}, expected 500`
         );
       }
 
