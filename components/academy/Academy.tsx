@@ -53,7 +53,7 @@ const cardStyles = [
     x: "213px",
     y: "30px",
     rotate: "24.31deg",
-    zIndex: 1,
+    zIndex: 0,
   },
 ] as const;
 
@@ -117,8 +117,12 @@ export function Academy({ title, subtitle, cards, programCards }: AcademyProps) 
         const style = cardStyles[index % cardStyles.length];
         const focusedX = -parseFloat(style.x);
         const focusedRotate = -parseFloat(style.rotate);
+        const raiseAt =
+          index === 0
+            ? 0
+            : (index - 1) * 1.16 + 0.54 + cardExitDuration + 0.01;
 
-        cardsTimeline.set(cardShell, { zIndex: 100 + index }, index * 1.16);
+        cardsTimeline.set(cardShell, { zIndex: 100 + index }, raiseAt);
 
         cardsTimeline.to(
           cardShell,
