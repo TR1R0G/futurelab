@@ -7,6 +7,7 @@ import type { CSSProperties } from 'react'
 import { useEffect, useRef } from 'react'
 
 const ECOSYSTEM_BLOCK_HEIGHT = 717
+const ECOSYSTEM_SCROLL_SLOWDOWN = 2.4
 interface EcosystemProps {
 	title: string
 	subtitle: string
@@ -37,6 +38,11 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 			media.add('(min-width: 1024px)', () => {
 				const getScrollDistance = () =>
 					Math.max(0, track.scrollWidth - wrapper.clientWidth)
+				const getPinDistance = () =>
+					Math.max(
+						window.innerHeight * 1.2,
+						getScrollDistance() * ECOSYSTEM_SCROLL_SLOWDOWN,
+					)
 
 				const tween = gsap.to(track, {
 					x: () => -getScrollDistance(),
@@ -44,7 +50,7 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 					scrollTrigger: {
 						trigger: section,
 						start: 'top top',
-						end: () => `+=${getScrollDistance()}`,
+						end: () => `+=${getPinDistance()}`,
 						pin: true,
 						scrub: 1,
 						anticipatePin: 1,
