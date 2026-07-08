@@ -2051,41 +2051,6 @@ main {
 	transform: matrix(-0.7, 0.71, 0.71, 0.7, 0, 0);
 }
 
-.solutions-glow-expanded {
-	left: 102.38px;
-	top: 0;
-	width: 1003.81px;
-	height: 968.42px;
-	filter: blur(175px);
-}
-
-.solutions-glow-expanded-blue {
-	left: 271.17px;
-	top: 232.87px;
-	width: 292.74px;
-	height: 819.41px;
-	background: #3fa1fc;
-	transform: matrix(0.53, 0.85, -0.8, 0.6, 0, 0);
-}
-
-.solutions-glow-expanded-yellow {
-	left: 137.74px;
-	top: 554.27px;
-	width: 292.74px;
-	height: 788.72px;
-	background: #fccc01;
-	transform: matrix(-0.13, 0.99, 0.98, 0.21, 0, 0);
-}
-
-.solutions-glow-expanded-pink {
-	left: 128.13px;
-	top: 135.57px;
-	width: 349.58px;
-	height: 719.12px;
-	background: #da7fce;
-	transform: matrix(-0.66, 0.75, 0.68, 0.74, 0, 0);
-}
-
 .solutions-section::after {
 	content: '';
 	position: absolute;

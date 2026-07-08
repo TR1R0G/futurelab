@@ -17,8 +17,17 @@ interface SolutionsProps {
 
 const SOLUTION_CARD_TOP = 555
 const SOLUTION_CARD_IMAGE_TOP = 1059
-const SOLUTION_EXPANDED_GLOW_TOP = 1415.47
 const SOLUTION_EXPANDED_IMAGE_TOP = 1598
+const SOLUTION_CARD_IMAGE_LEFT = 371
+const SOLUTION_CARD_IMAGE_WIDTH = 694
+const SOLUTION_CARD_IMAGE_HEIGHT = 391
+const SOLUTION_EXPANDED_MEDIA_WIDTH = 1436
+const SOLUTION_EXPANDED_MEDIA_HEIGHT = 809
+const SOLUTION_GLOW_WIDTH = 820.87
+const SOLUTION_GLOW_HEIGHT = 710.82
+const SOLUTION_GLOW_CENTER_OFFSET_X = -61.27
+const SOLUTION_GLOW_TOP_OFFSET =
+	SOLUTION_CARD_TOP + 262.79 - SOLUTION_CARD_IMAGE_TOP
 const SOLUTION_BLOCK_HEIGHT = 2020.92
 const SOLUTION_TRAILING_SPACE = 220
 const SOLUTION_IMAGE_FINAL_AT = 0.82
@@ -38,6 +47,7 @@ const isExternalHref = (href: string) => /^https?:\/\//.test(href)
 export function Solutions({ title, description, cards, language }: SolutionsProps) {
 	const sectionRef = useRef<HTMLElement>(null)
 	const mediaRefs = useRef<Array<HTMLDivElement | null>>([])
+	const glowRefs = useRef<Array<HTMLDivElement | null>>([])
 	const cursorRef = useRef<HTMLDivElement | null>(null)
 	const museumHref = `/museum?lang=${language}`
 	const temuridsHref = `/temurids?lang=${language}`
@@ -62,25 +72,23 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 			return {
 				cardTop: SOLUTION_CARD_TOP + offset,
 				start: {
-					left: 371,
+					left: SOLUTION_CARD_IMAGE_LEFT,
 					top: SOLUTION_CARD_IMAGE_TOP + offset,
-					width: 694,
-					height: 391,
+					width: SOLUTION_CARD_IMAGE_WIDTH,
+					height: SOLUTION_CARD_IMAGE_HEIGHT,
 					borderRadius: 35,
 				},
 			}
 		}
 
 		const getTargetRect = (): Rect => {
-			const visualWidth = 1436
-			const visualHeight = 809
 			const visualScale = Math.min(
 				1,
-				(window.innerWidth * 0.9) / visualWidth,
-				(window.innerHeight * 0.92) / visualHeight,
+				(window.innerWidth * 0.9) / SOLUTION_EXPANDED_MEDIA_WIDTH,
+				(window.innerHeight * 0.92) / SOLUTION_EXPANDED_MEDIA_HEIGHT,
 			)
-			const width = Math.round(visualWidth * visualScale)
-			const height = Math.round(visualHeight * visualScale)
+			const width = Math.round(SOLUTION_EXPANDED_MEDIA_WIDTH * visualScale)
+			const height = Math.round(SOLUTION_EXPANDED_MEDIA_HEIGHT * visualScale)
 
 			return {
 				left: Math.round((window.innerWidth - width) / 2),
@@ -89,6 +97,15 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 				height,
 			}
 		}
+
+		const getGlowPosition = (rect: Rect) => ({
+			left:
+				rect.left +
+				rect.width / 2 +
+				SOLUTION_GLOW_CENTER_OFFSET_X -
+				SOLUTION_GLOW_WIDTH / 2,
+			top: rect.top + SOLUTION_GLOW_TOP_OFFSET,
+		})
 
 		const readSourceRect = (media: HTMLDivElement, index: number): Rect => {
 			const container = media.closest<HTMLElement>('.solutions-inner')
@@ -119,6 +136,79 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 				left: Math.round(target.left - containerLeft),
 				top: Math.round(releaseScroll - containerTop + target.top),
 			}
+		}
+
+		const setHiddenGlowState = (glow: HTMLDivElement, index: number) => {
+			const { start } = getLayout(index)
+			const position = getGlowPosition(start)
+
+			glow.style.position = 'absolute'
+			glow.style.left = `${position.left}px`
+			glow.style.top = `${position.top}px`
+			glow.style.width = `${SOLUTION_GLOW_WIDTH}px`
+			glow.style.height = `${SOLUTION_GLOW_HEIGHT}px`
+			glow.style.opacity = '0'
+			glow.style.visibility = 'hidden'
+			glow.style.zIndex = '10'
+			glow.style.transform = 'none'
+			glow.style.transformOrigin = 'top left'
+			glow.style.pointerEvents = 'none'
+			glow.style.willChange = 'left, top, transform'
+		}
+
+		const setReleasedGlowState = (
+			glow: HTMLDivElement,
+			media: HTMLDivElement,
+			target: Rect,
+			releaseScroll: number,
+		) => {
+			const released = getReleasedPosition(media, target, releaseScroll)
+			const position = getGlowPosition({
+				...target,
+				left: released.left,
+				top: released.top,
+			})
+
+			glow.style.position = 'absolute'
+			glow.style.left = `${position.left}px`
+			glow.style.top = `${position.top}px`
+			glow.style.width = `${SOLUTION_GLOW_WIDTH}px`
+			glow.style.height = `${SOLUTION_GLOW_HEIGHT}px`
+			glow.style.opacity = '1'
+			glow.style.visibility = 'visible'
+			glow.style.zIndex = '10'
+			glow.style.transform = 'none'
+			glow.style.transformOrigin = 'top left'
+			glow.style.pointerEvents = 'none'
+			glow.style.willChange = 'left, top, transform'
+		}
+
+		const setFixedGlowState = (
+			glow: HTMLDivElement,
+			start: Rect,
+			target: Rect,
+			progress: number,
+		) => {
+			const eased = ease(progress)
+			const position = getGlowPosition({
+				left: lerp(start.left, target.left, eased),
+				top: lerp(start.top, target.top, eased),
+				width: lerp(start.width, target.width, eased),
+				height: lerp(start.height, target.height, eased),
+			})
+
+			glow.style.position = 'fixed'
+			glow.style.left = `${position.left}px`
+			glow.style.top = `${position.top}px`
+			glow.style.width = `${SOLUTION_GLOW_WIDTH}px`
+			glow.style.height = `${SOLUTION_GLOW_HEIGHT}px`
+			glow.style.opacity = '1'
+			glow.style.visibility = 'visible'
+			glow.style.zIndex = '210'
+			glow.style.transform = 'none'
+			glow.style.transformOrigin = 'top left'
+			glow.style.pointerEvents = 'none'
+			glow.style.willChange = 'left, top, transform'
 		}
 
 		const setSourceState = (media: HTMLDivElement, index: number) => {
@@ -178,6 +268,7 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 			if (!mediaQuery.matches) {
 				sourceRects.clear()
 				mediaRefs.current.forEach(media => media?.removeAttribute('style'))
+				glowRefs.current.forEach(glow => glow?.removeAttribute('style'))
 				return
 			}
 
@@ -187,10 +278,12 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 
 			mediaRefs.current.forEach((media, index) => {
 				if (!media) return
+				const glow = glowRefs.current[index]
 
 				if (window.scrollY >= sectionBottom - 1) {
 					media.style.visibility = 'hidden'
 					media.style.pointerEvents = 'none'
+					if (glow) setHiddenGlowState(glow, index)
 					return
 				}
 
@@ -212,12 +305,14 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 
 				if (rawProgress <= 0) {
 					setSourceState(media, index)
+					if (glow) setHiddenGlowState(glow, index)
 					sourceRects.set(media, readSourceRect(media, index))
 					return
 				}
 
 				if (rawProgress >= 1) {
 					setReleasedState(media, target, releaseScroll)
+					if (glow) setReleasedGlowState(glow, media, target, releaseScroll)
 					sourceRects.delete(media)
 					return
 				}
@@ -232,6 +327,14 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 					target,
 					clamp(rawProgress / SOLUTION_IMAGE_FINAL_AT),
 				)
+				if (glow) {
+					setFixedGlowState(
+						glow,
+						startRect,
+						target,
+						clamp(rawProgress / SOLUTION_IMAGE_FINAL_AT),
+					)
+				}
 			})
 		}
 
@@ -243,12 +346,16 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 		const handleResize = () => {
 			sourceRects.clear()
 			mediaRefs.current.forEach(media => media?.removeAttribute('style'))
+			glowRefs.current.forEach(glow => glow?.removeAttribute('style'))
 			requestUpdate()
 		}
 
 		const ctx = gsap.context(() => {
 			mediaRefs.current.forEach((media, index) => {
 				if (media) setSourceState(media, index)
+			})
+			glowRefs.current.forEach((glow, index) => {
+				if (glow) setHiddenGlowState(glow, index)
 			})
 			update()
 			window.addEventListener('scroll', requestUpdate, { passive: true })
@@ -373,8 +480,6 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 
 				{cards.map((card, index) => {
 					const top = SOLUTION_CARD_TOP + index * SOLUTION_BLOCK_HEIGHT
-					const expandedTop =
-						SOLUTION_EXPANDED_GLOW_TOP + index * SOLUTION_BLOCK_HEIGHT
 					const imageTop = SOLUTION_CARD_IMAGE_TOP + index * SOLUTION_BLOCK_HEIGHT
 					const isMuseumCard = index === 0
 					const isTemuridsCard = index === 2
@@ -397,7 +502,11 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 								className='mt-16 md:mt-20 lg:absolute lg:left-0 lg:mt-0 lg:top-[var(--solutions-card-top)]'
 								style={{ '--solutions-card-top': `${top}px` } as CSSProperties}
 							/>
-							<ExpandedGlow top={expandedTop} />
+							<TransitionExpandedGlow
+								glowRef={element => {
+									glowRefs.current[index] = element
+								}}
+							/>
 							<TransitionMedia
 								mediaRef={element => {
 									mediaRefs.current[index] = element
@@ -574,18 +683,23 @@ function LearnMoreCursor({
 function CollapsedGlow() {
 	return (
 		<div className='pointer-events-none absolute left-1/2 top-[420px] z-10 h-[870px] w-[954px] -translate-x-1/2 lg:left-[calc(50%+5.16px)] lg:top-[262.79px]'>
-			<SolutionGlow variant='collapsed' />
+			<SolutionGlow />
 		</div>
 	)
 }
 
-function ExpandedGlow({ top }: { top: number }) {
+function TransitionExpandedGlow({
+	glowRef,
+}: {
+	glowRef: (element: HTMLDivElement | null) => void
+}) {
 	return (
 		<div
-			className='pointer-events-none relative mt-20 hidden h-[1160px] w-full lg:absolute lg:left-0 lg:mt-0 lg:block'
-			style={{ top }}
+			ref={glowRef}
+			className='solutions-transition-glow pointer-events-none invisible hidden opacity-0 lg:absolute lg:left-0 lg:top-0 lg:block'
+			aria-hidden='true'
 		>
-			<SolutionGlow variant='expanded' />
+			<SolutionGlow />
 		</div>
 	)
 }
@@ -657,20 +771,7 @@ function TransitionMedia({
 	)
 }
 
-function SolutionGlow({ variant }: { variant: 'collapsed' | 'expanded' }) {
-	if (variant === 'expanded') {
-		return (
-			<div
-				className='solutions-glow solutions-glow-expanded'
-				aria-hidden='true'
-			>
-				<span className='solutions-glow-ellipse solutions-glow-expanded-blue' />
-				<span className='solutions-glow-ellipse solutions-glow-expanded-yellow' />
-				<span className='solutions-glow-ellipse solutions-glow-expanded-pink' />
-			</div>
-		)
-	}
-
+function SolutionGlow() {
 	return (
 		<div className='solutions-glow solutions-glow-collapsed' aria-hidden='true'>
 			<span className='solutions-glow-ellipse solutions-glow-collapsed-blue' />
