@@ -6,6 +6,7 @@ import { useGlobalVideoSound } from '@/components/providers/SoundProvider'
 import { gsap, registerGsapPlugins } from '@/lib/gsap'
 import type { DirectionsContent, Language } from '@/lib/mdx'
 import { useEffect, useRef } from 'react'
+import { DirectionsLight } from './DirectionsLight'
 
 interface DirectionsProps {
 	title: string
@@ -121,10 +122,7 @@ export function Directions({
 								key={chip.label}
 								className={`directions-chip-slot directions-chip-slot-${index} absolute flex items-center justify-center ${chipLayout[index].outer}`}
 							>
-								<DirectionChip
-									chip={chip}
-									className={chipLayout[index].chip}
-								/>
+								<DirectionChip chip={chip} className={chipLayout[index].chip} />
 							</div>
 						))}
 					</div>
@@ -132,39 +130,7 @@ export function Directions({
 			</div>
 
 			<div className='directions-statement sticky top-[12svh] mx-auto mt-32 max-w-[1436px] text-center md:mt-44 lg:mt-52'>
-				<div
-					className='directions-statement-light pointer-events-none absolute -top-[228px] left-1/2 hidden h-[755.68px] w-[872.67px] lg:block'
-					style={{
-						filter: 'blur(175px)',
-						transform: 'translateX(calc(-50% - 70.67px)) rotate(-12.33deg)',
-					}}
-					aria-hidden='true'
-				>
-					<span
-						className='absolute h-[700.62px] w-[231.6px] bg-[#3FA1FC]'
-						style={{
-							left: '225.23px',
-							top: '183.61px',
-							transform: 'rotate(55.69deg)',
-						}}
-					/>
-					<span
-						className='absolute h-[674.38px] w-[231.6px] bg-[#FCCC01]'
-						style={{
-							left: '107.48px',
-							top: '449.7px',
-							transform: 'matrix(-0.17, 0.99, 0.99, 0.17, 0, 0)',
-						}}
-					/>
-					<span
-						className='absolute h-[578.17px] w-[293.53px] bg-[#DA7FCE]'
-						style={{
-							left: '107.48px',
-							top: '117.86px',
-							transform: 'matrix(-0.7, 0.71, 0.71, 0.7, 0, 0)',
-						}}
-					/>
-				</div>
+				<DirectionsLight className='left-1/2 top-[calc(38svh_-_377.84px)] hidden lg:block' />
 
 				<div className='directions-statement-copy relative z-10 text-[32px] font-semibold leading-[1.48] tracking-normal text-white md:text-[44px] lg:text-[55px] lg:leading-[78px]'>
 					<span className='directions-inline-image pointer-events-none absolute left-1/2 top-[155px] z-20 hidden h-[91px] w-[52px] translate-x-[90px] overflow-hidden rounded-[8px] lg:block'>
@@ -209,18 +175,14 @@ export function Directions({
 				src={statement.imageSrc}
 				videoSrc={academyVideoSrc}
 				alt={statement.imageAlt}
-				className='-mt-[58svh]'
+				className='-mt-[40svh]'
 				movingTextSelector='.directions-statement-copy'
-				fadingElementSelector='.directions-statement-light'
+				fadingElementSelector='.directions-statement > .directions-statement-light'
 				sourceSelector='.directions-inline-image'
 			/>
 
-			<div className='directions-post-image relative z-[100] flex min-h-[36svh] flex-col justify-center bg-black pt-20 md:pt-24 lg:pt-28'>
-				<CTACard
-					variant='wide'
-					text={ctaText}
-					buttonText={ctaButton}
-				/>
+			<div className='directions-post-image relative z-[100] flex min-h-[40svh] flex-col justify-center bg-black'>
+				<CTACard variant='wide' text={ctaText} buttonText={ctaButton} />
 
 				<div
 					className='mx-auto mt-[90px] h-1 w-[calc(100%_-_40px)] max-w-[1436px] rounded-sm bg-[linear-gradient(90deg,#4B0E5B_0%,#A91E83_29.9%,#FD9A34_65.67%,#F9EB44_100%)] md:mt-[110px] md:w-[calc(100%_-_64px)] lg:mt-[130px]'
