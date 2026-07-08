@@ -22,6 +22,7 @@ const SOLUTION_EXPANDED_IMAGE_TOP = 1598
 const SOLUTION_BLOCK_HEIGHT = 2020.92
 const SOLUTION_TRAILING_SPACE = 220
 const SOLUTION_IMAGE_FINAL_AT = 0.82
+const SOLUTION_ANIMATION_START_OFFSET = 5
 const MUSEUM_VIDEO_SRC = '/videos/museum/museum.mp4'
 const TEMURIDS_VIDEO_SRC = '/videos/temurids/temurids.mp4'
 
@@ -90,28 +91,13 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 		}
 
 		const readSourceRect = (media: HTMLDivElement, index: number): Rect => {
-			const rect = media.getBoundingClientRect()
-
-			if (
-				rect.width > 0 &&
-				rect.height > 0 &&
-				media.style.position !== 'fixed'
-			) {
-				return {
-					left: rect.left,
-					top: rect.top,
-					width: rect.width,
-					height: rect.height,
-				}
-			}
-
 			const container = media.closest<HTMLElement>('.solutions-inner')
 			const containerRect = container?.getBoundingClientRect()
-			const { start } = getLayout(index)
+			const { cardTop, start } = getLayout(index)
 
 			return {
 				left: (containerRect?.left ?? 0) + start.left,
-				top: section.getBoundingClientRect().top + start.top,
+				top: start.top - cardTop - SOLUTION_ANIMATION_START_OFFSET,
 				width: start.width,
 				height: start.height,
 			}
@@ -212,7 +198,8 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 				media.style.pointerEvents = ''
 
 				const { cardTop } = getLayout(index)
-				const animationStart = sectionTop + cardTop + 5
+				const animationStart =
+					sectionTop + cardTop + SOLUTION_ANIMATION_START_OFFSET
 				const releaseScroll =
 					sectionTop +
 					SOLUTION_EXPANDED_IMAGE_TOP +
