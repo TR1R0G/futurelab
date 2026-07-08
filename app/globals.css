@@ -365,15 +365,15 @@ main {
 	}
 
 	.contact-card > div:first-child {
-		left: 100px !important;
+		left: 40px !important;
 	}
 
 	.contact-item-mail {
-		left: 575px !important;
+		left: 545px !important;
 	}
 
 	.contact-item-telegram {
-		left: 900px !important;
+		left: 870px !important;
 	}
 
 	.footer-contact-list {
