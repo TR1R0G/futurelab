@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 const { chromium } = require("playwright");
+const fs = require("fs");
+const path = require("path");
 
 const chromeExecutable = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const baseUrl = process.env.TEST_URL || "http://localhost:3000";
@@ -9,6 +11,26 @@ const expectedVideos = [
   "/videos/solutions/behbudi.mp4",
   "/videos/solutions/webar.mp4",
 ];
+
+function assertNoRealizedProjectImageFields() {
+  const files = [
+    "content/realized-projects.mdx",
+    "content/en/realized-projects.mdx",
+  ];
+
+  for (const file of files) {
+    const source = fs.readFileSync(path.join(process.cwd(), file), "utf-8");
+    const imageFields = source
+      .split("\n")
+      .filter((line) => /^\s+image:\s/.test(line));
+
+    if (imageFields.length > 0) {
+      throw new Error(
+        `${file} still defines fixed image previews: ${imageFields.join(", ")}`
+      );
+    }
+  }
+}
 
 async function assertClickToPlay(page, index, expectedSrc) {
   const card = page.locator(".realized-project-card").nth(index);
@@ -22,6 +44,8 @@ async function assertClickToPlay(page, index, expectedSrc) {
     currentTime: element.currentTime,
     controls: element.controls,
     playsInline: element.playsInline,
+    poster: element.getAttribute("poster"),
+    preload: element.getAttribute("preload"),
     src: element.currentSrc || element.src,
   }));
 
@@ -35,6 +59,14 @@ async function assertClickToPlay(page, index, expectedSrc) {
 
   if (!initial.playsInline) {
     throw new Error(`Video ${index} is missing inline playback attributes`);
+  }
+
+  if (initial.poster) {
+    throw new Error(`Video ${index} still uses a fixed poster image: ${initial.poster}`);
+  }
+
+  if (initial.preload !== "auto") {
+    throw new Error(`Video ${index} preload is ${initial.preload}, expected auto so the browser can render a video frame preview`);
   }
 
   if (!decodeURIComponent(initial.src).endsWith(expectedSrc)) {
@@ -55,6 +87,8 @@ async function assertClickToPlay(page, index, expectedSrc) {
 }
 
 async function run() {
+  assertNoRealizedProjectImageFields();
+
   const browser = await chromium.launch({
     headless: true,
     executablePath: chromeExecutable,

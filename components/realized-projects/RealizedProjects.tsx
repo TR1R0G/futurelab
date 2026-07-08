@@ -182,8 +182,7 @@ function ProjectMedia({ project }: { project: RealizedProject }) {
         <video
           ref={videoRef}
           className="h-full w-full object-cover"
-          poster={project.image}
-          preload="metadata"
+          preload="auto"
           playsInline
           controls
           onPlay={() => setIsPlaying(true)}
@@ -193,7 +192,7 @@ function ProjectMedia({ project }: { project: RealizedProject }) {
         >
           <source src={project.video} type="video/mp4" />
         </video>
-      ) : (
+      ) : project.image ? (
         <FadeInImage
           src={project.image}
           alt={project.imageAlt}
@@ -202,13 +201,13 @@ function ProjectMedia({ project }: { project: RealizedProject }) {
           className="object-cover"
           unoptimized
         />
-      )}
+      ) : null}
 
       {project.video ? (
         !isPlaying && <PlayButton onClick={handlePlay} />
-      ) : (
+      ) : project.image ? (
         <PlayIcon />
-      )}
+      ) : null}
     </div>
   );
 }

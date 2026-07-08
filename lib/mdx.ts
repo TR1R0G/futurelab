@@ -146,7 +146,7 @@ export async function loadSolutionsContent(language: Language = "ru"): Promise<S
 export interface RealizedProject {
   title: string;
   description: string;
-  image: string;
+  image?: string;
   imageAlt: string;
   video?: string;
 }
