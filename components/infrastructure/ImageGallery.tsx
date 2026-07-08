@@ -103,7 +103,7 @@ export function ImageGallery() {
         duration: 28,
         ease: "none",
         repeat: -1,
-        invalidateOnRefresh: true,
+        repeatRefresh: true,
       });
 
       const slowDown = () => tween.timeScale(0.28);

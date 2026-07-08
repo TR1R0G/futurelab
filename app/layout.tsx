@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Golos_Text, Onest, Sansation } from "next/font/google";
+import { Golos_Text, Onest } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
 import { PageLoadGate } from "@/components/providers/PageLoadGate";
@@ -11,12 +12,21 @@ const golosText = Golos_Text({
   display: "swap",
 });
 
-const sansation = Sansation({
+const sansation = localFont({
   variable: "--font-sansation",
-  weight: ["400", "700"],
-  subsets: ["latin", "cyrillic"],
+  src: [
+    {
+      path: "./fonts/sansation-400.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./fonts/sansation-700.ttf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
   display: "swap",
-  adjustFontFallback: false,
 });
 
 const onest = Onest({

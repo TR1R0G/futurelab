@@ -140,11 +140,7 @@ export function useGlobalVideoSound(
 }
 
 export function SoundProvider({ children }: { children: React.ReactNode }) {
-  const [soundEnabled, setSoundEnabledState] = useState(() => {
-    if (typeof window === "undefined") return false;
-
-    return window.localStorage.getItem(SOUND_STORAGE_KEY) === "1";
-  });
+  const [soundEnabled, setSoundEnabledState] = useState(false);
   const [hasVisibleMedia, setHasVisibleMedia] = useState(false);
 
   const setVisibleMediaState = useCallback((visibleCount: number) => {
@@ -175,6 +171,18 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
   const toggleSound = useCallback(() => {
     setSoundEnabled(!soundEnabled);
   }, [setSoundEnabled, soundEnabled]);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      setSoundEnabledState(
+        window.localStorage.getItem(SOUND_STORAGE_KEY) === "1"
+      );
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+    };
+  }, []);
 
   useEffect(() => {
     let frame = 0;
