@@ -34,6 +34,7 @@ const SOLUTION_IMAGE_FINAL_AT = 0.82
 const SOLUTION_ANIMATION_START_OFFSET = 5
 const MUSEUM_VIDEO_SRC = '/videos/museum/museum.mp4'
 const TEMURIDS_VIDEO_SRC = '/videos/temurids/temurids.mp4'
+const LEARN_MORE_SEPARATOR = '\u00a0\u00a0•\u00a0\u00a0'
 
 type Rect = {
 	left: number
@@ -594,6 +595,8 @@ function SolutionCard({
 }
 
 function LearnMoreButton({ label }: { label: string }) {
+	const circularLabel = `${label}${LEARN_MORE_SEPARATOR}${label}${LEARN_MORE_SEPARATOR}`
+
 	return (
 		<span
 			aria-hidden='true'
@@ -618,16 +621,16 @@ function LearnMoreButton({ label }: { label: string }) {
 						textLength='465'
 						lengthAdjust='spacing'
 					>
-						{label} • {label} • {label} •
+						{circularLabel}
 					</textPath>
 				</text>
 			</svg>
 			<Image
 				src='/images/block6/arrow.svg'
 				alt=''
-				width={28}
-				height={28}
-				className='absolute left-[112.21px] top-[112.2px] h-[28px] w-[28px]'
+				width={16}
+				height={16}
+				className='absolute left-[118.21px] top-[118.2px] h-4 w-4'
 				aria-hidden='true'
 			/>
 		</span>
@@ -641,6 +644,8 @@ function LearnMoreCursor({
 	cursorRef: RefObject<HTMLDivElement | null>
 	label: string
 }) {
+	const circularLabel = `${label}${LEARN_MORE_SEPARATOR}${label}${LEARN_MORE_SEPARATOR}`
+
 	return (
 		<div
 			ref={cursorRef}
@@ -671,16 +676,16 @@ function LearnMoreCursor({
 						textLength='465'
 						lengthAdjust='spacing'
 					>
-						{label} • {label} • {label} •
+						{circularLabel}
 					</textPath>
 				</text>
 			</svg>
 			<Image
 				src='/images/block6/arrow.svg'
 				alt=''
-				width={28}
-				height={28}
-				className='absolute left-[112.21px] top-[112.2px] h-[28px] w-[28px]'
+				width={16}
+				height={16}
+				className='absolute left-[118.21px] top-[118.2px] h-4 w-4'
 			/>
 		</div>
 	)
