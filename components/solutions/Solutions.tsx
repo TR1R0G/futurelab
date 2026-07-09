@@ -462,7 +462,12 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 		<section
 			ref={sectionRef}
 			className='solutions-section relative z-[120] isolate -mt-20 overflow-hidden bg-black px-5 py-24 md:px-8 lg:mt-[60px] lg:px-0 lg:py-0'
-			style={{ minHeight: `${sectionHeight}px` }}
+			style={
+				{
+					'--solutions-section-height': `${sectionHeight}px`,
+					minHeight: `${sectionHeight}px`,
+				} as CSSProperties
+			}
 		>
 			<div
 				className='solutions-inner relative mx-auto max-w-[1436px]'

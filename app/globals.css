@@ -2132,3 +2132,11 @@ main {
 		animation: none;
 	}
 }
+
+@media (min-width: 1024px) {
+	.solutions-section,
+	.solutions-inner {
+		height: var(--solutions-section-height) !important;
+		min-height: var(--solutions-section-height) !important;
+	}
+}
