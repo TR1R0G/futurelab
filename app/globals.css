@@ -54,8 +54,8 @@ main {
 }
 
 .hero-section {
-	height: 220svh;
-	min-height: 1600px;
+	height: 320svh;
+	min-height: 2400px;
 }
 
 .hero-stage {
@@ -489,7 +489,8 @@ main {
 }
 
 .directions-section {
-	height: 2031px;
+	--expanded-image-scroll-extra: 120svh;
+	height: calc(2031px + var(--expanded-image-scroll-extra));
 	min-height: 0;
 	overflow: visible !important;
 }
@@ -595,7 +596,7 @@ main {
 	}
 
 	.directions-section {
-		height: 2144px;
+		height: calc(2144px + var(--expanded-image-scroll-extra));
 		min-height: 0;
 	}
 
@@ -683,7 +684,7 @@ main {
 	}
 
 	.directions-section {
-		height: 3200px;
+		height: calc(3200px + var(--expanded-image-scroll-extra));
 		min-height: 0;
 	}
 
@@ -781,7 +782,7 @@ main {
 	}
 
 	.directions-section {
-		height: 2144px;
+		height: calc(2144px + var(--expanded-image-scroll-extra));
 		min-height: 0;
 	}
 
@@ -859,7 +860,7 @@ main {
 	}
 
 	.directions-section {
-		height: 3600px;
+		height: calc(3600px + var(--expanded-image-scroll-extra));
 		min-height: 0;
 	}
 
@@ -945,7 +946,7 @@ main {
 	}
 
 	.directions-section {
-		height: 3200px;
+		height: calc(3200px + var(--expanded-image-scroll-extra));
 		min-height: 0;
 	}
 
@@ -1000,8 +1001,8 @@ main {
 
 @media (min-width: 640px) {
 	.hero-section {
-		height: 220svh;
-		min-height: 1800px;
+		height: 320svh;
+		min-height: 2600px;
 	}
 
 	.hero-header {
@@ -1103,8 +1104,8 @@ main {
 	}
 
 	.hero-section {
-		height: 1739px;
-		min-height: 1739px;
+		height: 2520px;
+		min-height: 2520px;
 	}
 
 	.hero-header {
@@ -1232,8 +1233,8 @@ main {
 	}
 
 	.hero-section {
-		height: 1771px;
-		min-height: 1771px;
+		height: 2570px;
+		min-height: 2570px;
 	}
 
 	.hero-header {
@@ -1351,8 +1352,8 @@ main {
 
 @media (min-width: 900px) and (max-width: 1199px) {
 	.hero-section {
-		height: 1771px;
-		min-height: 1771px;
+		height: 2570px;
+		min-height: 2570px;
 	}
 
 	.hero-header {
@@ -1451,8 +1452,8 @@ main {
 
 @media (min-width: 1200px) {
 	.hero-section {
-		height: 1771px;
-		min-height: 1771px;
+		height: 2570px;
+		min-height: 2570px;
 	}
 
 	.hero-header {
@@ -1557,8 +1558,8 @@ main {
 
 @media (min-width: 1600px) {
 	.hero-section {
-		height: calc(100svh + 1046px);
-		min-height: 1700px;
+		height: calc(100svh + 1800px);
+		min-height: 2500px;
 	}
 
 	.hero-header {

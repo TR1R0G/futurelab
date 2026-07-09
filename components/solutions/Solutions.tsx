@@ -32,6 +32,7 @@ const SOLUTION_BLOCK_HEIGHT = 2020.92
 const SOLUTION_TRAILING_SPACE = 220
 const SOLUTION_IMAGE_FINAL_AT = 0.82
 const SOLUTION_ANIMATION_START_OFFSET = 5
+const SOLUTION_EXPANSION_SCROLL_MULTIPLIER = 1.85
 const MUSEUM_VIDEO_SRC = '/videos/museum/museum.mp4'
 const TEMURIDS_VIDEO_SRC = '/videos/temurids/temurids.mp4'
 
@@ -293,12 +294,17 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 				const { cardTop } = getLayout(index)
 				const animationStart =
 					sectionTop + cardTop + SOLUTION_ANIMATION_START_OFFSET
-				const releaseScroll =
+				const baseReleaseScroll =
 					sectionTop +
 					SOLUTION_EXPANDED_IMAGE_TOP +
 					index * SOLUTION_BLOCK_HEIGHT -
 					target.top
-				const transitionDistance = Math.max(1, releaseScroll - animationStart)
+				const transitionDistance = Math.max(
+					1,
+					(baseReleaseScroll - animationStart) *
+						SOLUTION_EXPANSION_SCROLL_MULTIPLIER,
+				)
+				const releaseScroll = animationStart + transitionDistance
 				const rawProgress =
 					(window.scrollY - animationStart) /
 					transitionDistance

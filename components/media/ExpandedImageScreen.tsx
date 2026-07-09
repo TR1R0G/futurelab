@@ -42,6 +42,7 @@ export function ExpandedImageScreen({
 
 		const positionEase = gsap.parseEase('power2.inOut')
 		const fullSizeAt = 0.82
+		const imageScrollRangeMultiplier = 2.5
 		const clamp = (value: number) => Math.min(1, Math.max(0, value))
 
 		const getSourceElements = () =>
@@ -104,7 +105,7 @@ export function ExpandedImageScreen({
 
 			return {
 				left: Math.round((window.innerWidth - width) / 2),
-				top: Math.max(32, Math.round((window.innerHeight - height) / 2 + 200)),
+				top: Math.max(32, Math.round((window.innerHeight - height) / 2)),
 				width,
 				height,
 			}
@@ -135,7 +136,13 @@ export function ExpandedImageScreen({
 
 				const maxScroll = Math.max(1, section.offsetHeight - window.innerHeight)
 				const sectionTop = section.getBoundingClientRect().top + window.scrollY
-				const progress = clamp((window.scrollY - sectionTop) / maxScroll)
+				const scrollDelta = window.scrollY - sectionTop
+				const baseMaxScroll = Math.max(
+					1,
+					maxScroll / imageScrollRangeMultiplier,
+				)
+				const progress = clamp(scrollDelta / baseMaxScroll)
+				const imageScrollProgress = clamp(scrollDelta / maxScroll)
 				const target = readTargetRect()
 
 				if (progress <= 0.001) {
@@ -153,7 +160,7 @@ export function ExpandedImageScreen({
 					hasStartRect = true
 				}
 
-				const imageProgress = clamp(progress / fullSizeAt)
+				const imageProgress = clamp(imageScrollProgress / fullSizeAt)
 				const easedProgress = positionEase(imageProgress)
 				const rect = mixRect(startRect, target, easedProgress)
 
@@ -226,7 +233,7 @@ export function ExpandedImageScreen({
 	return (
 		<section
 			ref={sectionRef}
-			className={`expanded-image-section relative z-[90] ml-[calc(50%_-_50vw)] h-[180svh] w-screen bg-transparent ${className}`}
+			className={`expanded-image-section relative z-[90] ml-[calc(50%_-_50vw)] h-[300svh] w-screen bg-transparent ${className}`}
 		>
 			<div className='expanded-image-stage sticky top-0 h-[140svh] overflow-hidden bg-transparent'>
 				<div
