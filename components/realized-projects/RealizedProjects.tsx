@@ -15,6 +15,7 @@ export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const [activeProject, setActiveProject] = useState<RealizedProject | null>(null);
 
   useEffect(() => {
     registerGsapPlugins();
@@ -108,6 +109,22 @@ export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
     };
   }, []);
 
+  useEffect(() => {
+    if (!activeProject) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setActiveProject(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeProject]);
+
   return (
     <section
       ref={sectionRef}
@@ -128,15 +145,32 @@ export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
           className="realized-projects-track flex w-max gap-10 px-5 will-change-transform md:px-8 lg:ml-[max(32px,calc((100vw-1436px)/2))] lg:px-0"
         >
           {projects.map((project) => (
-            <ProjectCard key={project.title} project={project} />
+            <ProjectCard
+              key={project.title}
+              project={project}
+              onOpenVideo={setActiveProject}
+            />
           ))}
         </div>
       </div>
+
+      {activeProject?.video ? (
+        <ProjectVideoOverlay
+          project={activeProject}
+          onClose={() => setActiveProject(null)}
+        />
+      ) : null}
     </section>
   );
 }
 
-function ProjectCard({ project }: { project: RealizedProject }) {
+function ProjectCard({
+  project,
+  onOpenVideo,
+}: {
+  project: RealizedProject;
+  onOpenVideo: (project: RealizedProject) => void;
+}) {
   return (
     <article className="realized-project-card relative h-[var(--realized-card-height,874px)] w-[var(--realized-card-width,698px)] shrink-0 origin-top-left overflow-hidden bg-[#1D1D1D]">
       <div className="relative z-10 h-[868px] w-[698px] origin-top-left scale-[var(--realized-card-scale,1)] rounded-[35px] bg-[#1D1D1D]">
@@ -148,33 +182,22 @@ function ProjectCard({ project }: { project: RealizedProject }) {
           {project.description}
         </p>
 
-        <ProjectMedia project={project} />
+        <ProjectMedia project={project} onOpenVideo={onOpenVideo} />
       </div>
     </article>
   );
 }
 
-function ProjectMedia({ project }: { project: RealizedProject }) {
+function ProjectMedia({
+  project,
+  onOpenVideo,
+}: {
+  project: RealizedProject;
+  onOpenVideo: (project: RealizedProject) => void;
+}) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
 
   useGlobalVideoSound(videoRef, [project.video]);
-
-  const handlePlay = async () => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (video.ended) {
-      video.currentTime = 0;
-    }
-
-    try {
-      await video.play();
-      setIsPlaying(true);
-    } catch {
-      setIsPlaying(false);
-    }
-  };
 
   return (
     <div className="absolute left-10 top-[496px] h-[332px] w-[618px] overflow-hidden rounded-[10px]">
@@ -184,10 +207,8 @@ function ProjectMedia({ project }: { project: RealizedProject }) {
           className="h-full w-full object-cover"
           preload="auto"
           playsInline
-          controls
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
-          onEnded={() => setIsPlaying(false)}
+          muted
+          loop
           aria-label={project.imageAlt}
         >
           <source src={project.video} type="video/mp4" />
@@ -204,10 +225,67 @@ function ProjectMedia({ project }: { project: RealizedProject }) {
       ) : null}
 
       {project.video ? (
-        !isPlaying && <PlayButton onClick={handlePlay} />
+        <PlayButton onClick={() => onOpenVideo(project)} />
       ) : project.image ? (
         <PlayIcon />
       ) : null}
+    </div>
+  );
+}
+
+function ProjectVideoOverlay({
+  project,
+  onClose,
+}: {
+  project: RealizedProject;
+  onClose: () => void;
+}) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    void video.play().catch(() => undefined);
+  }, [project.video]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/70 px-5 py-8 backdrop-blur-[1px] md:px-8"
+      role="dialog"
+      aria-modal="true"
+      aria-label={project.title}
+      onClick={onClose}
+    >
+      <div
+        className="relative w-[min(84vw,1490px)] overflow-hidden rounded-[20px] bg-black shadow-2xl shadow-black/60 md:rounded-[28px] lg:rounded-[35px]"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <button
+          type="button"
+          aria-label="Закрыть видео"
+          onClick={onClose}
+          className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center text-black transition-transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white md:right-6 md:top-6 md:h-14 md:w-14"
+        >
+          <span className="absolute h-[4px] w-10 rotate-45 rounded-full bg-black md:w-12" />
+          <span className="absolute h-[4px] w-10 -rotate-45 rounded-full bg-black md:w-12" />
+        </button>
+
+        <video
+          ref={videoRef}
+          key={project.video}
+          className="aspect-video max-h-[calc(100svh-96px)] w-full bg-black object-cover"
+          controls
+          autoPlay
+          playsInline
+          preload="auto"
+          poster={project.image}
+          aria-label={project.imageAlt}
+          data-manual-sound="true"
+        >
+          <source src={project.video} type="video/mp4" />
+        </video>
+      </div>
     </div>
   );
 }

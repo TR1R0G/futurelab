@@ -172,6 +172,8 @@ function syncYoutubeEmbeds(soundEnabled: boolean) {
   document
     .querySelectorAll<HTMLIFrameElement>('iframe[src*="youtube.com/embed"]')
     .forEach((iframe) => {
+      if (iframe.dataset.manualSound === "true") return;
+
       const inView = isMediaInView(iframe);
       const shouldBeAudible = soundEnabled && inView;
 
@@ -193,7 +195,11 @@ function syncPageMedia(soundEnabled: boolean) {
   let visibleCount = 0;
   const nextActiveGroupedVideos = new Map<string, HTMLVideoElement>();
   const groupedVideoRatios = new Map<HTMLVideoElement, number>();
-  const videos = Array.from(document.querySelectorAll<HTMLVideoElement>("video"));
+  const videos = Array.from(
+    document.querySelectorAll<HTMLVideoElement>(
+      'video:not([data-manual-sound="true"])'
+    )
+  );
 
   videos.forEach((video) => {
     const visibleRatio = getVisibleRatio(video);

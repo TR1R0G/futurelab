@@ -6,7 +6,7 @@ import { gsap, registerGsapPlugins } from '@/lib/gsap'
 import type { Language, SolutionsContent } from '@/lib/mdx'
 import Image from 'next/image'
 import type { CSSProperties, RefObject } from 'react'
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 interface SolutionsProps {
 	title: string
@@ -43,6 +43,13 @@ type Rect = {
 	height: number
 }
 
+type SolutionPlayerMedia = {
+	image: string
+	imageAlt: string
+	videoSrc?: string
+	youtubeVideoId?: string
+}
+
 const isExternalHref = (href: string) => /^https?:\/\//.test(href)
 
 export function Solutions({
@@ -55,8 +62,11 @@ export function Solutions({
 	const mediaRefs = useRef<Array<HTMLDivElement | null>>([])
 	const glowRefs = useRef<Array<HTMLDivElement | null>>([])
 	const cursorRef = useRef<HTMLDivElement | null>(null)
+	const [activePlayerMedia, setActivePlayerMedia] =
+		useState<SolutionPlayerMedia | null>(null)
 	const museumHref = `/museum?lang=${language}`
 	const temuridsHref = `/temurids?lang=${language}`
+	const closePlayer = useCallback(() => setActivePlayerMedia(null), [])
 
 	useEffect(() => {
 		registerGsapPlugins()
@@ -462,6 +472,45 @@ export function Solutions({
 		}
 	}, [])
 
+	useEffect(() => {
+		if (!activePlayerMedia) return
+
+		const previousOverflow = document.body.style.overflow
+		const backgroundVideos = Array.from(
+			document.querySelectorAll<HTMLVideoElement>(
+				'.solutions-transition-media video',
+			),
+		)
+		const previousVideoStates = backgroundVideos.map(video => ({
+			video,
+			muted: video.muted,
+			volume: video.volume,
+		}))
+
+		document.body.style.overflow = 'hidden'
+		backgroundVideos.forEach(video => {
+			video.muted = true
+			video.volume = 0
+		})
+
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (event.key === 'Escape') closePlayer()
+		}
+
+		window.addEventListener('keydown', handleKeyDown)
+
+		return () => {
+			document.body.style.overflow = previousOverflow
+			previousVideoStates.forEach(({ video, muted, volume }) => {
+				if (!video.isConnected) return
+
+				video.muted = muted
+				video.volume = volume
+			})
+			window.removeEventListener('keydown', handleKeyDown)
+		}
+	}, [activePlayerMedia, closePlayer])
+
 	const sectionHeight =
 		SOLUTION_CARD_TOP +
 		cards.length * SOLUTION_BLOCK_HEIGHT +
@@ -541,6 +590,11 @@ export function Solutions({
 					label={cards[0]?.cta ?? 'Узнать больше'}
 				/>
 			</div>
+
+			<SolutionVideoPlayerModal
+				media={activePlayerMedia}
+				onClose={closePlayer}
+			/>
 		</section>
 	)
 }
@@ -783,6 +837,85 @@ function TransitionMedia({
 					unoptimized
 				/>
 			)}
+
+		</div>
+	)
+}
+
+function SolutionVideoPlayerModal({
+	media,
+	onClose,
+}: {
+	media: SolutionPlayerMedia | null
+	onClose: () => void
+}) {
+	if (!media) return null
+
+	const youtubeModalSrc = media.youtubeVideoId
+		? `https://www.youtube.com/embed/${media.youtubeVideoId}?autoplay=1&controls=1&playsinline=1&rel=0&modestbranding=1`
+		: undefined
+
+	return (
+		<div
+			className='fixed inset-0 z-[1000] flex items-center justify-center bg-black/72 px-4 py-8 backdrop-blur-[2px] md:px-8'
+			role='dialog'
+			aria-modal='true'
+			aria-label={media.imageAlt}
+			onClick={onClose}
+		>
+			<div
+				className='relative w-full max-w-[1490px] overflow-hidden rounded-[24px] bg-black shadow-[0_30px_90px_rgba(0,0,0,0.65)] md:w-[82vw] lg:rounded-[35px]'
+				onClick={event => event.stopPropagation()}
+			>
+				<button
+					type='button'
+					className='absolute right-4 top-4 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-white/90 text-black transition hover:scale-105 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:right-5 md:top-5 md:h-14 md:w-14'
+					aria-label='Закрыть видео'
+					onClick={onClose}
+				>
+					<svg
+						viewBox='0 0 24 24'
+						className='h-8 w-8 md:h-10 md:w-10'
+						fill='none'
+						aria-hidden='true'
+					>
+						<path
+							d='M5 5L19 19M19 5L5 19'
+							stroke='currentColor'
+							strokeWidth='2.4'
+							strokeLinecap='round'
+						/>
+					</svg>
+				</button>
+
+				<div className='aspect-video w-full bg-black'>
+					{youtubeModalSrc ? (
+						<iframe
+							key={media.youtubeVideoId}
+							className='h-full w-full'
+							src={youtubeModalSrc}
+							title={media.imageAlt}
+							data-manual-sound='true'
+							allow='autoplay; encrypted-media; picture-in-picture; web-share'
+							allowFullScreen
+						/>
+					) : (
+						<video
+							key={media.videoSrc}
+							className='h-full w-full object-cover'
+							aria-label={media.imageAlt}
+							data-manual-sound='true'
+							autoPlay
+							controls
+							playsInline
+							preload='auto'
+							poster={media.image}
+						>
+							<source src={media.videoSrc} type='video/mp4' />
+						</video>
+					)}
+				</div>
+			</div>
 		</div>
 	)
 }
