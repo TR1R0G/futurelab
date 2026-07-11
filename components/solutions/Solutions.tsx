@@ -558,7 +558,7 @@ export function Solutions({
 						? MUSEUM_VIDEO_SRC
 						: isTemuridsCard
 							? TEMURIDS_VIDEO_SRC
-							: undefined
+							: card.videoSrc
 
 					return (
 						<div key={card.title}>

@@ -135,6 +135,7 @@ export interface SolutionsContent {
     imageAlt: string;
     cta: string;
     href?: string;
+    videoSrc?: string;
     youtubeVideoId?: string;
   }[];
 }
