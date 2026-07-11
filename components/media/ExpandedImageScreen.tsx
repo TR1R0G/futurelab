@@ -337,7 +337,6 @@ export function ExpandedImageScreen({
 							className='h-full w-full object-cover'
 							aria-label={alt}
 							autoPlay
-							muted
 							loop
 							playsInline
 							preload='auto'

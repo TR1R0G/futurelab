@@ -390,7 +390,6 @@ export function Hero({
 							className='h-full w-full object-cover'
 							aria-label={imageAlt}
 							autoPlay
-							muted
 							loop
 							playsInline
 							preload='auto'

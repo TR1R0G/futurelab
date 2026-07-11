@@ -10,7 +10,7 @@ import {
   type RefObject,
 } from "react";
 
-const SOUND_STORAGE_KEY = "futurelab:sound-enabled";
+const SOUND_STORAGE_KEY = "futurelab:sound-enabled-v2";
 const MIN_VISIBLE_RATIO = 0.2;
 const SOUND_GROUP_SYNC_THRESHOLD = 0.08;
 
@@ -75,6 +75,12 @@ function playVideoMuted(video: HTMLVideoElement) {
   return video.play().catch(() => undefined);
 }
 
+function playVideoAudibly(video: HTMLVideoElement) {
+  video.muted = false;
+  video.volume = 1;
+  return video.play();
+}
+
 function unmuteWhenPlaying(video: HTMLVideoElement) {
   video.muted = false;
   video.volume = 1;
@@ -99,16 +105,9 @@ function syncVideoElement(video: HTMLVideoElement, shouldBeAudible: boolean) {
   }
 
   if (video.paused) {
-    video.muted = true;
-    video.volume = 0;
-    void video
-      .play()
-      .then(() => {
-        unmuteWhenPlaying(video);
-      })
-      .catch(() => {
-        void playVideoMuted(video);
-      });
+    void playVideoAudibly(video).catch(() => {
+      void playVideoMuted(video);
+    });
     return;
   }
 
@@ -308,7 +307,7 @@ export function useGlobalVideoSound(
 }
 
 export function SoundProvider({ children }: { children: React.ReactNode }) {
-  const [soundEnabled, setSoundEnabledState] = useState(false);
+  const [soundEnabled, setSoundEnabledState] = useState(true);
   const [hasVisibleMedia, setHasVisibleMedia] = useState(false);
 
   const setVisibleMediaState = useCallback((visibleCount: number) => {
@@ -343,11 +342,15 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
     setSoundEnabled(!soundEnabled);
   }, [setSoundEnabled, soundEnabled]);
 
+  const requestSoundUnlock = useCallback(() => {
+    setSoundEnabled(true);
+  }, [setSoundEnabled]);
+
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
-      setSoundEnabledState(
-        window.localStorage.getItem(SOUND_STORAGE_KEY) === "1"
-      );
+      const storedSoundPreference = window.localStorage.getItem(SOUND_STORAGE_KEY);
+
+      setSoundEnabledState(storedSoundPreference !== "0");
     });
 
     return () => {
@@ -385,6 +388,37 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
       observer.disconnect();
     };
   }, [syncCurrentPageMedia]);
+
+  useEffect(() => {
+    const unlockEvents: ReadonlyArray<keyof WindowEventMap> = [
+      "scroll",
+      "wheel",
+      "touchstart",
+      "pointerdown",
+      "keydown",
+    ];
+
+    const handleFirstInteraction = () => {
+      requestSoundUnlock();
+
+      window.requestAnimationFrame(() => {
+        requestSoundUnlock();
+      });
+    };
+
+    unlockEvents.forEach((eventName) => {
+      window.addEventListener(eventName, handleFirstInteraction, {
+        once: true,
+        passive: true,
+      });
+    });
+
+    return () => {
+      unlockEvents.forEach((eventName) => {
+        window.removeEventListener(eventName, handleFirstInteraction);
+      });
+    };
+  }, [requestSoundUnlock]);
 
   const value = useMemo(
     () => ({ soundEnabled, hasVisibleMedia, setSoundEnabled, toggleSound }),

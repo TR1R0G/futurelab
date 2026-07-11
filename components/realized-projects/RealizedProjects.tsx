@@ -207,7 +207,6 @@ function ProjectMedia({
           className="h-full w-full object-cover"
           preload="auto"
           playsInline
-          muted
           loop
           aria-label={project.imageAlt}
         >
