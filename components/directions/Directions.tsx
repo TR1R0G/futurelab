@@ -2,9 +2,7 @@
 
 import { CTACard } from '@/components/infrastructure/CTACard'
 import { ExpandedImageScreen } from '@/components/media/ExpandedImageScreen'
-import { gsap, registerGsapPlugins } from '@/lib/gsap'
 import type { DirectionsContent } from '@/lib/mdx'
-import { useEffect, useRef } from 'react'
 import { DirectionsLight } from './DirectionsLight'
 
 interface DirectionsProps {
@@ -52,42 +50,10 @@ export function Directions({
 	ctaText,
 	ctaButton,
 }: DirectionsProps) {
-	const sectionRef = useRef<HTMLElement>(null)
 	const academyVideoSrc = '/videos/academy/AR-AVATAR.mp4'
-
-	useEffect(() => {
-		registerGsapPlugins()
-
-		const section = sectionRef.current
-		if (!section) return
-
-		const media = gsap.matchMedia()
-		const ctx = gsap.context(() => {
-			media.add('(prefers-reduced-motion: no-preference)', () => {
-				gsap.from('.directions-statement-line', {
-					y: 52,
-					opacity: 0,
-					duration: 0.9,
-					stagger: 0.09,
-					ease: 'power3.out',
-					scrollTrigger: {
-						trigger: '.directions-statement',
-						start: 'top 72%',
-						once: true,
-					},
-				})
-			})
-		}, section)
-
-		return () => {
-			media.revert()
-			ctx.revert()
-		}
-	}, [])
 
 	return (
 		<section
-			ref={sectionRef}
 			className='directions-section relative z-[80] isolate overflow-visible bg-black px-5 pb-28 pt-20 md:px-8 md:pb-36 md:pt-24 lg:pb-44 lg:pt-20 xl:pt-[380px]'
 		>
 			<div className='directions-board relative mx-auto h-auto max-w-[1436px] overflow-visible md:h-[398px]'>
