@@ -93,6 +93,28 @@ export function Hero({
 				}
 			}
 
+			const measureTargetHeight = (element: HTMLElement, width: number) => {
+				const clone = element.cloneNode(true) as HTMLElement
+				clone.removeAttribute('style')
+				clone.style.position = 'fixed'
+				clone.style.left = '-9999px'
+				clone.style.top = '0'
+				clone.style.width = `${width}px`
+				clone.style.height = 'auto'
+				clone.style.visibility = 'hidden'
+				clone.style.pointerEvents = 'none'
+				clone.style.transform = 'none'
+				clone.style.opacity = '1'
+				document.body.appendChild(clone)
+				const height = clone.getBoundingClientRect().height
+				clone.remove()
+
+				return height || element.getBoundingClientRect().height
+			}
+
+			const centeredTop = (element: HTMLElement, width: number, centerY: number) =>
+				Math.round(centerY - measureTargetHeight(element, width) / 2)
+
 			const getTarget = (vh: number): ScrollTarget => {
 				const width = window.innerWidth
 				const visualGroupWidth = 1013.91
@@ -121,18 +143,20 @@ export function Hero({
 						40,
 						Math.round(width - (frameOffset + 1349 + 329)),
 					)
+					const desktopDescriptionWidth = 402
+					const desktopActionsWidth = 329
 
 					return {
 						image: { top: imageTop, width: imageWidth, height: imageHeight },
 						description: {
 							left: desktopDescriptionLeft,
-							top: Math.round(centerY - 120),
-							width: 402,
+							top: centeredTop(desc, desktopDescriptionWidth, centerY),
+							width: desktopDescriptionWidth,
 						},
 						actions: {
 							right: desktopActionsRight,
-							top: Math.round(centerY - 115),
-							width: 329,
+							top: centeredTop(actions, desktopActionsWidth, centerY),
+							width: desktopActionsWidth,
 						},
 						gradientScale,
 						gradientTop,
@@ -143,6 +167,8 @@ export function Hero({
 					const compactHeight = vh <= 820
 					const tabletImageWidth = compactHeight ? 340 : 373
 					const tabletImageHeight = compactHeight ? 596 : 653
+					const descriptionWidth = compactHeight ? 310 : 370
+					const actionsWidth = 270
 
 					return {
 						image: {
@@ -152,16 +178,16 @@ export function Hero({
 						},
 						description: {
 							left: compactHeight ? 98 : 135,
-							top: Math.round(centerY - 113),
-							width: compactHeight ? 310 : 370,
+							top: centeredTop(desc, descriptionWidth, centerY),
+							width: descriptionWidth,
 						},
 						actions: {
 							right: Math.max(
 								compactHeight ? 96 : 134,
 								Math.round((width - 1305) / 2),
 							),
-							top: Math.round(centerY - 113),
-							width: 270,
+							top: centeredTop(actions, actionsWidth, centerY),
+							width: actionsWidth,
 						},
 						gradientScale,
 						gradientTop: Math.round((vh - 631.91) / 2 - 60),
@@ -180,10 +206,14 @@ export function Hero({
 						},
 						description: {
 							left: 35,
-							top: Math.round(centerY - 225),
+							top: centeredTop(desc, 210, centerY),
 							width: 210,
 						},
-						actions: { right: 35, top: Math.round(centerY - 177), width: 210 },
+						actions: {
+							right: 35,
+							top: centeredTop(actions, 210, centerY),
+							width: 210,
+						},
 						gradientScale,
 						gradientTop: Math.round((vh - 631.91) / 2 - 60),
 					}
@@ -201,12 +231,12 @@ export function Hero({
 						},
 						description: {
 							left: 155,
-							top: Math.round(centerY - 225),
+							top: centeredTop(desc, 210, centerY),
 							width: 210,
 						},
 						actions: {
 							right: Math.max(0, width - 845),
-							top: Math.round(centerY - 177),
+							top: centeredTop(actions, 210, centerY),
 							width: 210,
 						},
 						gradientScale,
