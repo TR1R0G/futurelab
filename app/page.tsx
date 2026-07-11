@@ -88,7 +88,6 @@ export default async function Home({ searchParams }: HomeProps) {
         statement={directionsContent.statement}
         ctaText={copy.directionsCta.text}
         ctaButton={copy.directionsCta.buttonText}
-        language={language}
       />
       <Solutions
         title={solutionsContent.title}

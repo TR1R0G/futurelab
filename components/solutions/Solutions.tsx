@@ -1,9 +1,9 @@
 'use client'
 
-import { gsap, registerGsapPlugins } from '@/lib/gsap'
-import type { Language, SolutionsContent } from '@/lib/mdx'
 import { FadeInImage } from '@/components/media/FadeInImage'
 import { useGlobalVideoSound } from '@/components/providers/SoundProvider'
+import { gsap, registerGsapPlugins } from '@/lib/gsap'
+import type { Language, SolutionsContent } from '@/lib/mdx'
 import Image from 'next/image'
 import type { CSSProperties, RefObject } from 'react'
 import { useEffect, useRef } from 'react'
@@ -45,7 +45,12 @@ type Rect = {
 
 const isExternalHref = (href: string) => /^https?:\/\//.test(href)
 
-export function Solutions({ title, description, cards, language }: SolutionsProps) {
+export function Solutions({
+	title,
+	description,
+	cards,
+	language,
+}: SolutionsProps) {
 	const sectionRef = useRef<HTMLElement>(null)
 	const mediaRefs = useRef<Array<HTMLDivElement | null>>([])
 	const glowRefs = useRef<Array<HTMLDivElement | null>>([])
@@ -302,8 +307,7 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 				const releaseScroll = baseReleaseScroll
 				const transitionDistance = Math.max(1, releaseScroll - animationStart)
 				const rawProgress =
-					(window.scrollY - animationStart) /
-					transitionDistance
+					(window.scrollY - animationStart) / transitionDistance
 
 				if (rawProgress <= 0) {
 					setSourceState(media, index)
@@ -319,8 +323,7 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 					return
 				}
 
-				const startRect =
-					sourceRects.get(media) ?? readSourceRect(media, index)
+				const startRect = sourceRects.get(media) ?? readSourceRect(media, index)
 				sourceRects.set(media, startRect)
 
 				setFixedState(
@@ -379,7 +382,9 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 		const cursor = cursorRef.current
 		if (!section || !cursor) return
 
-		const mediaQuery = window.matchMedia('(min-width: 361px) and (pointer: fine)')
+		const mediaQuery = window.matchMedia(
+			'(min-width: 361px) and (pointer: fine)',
+		)
 		let frame = 0
 		let cursorX: number | null = null
 		let cursorY: number | null = null
@@ -458,7 +463,9 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 	}, [])
 
 	const sectionHeight =
-		SOLUTION_CARD_TOP + cards.length * SOLUTION_BLOCK_HEIGHT + SOLUTION_TRAILING_SPACE
+		SOLUTION_CARD_TOP +
+		cards.length * SOLUTION_BLOCK_HEIGHT +
+		SOLUTION_TRAILING_SPACE
 
 	return (
 		<section
@@ -487,7 +494,8 @@ export function Solutions({ title, description, cards, language }: SolutionsProp
 
 				{cards.map((card, index) => {
 					const top = SOLUTION_CARD_TOP + index * SOLUTION_BLOCK_HEIGHT
-					const imageTop = SOLUTION_CARD_IMAGE_TOP + index * SOLUTION_BLOCK_HEIGHT
+					const imageTop =
+						SOLUTION_CARD_IMAGE_TOP + index * SOLUTION_BLOCK_HEIGHT
 					const isMuseumCard = index === 0
 					const isTemuridsCard = index === 2
 					const href = isMuseumCard
@@ -585,10 +593,7 @@ function SolutionCard({
 	}
 
 	return (
-		<article
-			className={classNames}
-			style={style}
-		>
+		<article className={classNames} style={style}>
 			{content}
 		</article>
 	)
