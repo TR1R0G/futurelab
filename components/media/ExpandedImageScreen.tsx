@@ -26,6 +26,7 @@ export function ExpandedImageScreen({
 	sourceSelector,
 }: ExpandedImageScreenProps) {
 	const sectionRef = useRef<HTMLElement>(null)
+	const stageRef = useRef<HTMLDivElement>(null)
 	const frameRef = useRef<HTMLDivElement>(null)
 	const gradientRef = useRef<HTMLDivElement>(null)
 	const videoRef = useRef<HTMLVideoElement>(null)
@@ -33,17 +34,30 @@ export function ExpandedImageScreen({
 	useGlobalVideoSound(videoRef, [videoSrc])
 
 	useEffect(() => {
+		const video = videoRef.current
+		if (!video) return
+
+		void video.play().catch(() => undefined)
+	}, [videoSrc])
+
+	useEffect(() => {
 		registerGsapPlugins()
 
 		const section = sectionRef.current
+		const stage = stageRef.current
 		const frame = frameRef.current
 		const gradient = gradientRef.current
-		if (!section || !frame || !gradient) return
+		if (!section || !stage || !frame || !gradient) return
 
 		const positionEase = gsap.parseEase('power2.inOut')
 		const fullSizeAt = 0.82
 		const imageScrollRangeMultiplier = 2.5
 		const clamp = (value: number) => Math.min(1, Math.max(0, value))
+		const isRectInViewport = (rect: DOMRect) =>
+			rect.bottom > 0 &&
+			rect.top < window.innerHeight &&
+			rect.right > 0 &&
+			rect.left < window.innerWidth
 
 		const getSourceElements = () =>
 			sourceSelector
@@ -56,17 +70,52 @@ export function ExpandedImageScreen({
 				return rect.width > 0 && rect.height > 0
 			}) ?? null
 
+		const toStageRect = (rect: {
+			left: number
+			top: number
+			width: number
+			height: number
+		}) => {
+			const stageRect = stage.getBoundingClientRect()
+
+			return {
+				left: rect.left - stageRect.left,
+				top: rect.top - stageRect.top,
+				width: rect.width,
+				height: rect.height,
+			}
+		}
+
+		const ensureVideoPlayback = () => {
+			const video = videoRef.current
+			if (!video || !video.paused) return
+
+			const shouldRestoreAudio = !video.muted && video.volume > 0
+			video.muted = true
+			video.volume = 0
+
+			void video
+				.play()
+				.then(() => {
+					if (!shouldRestoreAudio) return
+
+					video.muted = false
+					video.volume = 1
+				})
+				.catch(() => undefined)
+		}
+
 		const readSourceRect = () => {
 			const source = getVisibleSourceElement()
 			const rect = source?.getBoundingClientRect()
 
 			if (rect && rect.width > 0 && rect.height > 0) {
-				return {
+				return toStageRect({
 					left: rect.left,
 					top: rect.top,
 					width: rect.width,
 					height: rect.height,
-				}
+				})
 			}
 
 			const target = readTargetRect()
@@ -124,19 +173,49 @@ export function ExpandedImageScreen({
 			let startRect = readSourceRect()
 			let hasStartRect = false
 
-			const resetStartRect = () => {
-				gsap.set(getSourceElements(), { opacity: 1 })
-				gsap.set(frame, { autoAlpha: 0 })
+			const placeFrameAtSource = () => {
 				startRect = readSourceRect()
 				hasStartRect = true
+				gsap.set(getSourceElements(), { opacity: 0 })
+				gsap.set(frame, {
+					...startRect,
+					autoAlpha: 1,
+					borderRadius: 8,
+				})
+				ensureVideoPlayback()
 			}
 
 			const update = () => {
 				frameId = 0
 
-				const maxScroll = Math.max(1, section.offsetHeight - window.innerHeight)
-				const sectionTop = section.getBoundingClientRect().top + window.scrollY
+				const sectionRect = section.getBoundingClientRect()
+				const sourceElement = getVisibleSourceElement()
+				const sourceRect = sourceElement?.getBoundingClientRect()
+				const isAnimationVisible =
+					(sectionRect.bottom > 0 && sectionRect.top < window.innerHeight) ||
+					(sourceRect ? isRectInViewport(sourceRect) : false)
+
+				if (!isAnimationVisible) {
+					gsap.set(getSourceElements(), { opacity: 1 })
+					gsap.set(frame, { autoAlpha: 0 })
+					return
+				}
+
+				const sectionTop = sectionRect.top + window.scrollY
 				const scrollDelta = window.scrollY - sectionTop
+
+				if (scrollDelta < 0) {
+					gsap.set(getSourceElements(), { opacity: 1 })
+					gsap.set(frame, { autoAlpha: 0 })
+					if (movingText) {
+						gsap.set(movingText, { y: 0, opacity: 1 })
+					}
+					gsap.set(fadingElements, { opacity: 1 })
+					gsap.set(gradient, { opacity: 1, scale: 1 })
+					return
+				}
+
+				const maxScroll = Math.max(1, section.offsetHeight - window.innerHeight)
 				const baseMaxScroll = Math.max(
 					1,
 					maxScroll / imageScrollRangeMultiplier,
@@ -146,7 +225,7 @@ export function ExpandedImageScreen({
 				const target = readTargetRect()
 
 				if (progress <= 0.001) {
-					resetStartRect()
+					placeFrameAtSource()
 					if (movingText) {
 						gsap.set(movingText, { y: 0, opacity: 1 })
 					}
@@ -194,6 +273,7 @@ export function ExpandedImageScreen({
 					opacity: 1,
 					scale: 1,
 				})
+				ensureVideoPlayback()
 			}
 
 			const requestUpdate = () => {
@@ -203,7 +283,7 @@ export function ExpandedImageScreen({
 
 			const handleResize = () => {
 				hasStartRect = false
-				resetStartRect()
+				placeFrameAtSource()
 				requestUpdate()
 			}
 
@@ -212,7 +292,7 @@ export function ExpandedImageScreen({
 				willChange: 'left, top, width, height, border-radius, opacity',
 			})
 
-			resetStartRect()
+			placeFrameAtSource()
 			update()
 
 			window.addEventListener('scroll', requestUpdate, { passive: true })
@@ -235,7 +315,10 @@ export function ExpandedImageScreen({
 			ref={sectionRef}
 			className={`expanded-image-section relative z-[90] ml-[calc(50%_-_50vw)] h-[300svh] w-screen bg-transparent ${className}`}
 		>
-			<div className='expanded-image-stage sticky top-0 h-[140svh] overflow-hidden bg-transparent'>
+			<div
+				ref={stageRef}
+				className='expanded-image-stage sticky top-0 h-[100svh] overflow-hidden bg-transparent'
+			>
 				<div
 					ref={gradientRef}
 					className='video-gradient-field absolute inset-0'

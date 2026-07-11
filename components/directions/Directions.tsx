@@ -2,7 +2,6 @@
 
 import { CTACard } from '@/components/infrastructure/CTACard'
 import { ExpandedImageScreen } from '@/components/media/ExpandedImageScreen'
-import { useGlobalVideoSound } from '@/components/providers/SoundProvider'
 import { gsap, registerGsapPlugins } from '@/lib/gsap'
 import type { DirectionsContent, Language } from '@/lib/mdx'
 import { useEffect, useRef } from 'react'
@@ -134,11 +133,7 @@ export function Directions({
 
 				<div className='directions-statement-copy relative z-10 text-[32px] font-semibold leading-[1.48] tracking-normal text-white md:text-[44px] lg:text-[55px] lg:leading-[78px]'>
 					<span className='directions-inline-image pointer-events-none absolute left-1/2 top-[155px] z-20 hidden h-[91px] w-[52px] translate-x-[90px] overflow-hidden rounded-[8px] lg:block'>
-						<AcademyInlineVideo
-							src={academyVideoSrc}
-							poster={statement.imageSrc}
-							label={statement.imageAlt}
-						/>
+						<AcademyVideoPlaceholder poster={statement.imageSrc} />
 					</span>
 					{statement.linesBeforeImage.map(line => (
 						<p key={line} className='directions-statement-line'>
@@ -153,10 +148,8 @@ export function Directions({
 							aria-hidden='true'
 						/>
 						<span className='directions-inline-image mx-5 inline-flex translate-y-[0.18em] overflow-hidden rounded-[8px] align-baseline shadow-[0_10px_34px_rgba(0,0,0,0.45)] md:mx-7 lg:hidden'>
-							<AcademyInlineVideo
-								src={academyVideoSrc}
+							<AcademyVideoPlaceholder
 								poster={statement.imageSrc}
-								label={statement.imageAlt}
 								className='h-[58px] w-[38px] md:h-[78px] md:w-[52px] lg:h-[91px] lg:w-[52px]'
 							/>
 						</span>
@@ -193,37 +186,19 @@ export function Directions({
 	)
 }
 
-function AcademyInlineVideo({
-	src,
+function AcademyVideoPlaceholder({
 	poster,
-	label,
 	className = 'h-full w-full',
 }: {
-	src: string
 	poster: string
-	label: string
 	className?: string
 }) {
-	const videoRef = useRef<HTMLVideoElement>(null)
-
-	useGlobalVideoSound(videoRef, [src])
-
 	return (
-		<video
-			ref={videoRef}
-			key={src}
-			className={`${className} object-cover`}
-			aria-label={label}
-			autoPlay
-			muted
-			loop
-			playsInline
-			preload='auto'
-			poster={poster}
-			disablePictureInPicture
-		>
-			<source src={src} type='video/mp4' />
-		</video>
+		<span
+			className={`${className} block bg-cover bg-center`}
+			style={{ backgroundImage: `url(${poster})` }}
+			aria-hidden='true'
+		/>
 	)
 }
 
