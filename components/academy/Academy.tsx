@@ -85,6 +85,7 @@ export function Academy({ title, subtitle, cards, programCards }: AcademyProps) 
       const cardShells = gsap.utils.toArray<HTMLElement>(
         ".academy-card-shell"
       );
+      const cardElements = gsap.utils.toArray<HTMLElement>(".academy-card");
       const programsStage = section.querySelector<HTMLElement>(
         ".academy-programs-stage"
       );
@@ -92,7 +93,14 @@ export function Academy({ title, subtitle, cards, programCards }: AcademyProps) 
       const lastCardExitStart = lastCardIndex * 1.16 + 0.54;
       const cardExitDuration = 0.82;
 
-      gsap.set(cardShells, { y: 0, opacity: 1, rotate: 0 });
+      gsap.set(cardShells, {
+        xPercent: -50,
+        yPercent: -50,
+        x: 0,
+        y: 0,
+        opacity: 1,
+        rotate: 0,
+      });
       if (programsStage) {
         gsap.set(programsStage, {
           opacity: 1,
@@ -114,9 +122,8 @@ export function Academy({ title, subtitle, cards, programCards }: AcademyProps) 
       });
 
       cardShells.forEach((cardShell, index) => {
-        const style = cardStyles[index % cardStyles.length];
-        const focusedX = -parseFloat(style.x);
-        const focusedRotate = -parseFloat(style.rotate);
+        const cardElement = cardElements[index];
+        const exitRotate = [-8, 7, -5, 6, -7][index] ?? -6;
         const raiseAt =
           index === 0
             ? 0
@@ -125,10 +132,11 @@ export function Academy({ title, subtitle, cards, programCards }: AcademyProps) 
         cardsTimeline.set(cardShell, { zIndex: 100 + index }, raiseAt);
 
         cardsTimeline.to(
-          cardShell,
+          cardElement,
           {
-            x: focusedX,
-            rotate: focusedRotate,
+            x: 0,
+            y: 0,
+            rotate: 0,
             duration: 0.32,
             ease: "power2.out",
           },
@@ -139,8 +147,16 @@ export function Academy({ title, subtitle, cards, programCards }: AcademyProps) 
           cardShell,
           {
             y: () => -window.innerHeight * 1.18 - index * 36,
-            x: () => focusedX + (index - 2) * -28,
-            rotate: () => focusedRotate + ([-8, 7, -5, 6, -7][index] ?? -6),
+            x: 0,
+            duration: cardExitDuration,
+          },
+          index * 1.16 + 0.54
+        );
+
+        cardsTimeline.to(
+          cardElement,
+          {
+            rotate: exitRotate,
             duration: cardExitDuration,
           },
           index * 1.16 + 0.54
@@ -209,16 +225,16 @@ export function Academy({ title, subtitle, cards, programCards }: AcademyProps) 
             return (
               <div
                 key={card.title}
-                className="academy-card-shell absolute left-1/2 top-1/2 will-change-transform"
+                className="academy-card-shell absolute left-1/2 top-1/2 h-[280px] w-[280px] will-change-transform"
                 style={{
                   zIndex: style.zIndex,
                 }}
               >
                 <article
-                  className="academy-card flex h-[280px] w-[280px] items-center justify-center rounded-[35px] px-[29px] text-center shadow-[0_18px_50px_rgba(0,0,0,0.18)]"
+                  className="academy-card flex h-full w-full items-center justify-center rounded-[35px] px-[29px] text-center shadow-[0_18px_50px_rgba(0,0,0,0.18)]"
                   style={{
                     backgroundColor: style.color,
-                    transform: `translate(calc(-50% + ${style.x}), calc(-50% + ${style.y})) rotate(${style.rotate})`,
+                    transform: `translate(${style.x}, ${style.y}) rotate(${style.rotate})`,
                   }}
                 >
                   <h3 className="max-w-[221px] text-[25px] font-semibold leading-normal tracking-normal text-black">
