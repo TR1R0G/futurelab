@@ -51,6 +51,8 @@ type SolutionPlayerMedia = {
 }
 
 const isExternalHref = (href: string) => /^https?:\/\//.test(href)
+const isPdfPageHref = (href: string) =>
+	href.startsWith('/museum') || href.startsWith('/temurids')
 
 export function Solutions({
 	title,
@@ -631,6 +633,7 @@ function SolutionCard({
 
 	if (href) {
 		const isExternal = isExternalHref(href)
+		const opensInNewTab = isExternal || isPdfPageHref(href)
 
 		return (
 			<a
@@ -638,8 +641,8 @@ function SolutionCard({
 				className={classNames}
 				style={style}
 				aria-label={`${card.cta}: ${card.title}`}
-				target={isExternal ? '_blank' : undefined}
-				rel={isExternal ? 'noopener noreferrer' : undefined}
+				target={opensInNewTab ? '_blank' : undefined}
+				rel={opensInNewTab ? 'noopener noreferrer' : undefined}
 			>
 				{content}
 			</a>

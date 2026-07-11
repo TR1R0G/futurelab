@@ -25,11 +25,8 @@ export default async function TemuridsPage({ searchParams }: TemuridsPageProps) 
         </a>
         <a
           href={TEMURIDS_PDF_SRC}
-          download={
-            language === "en"
-              ? "FutureLab-temurids-exposition-en.pdf"
-              : "FutureLab-temurids-exposition-ru.pdf"
-          }
+          target="_blank"
+          rel="noopener noreferrer"
           className="rounded-[13px] bg-[#0B5CFF] px-6 py-3 text-[16px] font-medium text-white transition-transform hover:scale-[1.01] active:scale-[0.99]"
         >
           {language === "en" ? "Download PDF" : "Скачать PDF"}
