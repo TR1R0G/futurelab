@@ -18,21 +18,21 @@ export function ContactBlock({
 	return (
 		<section
 			id='contacts'
-			className='contact-section relative overflow-hidden bg-white px-5 py-24 text-black md:px-8 md:py-28 min-[1440px]:h-[738px] min-[1440px]:px-0 min-[1440px]:py-0'
+			className='contact-section relative overflow-hidden bg-white px-5 py-24 text-black md:px-8 md:py-28 h-60 min-[1440px]:h-[538px] min-[1440px]:px-0 min-[1440px]:py-0'
 		>
 			<ContactGlow />
 
-			<div className='contact-content relative z-10 mx-auto max-w-[1438px]'>
-				<h2 className='font-heading text-[42px] font-bold leading-[1.08] tracking-normal text-black md:text-[50px] min-[1440px]:absolute min-[1440px]:left-0 min-[1440px]:top-[206px] min-[1440px]:w-[698px] min-[1440px]:text-[55px] min-[1440px]:leading-[62px]'>
+			<div className='contact-content relative z-10 mx-auto max-w-[1410px] min-[1440px]:h-full'>
+				<h2 className='font-heading text-[42px] font-bold leading-[1.08] tracking-normal text-black md:text-[50px] min-[1440px]:absolute min-[1440px]:left-0 min-[1440px]:top-[calc(50%_-_178px)] min-[1440px]:w-[698px] min-[1440px]:text-[55px] min-[1440px]:leading-[62px]'>
 					{title}
 				</h2>
 
-				<div className='contact-card mt-12 grid gap-10 rounded-[30px] bg-white px-4 py-10 shadow-[0_20px_50px_rgba(0,0,0,0.15)] md:mt-14 md:grid-cols-2 md:rounded-[35px] md:px-6 md:py-12 min-[1200px]:grid-cols-3 min-[1440px]:absolute min-[1440px]:left-0 min-[1440px]:top-[308px] min-[1440px]:mt-0 min-[1440px]:h-[230px] min-[1440px]:w-[1436px] min-[1440px]:grid-cols-none min-[1440px]:gap-0 min-[1440px]:px-0 min-[1440px]:py-0'>
+				<div className='contact-card grid gap-10 rounded-[30px] bg-white px-6 py-0 shadow-[0_20px_50px_rgba(0,0,0,0.15)] md:mt-14 md:grid-cols-2 md:rounded-[35px] md:px-6 md:py-12 min-[1200px]:grid-cols-3 min-[1440px]:absolute min-[1440px]:left-0 min-[1440px]:top-[calc(50%_-_72px)] min-[1440px]:mt-0 min-[1440px]:h-[250px] min-[1440px]:w-[1408px] min-[1440px]:grid-cols-none min-[1440px]:gap-0 min-[1440px]:px-0 min-[1440px]:py-0'>
 					<div className='min-[1440px]:absolute min-[1440px]:left-10 min-[1440px]:top-10 min-[1440px]:w-[412px]'>
 						<h3 className='text-[26px] font-semibold leading-none text-black md:text-[30px]'>
 							{cardTitle}
 						</h3>
-						<p className='mt-8 max-w-[412px] text-[21px] font-medium leading-[1.7] text-[#4C4C4C] md:text-[23px] min-[1440px]:mt-[38px]'>
+						<p className='mt-8 max-w-[412px] text-[21px] font-medium leading-[1.7] text-[#4C4C4C] md:text-[23px] min-[1440px]:mt-[42px]'>
 							{cardText.split('\n').map((line, index) => (
 								<span key={line}>
 									{line}
@@ -43,7 +43,7 @@ export function ContactBlock({
 					</div>
 
 					<ContactItem
-						className='contact-item-mail min-[1440px]:absolute min-[1440px]:left-[695px] min-[1440px]:top-[34px] min-[1440px]:w-[306px]'
+						className='contact-item-mail min-[1440px]:absolute min-[1440px]:left-[637px] min-[1440px]:top-[34px] min-[1440px]:w-[306px]'
 						icon='mail'
 						title={emailTitle}
 						value='contact@future-lab.uz'
@@ -51,7 +51,7 @@ export function ContactBlock({
 					/>
 
 					<ContactItem
-						className='contact-item-telegram min-[1440px]:absolute min-[1440px]:left-[1064px] min-[1440px]:top-[34px] min-[1440px]:w-[240px]'
+						className='contact-item-telegram min-[1440px]:absolute min-[1440px]:left-[1128px] min-[1440px]:top-[34px] min-[1440px]:w-[240px]'
 						icon='telegram'
 						title={telegramTitle}
 						value='@nazzar_group'
@@ -70,9 +70,9 @@ function ContactGlow() {
 			style={{ marginLeft: '-1.33px' }}
 			aria-hidden='true'
 		>
-			<span className='absolute left-[929px] top-[96px] h-[837px] w-[444px] rounded-full bg-[#3FA1FC] rotate-[68.02deg]' />
-			<span className='absolute left-[46px] top-[96px] h-[837px] w-[444px] rounded-full bg-[#FCCC01] [transform:matrix(-0.37,0.93,0.93,0.37,0,0)]' />
-			<span className='absolute left-[535px] top-0 h-[837px] w-[444px] rounded-full bg-[#DA7FCE] [transform:matrix(-0.84,0.55,0.55,0.84,0,0)]' />
+			<span className='absolute left-[1000px] h-[837px] w-[444px] rounded-full bg-[#3FA1FC] rotate-[68.02deg] saturate-[10] brightness-[0.45]' />
+			<span className='absolute brightness-[1.1] left-[286px] -top-0 h-[837px] w-[444px] rounded-full bg-[#FCCC01] [transform:matrix(-0.37,0.93,0.93,0.37,0,0)] saturate-[2.9]' />
+			<span className='absolute left-[695px] top-0 h-[837px] w-[444px] rounded-full bg-[#DA7FCE] [transform:matrix(-0.84,0.55,0.55,0.84,0,0)] saturate-[2.2] brightness-[0.7]' />
 		</div>
 	)
 }

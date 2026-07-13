@@ -27,6 +27,14 @@ html.is-preloading body {
 
 body {
 	overflow-x: clip;
+	font-family: var(--font-golos-text), system-ui, sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+	font-family: inherit;
 }
 
 main {
@@ -35,12 +43,16 @@ main {
 }
 
 .font-heading,
+.footer-section h2,
+.footer-section h3,
+h2,
+h3,
 .hero-title {
 	font-family: var(--font-sansation), var(--font-golos-text), sans-serif;
 }
 
 .font-onest {
-	font-family: var(--font-onest), var(--font-golos-text), sans-serif;
+	font-family: var(--font-golos-text), system-ui, sans-serif;
 }
 
 @keyframes futurelab-loader {
@@ -338,9 +350,12 @@ main {
 	}
 
 	.experience-content,
-	.contact-content,
 	.footer-inner {
 		max-width: 1170px !important;
+	}
+
+	.contact-content {
+		max-width: 1142px !important;
 	}
 
 	.experience-stats {
@@ -361,7 +376,7 @@ main {
 	}
 
 	.contact-card {
-		width: 1170px !important;
+		width: 1142px !important;
 	}
 
 	.contact-card > div:first-child {
@@ -369,11 +384,11 @@ main {
 	}
 
 	.contact-item-mail {
-		left: 545px !important;
+		left: 504px !important;
 	}
 
 	.contact-item-telegram {
-		left: 870px !important;
+		left: 862px !important;
 	}
 
 	.footer-contact-list {
@@ -541,7 +556,7 @@ main {
 }
 
 .contact-section {
-	height: 692px !important;
+	height: 552px !important;
 	margin-top: 0;
 }
 
@@ -972,7 +987,7 @@ main {
 	}
 
 	.contact-section {
-		height: 738px !important;
+		height: 552px !important;
 		margin-top: 0;
 	}
 
