@@ -13,22 +13,22 @@ interface ExperienceProps {
 
 const mosaicTiles = [
 	{ src: '/images/block7/row1/01.png', left: 125, top: 0, width: 268 },
-	{ src: '/images/block7/row1/02.png', left: 414, top: 0, width: 222 },
+	{ src: '/images/block7/row1/02.png', left: 414, top: 0, width: 268 },
 	{ src: '/images/block7/row2/01.png', left: 0, top: 181, width: 268 },
 	{ src: '/images/block7/row2/02.png', left: 288, top: 181, width: 268 },
-	{ src: '/images/block7/row2/03.png', left: 576, top: 181, width: 60 },
+	{ src: '/images/block7/row2/03.png', left: 576, top: 181, width: 268 },
 	{ src: '/images/block7/row3/01.png', left: 125, top: 362, width: 268 },
-	{ src: '/images/block7/row3/02.png', left: 413, top: 362, width: 223 },
+	{ src: '/images/block7/row3/02.png', left: 413, top: 362, width: 268 },
 	{ src: '/images/block7/row4/01.png', left: 0, top: 543, width: 268 },
 	{ src: '/images/block7/row4/02.png', left: 288, top: 543, width: 268 },
-	{ src: '/images/block7/row4/03.png', left: 576, top: 543, width: 60 },
+	{ src: '/images/block7/row4/03.png', left: 576, top: 543, width: 268 },
 	{ src: '/images/block7/row5/01.png', left: 125, top: 725, width: 268 },
-	{ src: '/images/block7/row5/02.png', left: 413, top: 725, width: 223 },
+	{ src: '/images/block7/row5/02.png', left: 413, top: 725, width: 268 },
 	{ src: '/images/block7/row6/01.png', left: 0, top: 906, width: 268 },
 	{ src: '/images/block7/row6/02.png', left: 288, top: 906, width: 268 },
-	{ src: '/images/block7/row6/03.png', left: 576, top: 906, width: 60 },
+	{ src: '/images/block7/row6/03.png', left: 576, top: 906, width: 268 },
 	{ src: '/images/block7/row7/01.png', left: 125, top: 1087, width: 268 },
-	{ src: '/images/block7/row7/02.png', left: 414, top: 1087, width: 222 },
+	{ src: '/images/block7/row7/02.png', left: 414, top: 1087, width: 268 },
 ]
 
 export function Experience({
@@ -100,7 +100,7 @@ function StatCard({ value, label }: { value: string; label: string }) {
 function MosaicBackground() {
 	return (
 		<div
-			className='pointer-events-none absolute left-[calc(50%+324px)] top-[67px] z-0 hidden h-[1250px] w-[844px] min-[1440px]:block'
+			className='pointer-events-none absolute left-[calc(100vw-636px)] top-[67px] z-0 hidden h-[1250px] w-[844px] min-[1440px]:block'
 			aria-hidden='true'
 		>
 			<div className='absolute inset-y-0 right-0 z-30 w-[120px] bg-gradient-to-l from-black via-black/35 to-transparent' />
