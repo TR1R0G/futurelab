@@ -16,8 +16,8 @@ export function Footer({ address }: { address: string }) {
 
 				<div className='footer-contact-list mt-12 space-y-[11px] text-[16px] leading-[30px] text-white md:mt-14 lg:absolute lg:right-0 lg:top-24 lg:mt-0'>
 					<FooterContact icon={<LocationIcon />}>{address}</FooterContact>
-					<FooterContact icon={<MailIcon />} href='mailto:pr@nazzar.tech'>
-						pr@nazzar.tech
+					<FooterContact icon={<MailIcon />} href='mailto:info@future-lab.uz'>
+						info@future-lab.uz
 					</FooterContact>
 				</div>
 
