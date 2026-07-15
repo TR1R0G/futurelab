@@ -2067,22 +2067,6 @@ h3,
 	transform: matrix(-0.7, 0.71, 0.71, 0.7, 0, 0);
 }
 
-.solutions-section::after {
-	content: '';
-	position: absolute;
-	inset: auto 0 0;
-	z-index: 60;
-	height: 520px;
-	pointer-events: none;
-	background: linear-gradient(
-		180deg,
-		rgb(0 0 0 / 0) 0%,
-		rgb(0 0 0 / 0) 40%,
-		rgb(0 0 0 / 0.72) 76%,
-		#000 100%
-	);
-}
-
 .solutions-card-outline::before {
 	content: '';
 	position: absolute;

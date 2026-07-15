@@ -98,7 +98,7 @@ export function Infrastructure({
 	return (
 		<section
 			ref={sectionRef}
-			className='infrastructure-section w-full overflow-hidden bg-black pb-24 pt-24 md:pb-32 md:pt-32 lg:pb-40 lg:pt-40'
+			className='infrastructure-section w-full overflow-hidden bg-black pb-24 md:pb-32 lg:pb-40'
 		>
 			<div className='infrastructure-heading mx-auto max-w-[1436px] px-5 md:px-8 xl:px-0'>
 				<h2 className='font-heading max-w-3xl text-[36px] font-bold leading-[1.08] text-white md:text-5xl lg:max-w-[800px] lg:text-[56px]'>
