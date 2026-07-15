@@ -495,7 +495,7 @@ h3,
 }
 
 .infrastructure-section {
-	height: 2280px;
+	height: 2438px;
 }
 
 .programs-section {
@@ -604,7 +604,7 @@ h3,
 	}
 
 	.infrastructure-section {
-		height: 1888px;
+		height: 2046px;
 	}
 
 	.programs-section {
@@ -694,7 +694,7 @@ h3,
 	}
 
 	.infrastructure-section {
-		height: 2020px;
+		height: 2178px;
 	}
 
 	.programs-section {
@@ -794,7 +794,7 @@ h3,
 	}
 
 	.infrastructure-section {
-		height: 1888px;
+		height: 2046px;
 	}
 
 	.programs-section {
@@ -873,7 +873,7 @@ h3,
 	}
 
 	.infrastructure-section {
-		height: 2008px;
+		height: 2166px;
 	}
 
 	.programs-section {
@@ -958,7 +958,7 @@ h3,
 	}
 
 	.infrastructure-section {
-		height: 2000px;
+		height: 2158px;
 	}
 
 	.programs-section {
@@ -1782,7 +1782,7 @@ h3,
 
 	.academy-pin {
 		justify-content: flex-start !important;
-		padding-top: 72px !important;
+		padding-top: 0 !important;
 		padding-bottom: 0 !important;
 	}
 
@@ -1868,7 +1868,7 @@ h3,
 
 	.academy-pin {
 		justify-content: flex-start !important;
-		padding-top: 68px !important;
+		padding-top: 0 !important;
 		padding-bottom: 0 !important;
 	}
 

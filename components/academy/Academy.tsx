@@ -204,7 +204,7 @@ export function Academy({ title, subtitle, cards, programCards }: AcademyProps) 
     >
       <div
         ref={pinRef}
-        className="academy-pin sticky top-0 z-[210] box-border flex h-[100svh] flex-col justify-start overflow-visible bg-black pb-16 pt-[clamp(56px,10svh,120px)] md:pb-20 lg:pb-24"
+        className="academy-pin sticky top-0 z-[210] box-border flex h-[100svh] flex-col justify-start overflow-visible bg-black pb-16 pt-0 md:pb-20 lg:pb-24"
       >
         <div className="academy-heading relative z-[600] mx-auto w-full max-w-[1436px] px-5 md:px-8 xl:px-0">
           <h2 className="font-heading max-w-[805px] text-[42px] font-bold leading-none tracking-normal text-white md:text-6xl lg:text-[65px]">

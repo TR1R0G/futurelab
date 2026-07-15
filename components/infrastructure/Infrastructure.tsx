@@ -75,17 +75,6 @@ export function Infrastructure({
 					},
 				})
 
-				gsap.from('.infrastructure-separator', {
-					scaleX: 0,
-					transformOrigin: 'left center',
-					duration: 1.25,
-					ease: 'power3.inOut',
-					scrollTrigger: {
-						trigger: '.infrastructure-separator',
-						start: 'top 92%',
-						once: true,
-					},
-				})
 			})
 		}, section)
 
@@ -119,10 +108,12 @@ export function Infrastructure({
 
 			<CTACard text={ctaText} buttonText={ctaButton} />
 
-			<div
-				className='infrastructure-separator mx-auto mt-24 h-1 w-[calc(100%_-_40px)] max-w-[1436px] rounded-sm bg-[linear-gradient(90deg,#4B0E5B_0%,#A91E83_29.9%,#FD9A34_65.67%,#F9EB44_100%)] md:mt-32 md:w-[calc(100%_-_64px)]'
-				aria-hidden='true'
-			/>
+			<div className='infrastructure-separator-wrap py-24 md:py-32'>
+				<div
+					className='infrastructure-separator mx-auto h-[5px] w-[calc(100%_-_40px)] max-w-[1436px] rounded-full bg-[linear-gradient(90deg,#4B0E5B_0%,#A91E83_29.9%,#FD9A34_65.67%,#F9EB44_100%)] shadow-[0_0_18px_rgba(253,154,52,0.28)] md:w-[calc(100%_-_64px)]'
+					aria-hidden='true'
+				/>
+			</div>
 		</section>
 	)
 }
