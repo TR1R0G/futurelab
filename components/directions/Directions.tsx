@@ -2,7 +2,7 @@
 
 import { CTACard } from '@/components/infrastructure/CTACard'
 import { ExpandedImageScreen } from '@/components/media/ExpandedImageScreen'
-import type { DirectionsContent } from '@/lib/mdx'
+import type { DirectionsContent, Language } from '@/lib/mdx'
 import { useEffect, useRef } from 'react'
 import { DirectionsLight } from './DirectionsLight'
 
@@ -12,6 +12,7 @@ interface DirectionsProps {
 	statement: DirectionsContent['statement']
 	ctaText: string
 	ctaButton: string
+	language: Language
 }
 
 const chipLayout = [
@@ -50,8 +51,12 @@ export function Directions({
 	statement,
 	ctaText,
 	ctaButton,
+	language,
 }: DirectionsProps) {
-	const academyVideoSrc = '/videos/academy/AR-AVATAR.mp4'
+	const academyVideoSrc =
+		language === 'en'
+			? '/videos/academy/academy-en.mp4'
+			: '/videos/academy/academy-ru.mp4'
 
 	return (
 		<section
