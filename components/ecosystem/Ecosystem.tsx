@@ -73,7 +73,7 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 	return (
 		<section
 			ref={sectionRef}
-			className='ecosystem-section relative w-full overflow-hidden bg-black'
+			className='ecosystem-section relative w-full overflow-hidden'
 			style={
 				{
 					'--ecosystem-block-height': `${ECOSYSTEM_BLOCK_HEIGHT}px`,
