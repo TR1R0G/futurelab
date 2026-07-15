@@ -516,7 +516,8 @@ export function Solutions({
 	const sectionHeight =
 		SOLUTION_CARD_TOP +
 		cards.length * SOLUTION_BLOCK_HEIGHT +
-		SOLUTION_TRAILING_SPACE
+		SOLUTION_TRAILING_SPACE -
+		300
 
 	return (
 		<section
@@ -839,7 +840,6 @@ function TransitionMedia({
 					unoptimized
 				/>
 			)}
-
 		</div>
 	)
 }
