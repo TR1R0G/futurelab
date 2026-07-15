@@ -130,7 +130,7 @@ export function ImageGallery() {
   return (
     <div
       ref={galleryRef}
-      className="infrastructure-gallery relative mt-16 h-[468px] w-full overflow-hidden pt-[72px] md:mt-24 lg:mt-28"
+      className="infrastructure-gallery relative mt-16 h-[540px] w-full overflow-hidden pt-[72px] md:mt-24 lg:mt-28"
       aria-label="Фотографии пространства FutureLab"
     >
       <div
@@ -200,7 +200,7 @@ function GalleryCurveOverlay({ position }: { position: "top" | "bottom" }) {
   return (
     <svg
       className={`pointer-events-none absolute inset-x-0 z-20 h-[48px] w-full ${
-        isTop ? "top-[72px]" : "bottom-0"
+        isTop ? "top-[72px]" : "bottom-[72px]"
       }`}
       viewBox="0 0 1920 48"
       preserveAspectRatio="none"
