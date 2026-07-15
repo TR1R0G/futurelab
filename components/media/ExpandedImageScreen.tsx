@@ -172,10 +172,13 @@ export function ExpandedImageScreen({
 			let frameId = 0
 			let startRect = readSourceRect()
 			let hasStartRect = false
+			let lastScrollY = window.scrollY
+			let lastFrameTop: number | null = null
 
 			const placeFrameAtSource = () => {
 				startRect = readSourceRect()
 				hasStartRect = true
+				lastFrameTop = startRect.top
 				gsap.set(getSourceElements(), { opacity: 0 })
 				gsap.set(frame, {
 					...startRect,
@@ -198,6 +201,9 @@ export function ExpandedImageScreen({
 				if (!isAnimationVisible) {
 					gsap.set(getSourceElements(), { opacity: 1 })
 					gsap.set(frame, { autoAlpha: 0 })
+					hasStartRect = false
+					lastFrameTop = null
+					lastScrollY = window.scrollY
 					return
 				}
 
@@ -207,6 +213,9 @@ export function ExpandedImageScreen({
 				if (scrollDelta < 0) {
 					gsap.set(getSourceElements(), { opacity: 1 })
 					gsap.set(frame, { autoAlpha: 0 })
+					hasStartRect = false
+					lastFrameTop = null
+					lastScrollY = window.scrollY
 					if (movingText) {
 						gsap.set(movingText, { y: 0, opacity: 1 })
 					}
@@ -240,15 +249,34 @@ export function ExpandedImageScreen({
 				}
 
 				const imageProgress = clamp(imageScrollProgress / fullSizeAt)
+				if (imageProgress < 0.12) {
+					const currentSourceRect = readSourceRect()
+					startRect = {
+						...currentSourceRect,
+						top: Math.max(startRect.top, currentSourceRect.top),
+					}
+				}
 				const easedProgress = positionEase(imageProgress)
 				const rect = mixRect(startRect, target, easedProgress)
+				const scrollingDown = window.scrollY >= lastScrollY
+				const topLockProgress = clamp((imageProgress - 0.12) / 0.16)
+				const lockedTop =
+					scrollingDown && lastFrameTop != null
+						? Math.max(rect.top, lastFrameTop)
+						: rect.top
+				const nextRect = {
+					...rect,
+					top: mix(lockedTop, rect.top, topLockProgress),
+				}
 
 				gsap.set(getSourceElements(), { opacity: 0 })
 				gsap.set(frame, {
-					...rect,
+					...nextRect,
 					autoAlpha: 1,
 					borderRadius: mix(12, 35, easedProgress),
 				})
+				lastFrameTop = nextRect.top
+				lastScrollY = window.scrollY
 
 				if (movingText) {
 					const firstPhase = clamp(progress / 0.42)
