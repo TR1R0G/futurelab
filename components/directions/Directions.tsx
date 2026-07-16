@@ -59,9 +59,7 @@ export function Directions({
 			: '/videos/academy/academy-ru.mp4'
 
 	return (
-		<section
-			className='directions-section relative z-[80] isolate overflow-visible bg-black px-5 pb-28 pt-20 md:px-8 md:pb-36 md:pt-24 lg:pb-44 lg:pt-20 xl:pt-[380px]'
-		>
+		<section className='directions-section relative z-[80] isolate overflow-visible bg-black px-5 pb-28 pt-20 md:px-8 md:pb-36 md:pt-24 lg:pb-44 lg:pt-20 xl:pt-[380px]'>
 			<div className='directions-board relative mx-auto h-auto max-w-[1436px] overflow-visible md:h-[398px]'>
 				<div
 					className='pointer-events-none absolute left-0 top-[7px] hidden h-[391px] w-full rounded-[35px] md:block'
@@ -145,11 +143,17 @@ export function Directions({
 				sourceSelector='.directions-inline-image'
 			/>
 
-			<div className='directions-post-image relative z-[100] flex min-h-[40svh] flex-col justify-center bg-black'>
-				<CTACard variant='wide' text={ctaText} buttonText={ctaButton} />
+			<div className='directions-post-image relative z-[200] isolate flex min-h-[40svh] flex-col justify-center bg-black'>
+				<div
+					className='pointer-events-none absolute inset-x-0 bottom-[-60svh] z-0 h-[60svh] bg-black'
+					aria-hidden='true'
+				/>
+				<div className='relative z-10 w-full'>
+					<CTACard variant='wide' text={ctaText} buttonText={ctaButton} />
+				</div>
 
 				<div
-					className='mx-auto mt-[90px] h-1 w-[calc(100%_-_40px)] max-w-[1436px] rounded-sm bg-[linear-gradient(90deg,#4B0E5B_0%,#A91E83_29.9%,#FD9A34_65.67%,#F9EB44_100%)] md:mt-[110px] md:w-[calc(100%_-_64px)] lg:mt-[130px]'
+					className='relative z-10 mx-auto mt-[90px] h-1 w-[calc(100%_-_40px)] max-w-[1436px] rounded-sm bg-[linear-gradient(90deg,#4B0E5B_0%,#A91E83_29.9%,#FD9A34_65.67%,#F9EB44_100%)] md:mt-[110px] md:w-[calc(100%_-_64px)] lg:mt-[130px]'
 					aria-hidden='true'
 				/>
 			</div>

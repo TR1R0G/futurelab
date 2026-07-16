@@ -14,6 +14,7 @@ interface ExpandedImageScreenProps {
 	movingTextSelector?: string
 	fadingElementSelector?: string
 	sourceSelector?: string
+	showGradient?: boolean
 }
 
 export function ExpandedImageScreen({
@@ -24,6 +25,7 @@ export function ExpandedImageScreen({
 	movingTextSelector,
 	fadingElementSelector,
 	sourceSelector,
+	showGradient = true,
 }: ExpandedImageScreenProps) {
 	const sectionRef = useRef<HTMLElement>(null)
 	const stageRef = useRef<HTMLDivElement>(null)
@@ -47,7 +49,7 @@ export function ExpandedImageScreen({
 		const stage = stageRef.current
 		const frame = frameRef.current
 		const gradient = gradientRef.current
-		if (!section || !stage || !frame || !gradient) return
+		if (!section || !stage || !frame) return
 
 		const positionEase = gsap.parseEase('power2.inOut')
 		const fullSizeAt = 0.82
@@ -220,7 +222,9 @@ export function ExpandedImageScreen({
 						gsap.set(movingText, { y: 0, opacity: 1 })
 					}
 					gsap.set(fadingElements, { opacity: 1 })
-					gsap.set(gradient, { opacity: 1, scale: 1 })
+					if (gradient) {
+						gsap.set(gradient, { opacity: 1, scale: 1 })
+					}
 					return
 				}
 
@@ -239,7 +243,9 @@ export function ExpandedImageScreen({
 						gsap.set(movingText, { y: 0, opacity: 1 })
 					}
 					gsap.set(fadingElements, { opacity: 1 })
-					gsap.set(gradient, { opacity: 1, scale: 1 })
+					if (gradient) {
+						gsap.set(gradient, { opacity: 1, scale: 1 })
+					}
 					return
 				}
 
@@ -290,17 +296,19 @@ export function ExpandedImageScreen({
 
 					gsap.set(movingText, {
 						y: textY,
-						opacity: mix(1, 0.16, fadeProgress),
+						opacity: 1,
 					})
 					gsap.set(fadingElements, {
-						opacity: mix(1, 0, fadeProgress),
+						opacity: 1,
 					})
 				}
 
-				gsap.set(gradient, {
-					opacity: 1,
-					scale: 1,
-				})
+				if (gradient) {
+					gsap.set(gradient, {
+						opacity: 1,
+						scale: 1,
+					})
+				}
 				ensureVideoPlayback()
 			}
 
@@ -347,12 +355,14 @@ export function ExpandedImageScreen({
 				ref={stageRef}
 				className='expanded-image-stage sticky top-0 h-[100svh] overflow-hidden bg-transparent'
 			>
-				<div
-					ref={gradientRef}
-					className='video-gradient-field absolute inset-0'
-				>
-					<DirectionsLight className='expanded-image-light left-1/2 top-[calc(50%_-_377.84px)] hidden lg:block' />
-				</div>
+				{showGradient ? (
+					<div
+						ref={gradientRef}
+						className='video-gradient-field absolute inset-0'
+					>
+						<DirectionsLight className='expanded-image-light left-1/2 top-[calc(50%_-_377.84px)] hidden lg:block' />
+					</div>
+				) : null}
 
 				<div
 					ref={frameRef}

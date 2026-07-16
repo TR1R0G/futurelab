@@ -522,7 +522,7 @@ export function Solutions({
 	return (
 		<section
 			ref={sectionRef}
-			className='solutions-section relative z-[120] isolate -mt-20 overflow-hidden bg-black px-5 py-24 md:px-8 lg:mt-[60px] lg:px-0 lg:py-0'
+			className='solutions-section relative z-[120] isolate -mt-20 overflow-hidden bg-black px-5 py-10 md:px-8 md:py-14 lg:mt-[60px] lg:px-0 lg:py-0'
 			style={
 				{
 					'--solutions-section-height': `${sectionHeight}px`,
@@ -534,13 +534,13 @@ export function Solutions({
 				className='solutions-inner relative mx-auto max-w-[1436px]'
 				style={{ height: `${sectionHeight}px` }}
 			>
-				<div className='solutions-heading lg:absolute lg:left-0 lg:top-[150px] lg:w-[857px]'>
+				<div className='solutions-heading lg:absolute lg:left-0 lg:top-[40px] lg:w-[857px]'>
 					<h2 className='font-heading whitespace-pre-line text-[42px] font-bold leading-[1.08] tracking-normal text-white md:text-[56px] lg:text-[65px] lg:leading-[73px]'>
 						{title}
 					</h2>
 				</div>
 
-				<p className='solutions-description mt-10 max-w-[944px] text-[18px] font-medium leading-[1.24] text-[#C4C4C4] md:text-[21px] lg:absolute lg:left-0 lg:top-[366px] lg:mt-0 lg:text-[23px] lg:leading-[28px]'>
+				<p className='solutions-description mt-10 max-w-[944px] text-[18px] font-medium leading-[1.24] text-[#C4C4C4] md:text-[21px] lg:absolute lg:left-0 lg:top-[256px] lg:mt-0 lg:text-[23px] lg:leading-[28px]'>
 					{description}
 				</p>
 
