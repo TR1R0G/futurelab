@@ -92,38 +92,72 @@ export function ImageGallery() {
     const track = trackRef.current;
     if (!gallery || !track) return;
 
-    const ctx = gsap.context(() => {
-      const firstSet = track.querySelector<HTMLElement>(
-        "[data-gallery-set='original']"
-      );
-      if (!firstSet) return;
+    const firstSet = track.querySelector<HTMLElement>(
+      "[data-gallery-set='original']"
+    );
+    if (!firstSet) return;
 
-      const tween = gsap.to(track, {
-        x: () => -firstSet.offsetWidth,
+    let tween: gsap.core.Tween | null = null;
+    let frameId = 0;
+    let isSlowed = false;
+
+    const createTween = () => {
+      frameId = 0;
+
+      const setWidth = firstSet.offsetWidth;
+      if (setWidth <= 0) {
+        frameId = window.requestAnimationFrame(createTween);
+        return;
+      }
+
+      tween?.kill();
+      gsap.set(track, { x: 0 });
+      tween = gsap.to(track, {
+        x: -setWidth,
         duration: 28,
         ease: "none",
         repeat: -1,
-        repeatRefresh: true,
       });
+      tween.timeScale(isSlowed ? 0.28 : 1);
+    };
 
-      const slowDown = () => tween.timeScale(0.28);
-      const speedUp = () => tween.timeScale(1);
-      gallery.addEventListener("pointerenter", slowDown);
-      gallery.addEventListener("pointerleave", speedUp);
-      gallery.addEventListener("focusin", slowDown);
-      gallery.addEventListener("focusout", speedUp);
+    const requestCreateTween = () => {
+      if (frameId) return;
+      frameId = window.requestAnimationFrame(createTween);
+    };
 
-      return () => {
-        gallery.removeEventListener("pointerenter", slowDown);
-        gallery.removeEventListener("pointerleave", speedUp);
-        gallery.removeEventListener("focusin", slowDown);
-        gallery.removeEventListener("focusout", speedUp);
-        tween.kill();
-      };
-    }, gallery);
+    const slowDown = () => {
+      isSlowed = true;
+      tween?.timeScale(0.28);
+    };
+    const speedUp = () => {
+      isSlowed = false;
+      tween?.timeScale(1);
+    };
+    const resumeOnVisible = () => {
+      if (document.hidden) return;
+      tween?.resume();
+      requestCreateTween();
+    };
+
+    createTween();
+
+    gallery.addEventListener("pointerenter", slowDown);
+    gallery.addEventListener("pointerleave", speedUp);
+    gallery.addEventListener("focusin", slowDown);
+    gallery.addEventListener("focusout", speedUp);
+    window.addEventListener("resize", requestCreateTween);
+    document.addEventListener("visibilitychange", resumeOnVisible);
 
     return () => {
-      ctx.revert();
+      if (frameId) window.cancelAnimationFrame(frameId);
+      gallery.removeEventListener("pointerenter", slowDown);
+      gallery.removeEventListener("pointerleave", speedUp);
+      gallery.removeEventListener("focusin", slowDown);
+      gallery.removeEventListener("focusout", speedUp);
+      window.removeEventListener("resize", requestCreateTween);
+      document.removeEventListener("visibilitychange", resumeOnVisible);
+      tween?.kill();
     };
   }, []);
 
