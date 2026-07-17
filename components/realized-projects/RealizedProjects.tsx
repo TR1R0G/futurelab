@@ -181,13 +181,15 @@ function ProjectCard({
   return (
     <article className="realized-project-card relative h-[var(--realized-card-height,874px)] w-[var(--realized-card-width,698px)] shrink-0 origin-top-left overflow-hidden bg-[#1D1D1D]">
       <div className="relative z-10 h-[868px] w-[698px] origin-top-left scale-[var(--realized-card-scale,1)] rounded-[35px] bg-[#1D1D1D]">
-        <h3 className="absolute left-10 top-10 w-[618px] text-[40px] font-semibold leading-[48px] text-[#DE5CFF]">
-          {project.title}
-        </h3>
+        <div className="absolute left-10 top-10 w-[618px]">
+          <h3 className="text-[40px] font-semibold leading-[48px] text-[#DE5CFF]">
+            {project.title}
+          </h3>
 
-        <p className="absolute left-10 top-[176px] w-[618px] whitespace-pre-line text-[23px] font-medium leading-[28px] text-[#C4C4C4]">
-          {project.description}
-        </p>
+          <p className="mt-8 whitespace-pre-line text-[23px] font-medium leading-[28px] text-[#C4C4C4]">
+            {project.description}
+          </p>
+        </div>
 
         <ProjectMedia project={project} onOpenVideo={onOpenVideo} />
       </div>
