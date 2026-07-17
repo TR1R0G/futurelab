@@ -39,6 +39,9 @@ export const metadata: Metadata = {
   title: "Future Lab — Студия цифровых технологий",
   description:
     "Пространство, где развиваются специалисты, создаются проекты и внедряются цифровые решения.",
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+  },
 };
 
 export const viewport: Viewport = {
