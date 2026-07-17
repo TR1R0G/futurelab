@@ -1,6 +1,7 @@
 'use client'
 
 import { FadeInImage } from '@/components/media/FadeInImage'
+import { LazyVideo } from '@/components/media/LazyVideo'
 import { useGlobalVideoSound } from '@/components/providers/SoundProvider'
 import { gsap, registerGsapPlugins } from '@/lib/gsap'
 import type { Language, SolutionsContent } from '@/lib/mdx'
@@ -816,7 +817,7 @@ function TransitionMedia({
 					allowFullScreen
 				/>
 			) : videoSrc ? (
-				<video
+				<LazyVideo
 					ref={videoRef}
 					key={videoSrc}
 					className='h-full w-full object-cover'
@@ -824,12 +825,11 @@ function TransitionMedia({
 					autoPlay
 					loop
 					playsInline
-					preload='auto'
+					preload='metadata'
 					poster={image}
 					disablePictureInPicture
-				>
-					<source src={videoSrc} type='video/mp4' />
-				</video>
+					sourceSrc={videoSrc}
+				/>
 			) : (
 				<FadeInImage
 					src={image}
@@ -901,8 +901,8 @@ function SolutionVideoPlayerModal({
 							allow='autoplay; encrypted-media; picture-in-picture; web-share'
 							allowFullScreen
 						/>
-					) : (
-						<video
+					) : media.videoSrc ? (
+						<LazyVideo
 							key={media.videoSrc}
 							className='h-full w-full object-cover'
 							aria-label={media.imageAlt}
@@ -912,9 +912,18 @@ function SolutionVideoPlayerModal({
 							playsInline
 							preload='auto'
 							poster={media.image}
-						>
-							<source src={media.videoSrc} type='video/mp4' />
-						</video>
+							sourceSrc={media.videoSrc}
+							eager
+						/>
+					) : (
+						<FadeInImage
+							src={media.image}
+							alt={media.imageAlt}
+							fill
+							sizes='min(1490px, 82vw)'
+							className='object-cover'
+							unoptimized
+						/>
 					)}
 				</div>
 			</div>

@@ -2,6 +2,7 @@
 
 import { CTACard } from '@/components/infrastructure/CTACard'
 import { ExpandedImageScreen } from '@/components/media/ExpandedImageScreen'
+import { LazyVideo } from '@/components/media/LazyVideo'
 import type { DirectionsContent, Language } from '@/lib/mdx'
 import { useEffect, useRef } from 'react'
 import { DirectionsLight } from './DirectionsLight'
@@ -180,7 +181,7 @@ function AcademyInlineVideo({
 	}, [videoSrc])
 
 	return (
-		<video
+		<LazyVideo
 			ref={videoRef}
 			className={`${className} block object-cover`}
 			aria-hidden='true'
@@ -191,10 +192,9 @@ function AcademyInlineVideo({
 			muted
 			playsInline
 			poster={poster}
-			preload='auto'
-		>
-			<source src={videoSrc} type='video/mp4' />
-		</video>
+			preload='metadata'
+			sourceSrc={videoSrc}
+		/>
 	)
 }
 

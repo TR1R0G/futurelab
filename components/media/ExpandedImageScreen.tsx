@@ -2,6 +2,7 @@
 
 import { DirectionsLight } from '@/components/directions/DirectionsLight'
 import { FadeInImage } from '@/components/media/FadeInImage'
+import { LazyVideo } from '@/components/media/LazyVideo'
 import { useGlobalVideoSound } from '@/components/providers/SoundProvider'
 import { gsap, registerGsapPlugins } from '@/lib/gsap'
 import { useEffect, useRef } from 'react'
@@ -369,7 +370,7 @@ export function ExpandedImageScreen({
 					className='absolute z-10 h-[min(86svh,928px)] w-[min(85vw,calc(min(86svh,928px)*0.57112))] overflow-hidden rounded-[35px] opacity-0 shadow-2xl shadow-black/45'
 				>
 					{videoSrc ? (
-						<video
+						<LazyVideo
 							ref={videoRef}
 							key={videoSrc}
 							className='h-full w-full object-cover'
@@ -377,12 +378,11 @@ export function ExpandedImageScreen({
 							autoPlay
 							loop
 							playsInline
-							preload='auto'
+							preload='metadata'
 							poster={src}
 							disablePictureInPicture
-						>
-							<source src={videoSrc} type='video/mp4' />
-						</video>
+							sourceSrc={videoSrc}
+						/>
 					) : (
 						<FadeInImage
 							src={src}

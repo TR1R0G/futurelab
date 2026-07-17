@@ -2,6 +2,7 @@
 
 import { gsap, registerGsapPlugins, ScrollTrigger } from "@/lib/gsap";
 import { FadeInImage } from "@/components/media/FadeInImage";
+import { LazyVideo } from "@/components/media/LazyVideo";
 import { useGlobalVideoSound } from "@/components/providers/SoundProvider";
 import { useEffect, useRef, useState } from "react";
 import type { RealizedProject } from "@/lib/mdx";
@@ -10,6 +11,8 @@ interface RealizedProjectsProps {
   title: string;
   projects: RealizedProject[];
 }
+
+type RealizedProjectWithVideo = RealizedProject & { video: string };
 
 export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
   const sectionRef = useRef<HTMLElement>(null);
@@ -125,6 +128,10 @@ export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
     };
   }, [activeProject]);
 
+  const activeVideoProject = activeProject?.video
+    ? (activeProject as RealizedProjectWithVideo)
+    : null;
+
   return (
     <section
       ref={sectionRef}
@@ -154,9 +161,9 @@ export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
         </div>
       </div>
 
-      {activeProject?.video ? (
+      {activeVideoProject ? (
         <ProjectVideoOverlay
-          project={activeProject}
+          project={activeVideoProject}
           onClose={() => setActiveProject(null)}
         />
       ) : null}
@@ -202,16 +209,16 @@ function ProjectMedia({
   return (
     <div className="absolute left-10 top-[496px] h-[332px] w-[618px] overflow-hidden rounded-[10px]">
       {project.video ? (
-        <video
+        <LazyVideo
           ref={videoRef}
           className="h-full w-full object-cover"
-          preload="auto"
+          preload="metadata"
           playsInline
           loop
+          poster={project.image}
           aria-label={project.imageAlt}
-        >
-          <source src={project.video} type="video/mp4" />
-        </video>
+          sourceSrc={project.video}
+        />
       ) : project.image ? (
         <FadeInImage
           src={project.image}
@@ -236,7 +243,7 @@ function ProjectVideoOverlay({
   project,
   onClose,
 }: {
-  project: RealizedProject;
+  project: RealizedProjectWithVideo;
   onClose: () => void;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -270,7 +277,7 @@ function ProjectVideoOverlay({
           <span className="absolute h-[4px] w-10 -rotate-45 rounded-full bg-black md:w-12" />
         </button>
 
-        <video
+        <LazyVideo
           ref={videoRef}
           key={project.video}
           className="aspect-video max-h-[calc(100svh-96px)] w-full bg-black object-cover"
@@ -281,9 +288,9 @@ function ProjectVideoOverlay({
           poster={project.image}
           aria-label={project.imageAlt}
           data-manual-sound="true"
-        >
-          <source src={project.video} type="video/mp4" />
-        </video>
+          sourceSrc={project.video}
+          eager
+        />
       </div>
     </div>
   );
