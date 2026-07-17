@@ -5,6 +5,7 @@ import { FadeInImage } from "@/components/media/FadeInImage";
 import { LazyVideo } from "@/components/media/LazyVideo";
 import { useGlobalVideoSound } from "@/components/providers/SoundProvider";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import type { RealizedProject } from "@/lib/mdx";
 
 interface RealizedProjectsProps {
@@ -131,6 +132,8 @@ export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
   const activeVideoProject = activeProject?.video
     ? (activeProject as RealizedProjectWithVideo)
     : null;
+  const portalRoot =
+    typeof document === "undefined" ? null : document.body;
 
   return (
     <section
@@ -161,12 +164,15 @@ export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
         </div>
       </div>
 
-      {activeVideoProject ? (
-        <ProjectVideoOverlay
-          project={activeVideoProject}
-          onClose={() => setActiveProject(null)}
-        />
-      ) : null}
+      {activeVideoProject && portalRoot
+        ? createPortal(
+            <ProjectVideoOverlay
+              project={activeVideoProject}
+              onClose={() => setActiveProject(null)}
+            />,
+            portalRoot
+          )
+        : null}
     </section>
   );
 }
@@ -285,7 +291,6 @@ function ProjectVideoOverlay({
           className="aspect-video max-h-[calc(100svh-96px)] w-full bg-black object-cover"
           controls
           autoPlay
-          playsInline
           preload="auto"
           poster={project.image}
           aria-label={project.imageAlt}
