@@ -486,7 +486,7 @@ h3,
 }
 
 .academy-programs-stage {
-	top: clamp(300px, 42svh, 420px);
+	top: clamp(240px, 36svh, 340px);
 }
 
 .academy-programs-scale {
@@ -596,7 +596,7 @@ h3,
 	}
 
 	.academy-programs-stage {
-		top: clamp(260px, 40svh, 330px);
+		top: clamp(220px, 34svh, 290px);
 	}
 
 	.academy-programs-scale {
@@ -686,7 +686,7 @@ h3,
 	}
 
 	.academy-programs-stage {
-		top: clamp(280px, 41svh, 360px);
+		top: clamp(230px, 35svh, 310px);
 	}
 
 	.academy-programs-scale {
@@ -786,7 +786,7 @@ h3,
 	}
 
 	.academy-programs-stage {
-		top: clamp(260px, 40svh, 330px);
+		top: clamp(220px, 34svh, 290px);
 	}
 
 	.academy-programs-scale {
@@ -864,8 +864,12 @@ h3,
 		height: 905px;
 	}
 
+	.academy-pin {
+		top: 56px;
+	}
+
 	.academy-programs-stage {
-		top: clamp(270px, 31svh, 340px);
+		top: clamp(210px, 25svh, 280px);
 	}
 
 	.academy-programs-scale {
@@ -949,8 +953,12 @@ h3,
 		height: 1001px;
 	}
 
+	.academy-pin {
+		top: 80px;
+	}
+
 	.academy-programs-stage {
-		top: clamp(390px, 38svh, 430px);
+		top: clamp(300px, 30svh, 350px);
 	}
 
 	.academy-programs-scale {
@@ -1015,7 +1023,7 @@ h3,
 
 @media (min-width: 1600px) and (max-height: 1000px) {
 	.academy-programs-stage {
-		top: 390px !important;
+		top: 300px !important;
 	}
 
 	.academy-programs-scale {
@@ -1804,7 +1812,7 @@ h3,
 	}
 
 	.academy-programs-stage {
-		top: 252px !important;
+		top: 210px !important;
 	}
 
 	.academy-programs-scale {
@@ -1890,7 +1898,7 @@ h3,
 	}
 
 	.academy-programs-stage {
-		top: 238px !important;
+		top: 200px !important;
 	}
 
 	.academy-programs-scale {
@@ -1946,7 +1954,7 @@ h3,
 
 @media (min-width: 900px) and (max-width: 1199px) and (max-height: 650px) {
 	.academy-programs-stage {
-		top: 224px !important;
+		top: 188px !important;
 	}
 
 	.academy-programs-scale {

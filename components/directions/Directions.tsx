@@ -42,7 +42,11 @@ const chipLayout = [
 const gradientByLabel: Partial<Record<string, string>> = {
 	'AR / VR':
 		'linear-gradient(90.31142938099543deg, rgb(75, 14, 91) 0%, rgb(169, 30, 131) 23.033%, rgb(253, 154, 52) 58.393%, rgb(249, 235, 68) 100%)',
+	'AR | VR':
+		'linear-gradient(90.31142938099543deg, rgb(75, 14, 91) 0%, rgb(169, 30, 131) 23.033%, rgb(253, 154, 52) 58.393%, rgb(249, 235, 68) 100%)',
 	'Web-технологии':
+		'linear-gradient(90.8273010027987deg, rgb(75, 14, 91) 0%, rgb(169, 30, 131) 21.739%, rgb(253, 154, 52) 57.973%, rgb(249, 235, 68) 100%)',
+	'Web technologies':
 		'linear-gradient(90.8273010027987deg, rgb(75, 14, 91) 0%, rgb(169, 30, 131) 21.739%, rgb(253, 154, 52) 57.973%, rgb(249, 235, 68) 100%)',
 }
 
