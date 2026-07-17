@@ -970,7 +970,7 @@ h3,
 	}
 
 	.directions-section {
-		height: calc(3950px + var(--expanded-image-scroll-extra) - 840);
+		height: calc(3780px + var(--expanded-image-scroll-extra) - 840);
 		min-height: 0;
 	}
 

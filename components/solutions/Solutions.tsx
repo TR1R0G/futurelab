@@ -522,7 +522,7 @@ export function Solutions({
 	return (
 		<section
 			ref={sectionRef}
-			className='solutions-section relative z-[120] isolate -mt-20 overflow-hidden bg-black px-5 py-10 md:px-8 md:py-14 lg:mt-[60px] lg:px-0 lg:py-0'
+			className='solutions-section relative z-[120] isolate -mt-20 overflow-hidden bg-black px-5 py-10 md:px-8 md:py-14 lg:mt-[60px] lg:px-0 lg:py-0 min-[1600px]:mt-[-108px]'
 			style={
 				{
 					'--solutions-section-height': `${sectionHeight}px`,
