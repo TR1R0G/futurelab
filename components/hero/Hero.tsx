@@ -3,6 +3,7 @@
 import { gsap, registerGsapPlugins } from '@/lib/gsap'
 import { useGlobalVideoSound } from '@/components/providers/SoundProvider'
 import type { Language } from '@/lib/mdx'
+import { scrollToHashTarget } from '@/lib/smooth-scroll'
 import Image from 'next/image'
 import type { MouseEvent, RefObject } from 'react'
 import { useEffect, useRef } from 'react'
@@ -440,17 +441,7 @@ function HeroHeader({
 	language: Language
 }) {
 	const handleContactClick = (event: MouseEvent<HTMLAnchorElement>) => {
-		const contactSection = document.getElementById('contacts')
-
-		if (!contactSection) return
-
-		event.preventDefault()
-		window.dispatchEvent(
-			new CustomEvent('futurelab:smooth-scroll-to', {
-				detail: { target: contactSection },
-			})
-		)
-		window.history.pushState(null, '', '#contacts')
+		scrollToHashTarget(event, '#contacts')
 	}
 
 	return (

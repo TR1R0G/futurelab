@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
+import { scrollToHashTarget } from "@/lib/smooth-scroll";
 
 interface HeroActionsProps {
   primaryCta: string;
@@ -38,6 +39,7 @@ export function HeroActions({ primaryCta, secondaryCta }: HeroActionsProps) {
       </button>
       <a
         href="#contacts"
+        onClick={(event) => scrollToHashTarget(event, "#contacts")}
         className="hero-button bg-[#0B5CFF] font-medium text-white transition-transform hover:scale-[1.01] hover:bg-[#0050f2] active:scale-[0.99]"
       >
         {secondaryCta}

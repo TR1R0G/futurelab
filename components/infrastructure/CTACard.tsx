@@ -1,5 +1,7 @@
 'use client'
 
+import { scrollToHashTarget } from '@/lib/smooth-scroll'
+
 interface CTACardProps {
 	text: string
 	buttonText: string
@@ -45,7 +47,11 @@ export function CTACard({
 				{text}
 			</p>
 			{href ? (
-				<a href={href} className={buttonClassName}>
+				<a
+					href={href}
+					onClick={event => scrollToHashTarget(event, href)}
+					className={buttonClassName}
+				>
 					{buttonText}
 				</a>
 			) : (
