@@ -36,7 +36,8 @@ const onest = Onest({
 });
 
 export const metadata: Metadata = {
-  title: "Future Lab — Студия цифровых технологий",
+  title:
+    "FutureLab by NazzAR — CreativeTech-хаб для AI, AR/VR, 3D и иммерсивных digital-продуктов",
   description:
     "Пространство, где развиваются специалисты, создаются проекты и внедряются цифровые решения.",
   icons: {

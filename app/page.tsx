@@ -1,4 +1,5 @@
 import { Hero } from "@/components/hero/Hero";
+import type { Metadata } from "next";
 import { Ecosystem } from "@/components/ecosystem/Ecosystem";
 import { Infrastructure } from "@/components/infrastructure/Infrastructure";
 import { Academy } from "@/components/academy/Academy";
@@ -26,6 +27,22 @@ interface HomeProps {
   searchParams?: Promise<{
     lang?: string | string[];
   }>;
+}
+
+const PAGE_TITLES = {
+  en: "FutureLab by NazzAR — CreativeTech Hub for AI, AR/VR, 3D & Immersive Digital Products",
+  ru: "FutureLab by NazzAR — CreativeTech-хаб для AI, AR/VR, 3D и иммерсивных digital-продуктов",
+} as const;
+
+export async function generateMetadata({
+  searchParams,
+}: HomeProps): Promise<Metadata> {
+  const params = await searchParams;
+  const language = normalizeLanguage(params?.lang);
+
+  return {
+    title: PAGE_TITLES[language],
+  };
 }
 
 export default async function Home({ searchParams }: HomeProps) {
