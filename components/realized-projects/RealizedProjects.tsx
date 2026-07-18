@@ -3,7 +3,6 @@
 import { gsap, registerGsapPlugins, ScrollTrigger } from "@/lib/gsap";
 import { FadeInImage } from "@/components/media/FadeInImage";
 import { LazyVideo } from "@/components/media/LazyVideo";
-import { useGlobalVideoSound } from "@/components/providers/SoundProvider";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { RealizedProject } from "@/lib/mdx";
@@ -210,30 +209,15 @@ function ProjectMedia({
   project: RealizedProject;
   onOpenVideo: (project: RealizedProject) => void;
 }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useGlobalVideoSound(videoRef, [project.video]);
-
   return (
     <div className="absolute left-10 top-[496px] h-[332px] w-[618px] overflow-hidden rounded-[10px]">
-      {project.video ? (
-        <LazyVideo
-          ref={videoRef}
-          className="h-full w-full object-cover"
-          preload="metadata"
-          playsInline
-          loop
-          poster={project.image}
-          aria-label={project.imageAlt}
-          sourceSrc={project.video}
-        />
-      ) : project.image ? (
+      {project.image ? (
         <FadeInImage
           src={project.image}
           alt={project.imageAlt}
           fill
           sizes="618px"
-          className="object-cover"
+          className="select-none object-cover [backface-visibility:hidden] [transform:translateZ(0)]"
           unoptimized
         />
       ) : null}
@@ -309,7 +293,7 @@ function PlayButton({ onClick }: { onClick: () => void }) {
       type="button"
       aria-label="Смотреть видео"
       onClick={onClick}
-      className="absolute left-1/2 top-1/2 flex h-[60px] w-[60px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 transition-transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80 active:scale-95"
+      className="absolute left-1/2 top-1/2 flex h-[60px] w-[60px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 transition-colors hover:bg-black/65 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80 active:bg-black/75"
     >
       <PlayTriangle />
     </button>
