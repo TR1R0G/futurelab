@@ -23,8 +23,8 @@ export function Footer({ address }: { address: string }) {
 
 				<div className='footer-line mt-16 h-px w-full bg-[#2F2F2F] lg:absolute lg:left-0 lg:top-[283px] lg:mt-0' />
 
-				<p className='footer-copyright mt-6 text-center text-[16px] leading-[30px] text-[#949494] lg:absolute lg:left-1/2 lg:top-[310px] lg:mt-0 lg:w-[149px] lg:-translate-x-1/2'>
-					© 2026 nazzar.tech
+				<p className='footer-copyright mt-6 text-center text-[16px] leading-[30px] text-[#949494] lg:absolute lg:left-1/2 lg:top-[310px] lg:mt-0 lg:w-auto lg:-translate-x-1/2 lg:whitespace-nowrap'>
+					© 2026 FutureLab by NazzAR Innovation
 				</p>
 			</div>
 		</footer>

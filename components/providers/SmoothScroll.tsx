@@ -24,6 +24,23 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       });
     };
 
+    const scrollToTarget = (event: Event) => {
+      const { target } =
+        (event as CustomEvent<{ target?: string | HTMLElement }>).detail ?? {};
+
+      if (!target) return;
+
+      event.preventDefault();
+      refreshLayout();
+
+      requestAnimationFrame(() => {
+        lenis.scrollTo(target, {
+          duration: 2.4,
+          easing: (t: number) => 1 - Math.pow(1 - t, 3),
+        });
+      });
+    };
+
     lenis.on("scroll", ScrollTrigger.update);
 
     const tickerFn = (time: number) => {
@@ -37,6 +54,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     window.addEventListener("load", refreshLayout);
     window.addEventListener("futurelab:critical-assets-ready", refreshLayout);
     window.addEventListener("futurelab:image-loaded", refreshLayout);
+    window.addEventListener("futurelab:smooth-scroll-to", scrollToTarget);
 
     if ("fonts" in document) {
       document.fonts.ready.then(refreshLayout).catch(() => undefined);
@@ -51,6 +69,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
         refreshLayout
       );
       window.removeEventListener("futurelab:image-loaded", refreshLayout);
+      window.removeEventListener("futurelab:smooth-scroll-to", scrollToTarget);
       window.clearTimeout(refreshTimeout);
 
       if (tickerFnRef.current) {

@@ -4,7 +4,7 @@ import { gsap, registerGsapPlugins } from '@/lib/gsap'
 import { useGlobalVideoSound } from '@/components/providers/SoundProvider'
 import type { Language } from '@/lib/mdx'
 import Image from 'next/image'
-import type { RefObject } from 'react'
+import type { MouseEvent, RefObject } from 'react'
 import { useEffect, useRef } from 'react'
 import { GradientOrb } from './GradientOrb'
 import { HeroActions } from './HeroActions'
@@ -439,6 +439,20 @@ function HeroHeader({
 	headerRef: RefObject<HTMLElement | null>
 	language: Language
 }) {
+	const handleContactClick = (event: MouseEvent<HTMLAnchorElement>) => {
+		const contactSection = document.getElementById('contacts')
+
+		if (!contactSection) return
+
+		event.preventDefault()
+		window.dispatchEvent(
+			new CustomEvent('futurelab:smooth-scroll-to', {
+				detail: { target: contactSection },
+			})
+		)
+		window.history.pushState(null, '', '#contacts')
+	}
+
 	return (
 		<header
 			ref={headerRef}
@@ -455,9 +469,13 @@ function HeroHeader({
 						priority
 					/>
 				</a>
-				<button className='hero-header-button bg-[#0B5CFF] font-medium text-white'>
+				<a
+					href='#contacts'
+					onClick={handleContactClick}
+					className='hero-header-button bg-[#0B5CFF] font-medium text-white'
+				>
 					{cta}
-				</button>
+				</a>
 			</div>
 			<div className='hero-language' aria-label='Language'>
 				<a

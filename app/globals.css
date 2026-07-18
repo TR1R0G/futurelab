@@ -18,6 +18,7 @@ body {
 html {
 	-webkit-text-size-adjust: 100%;
 	text-size-adjust: 100%;
+	scroll-behavior: smooth;
 }
 
 html.is-preloading,
@@ -166,6 +167,10 @@ h3,
 
 .hero-header-button {
 	display: none;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	text-decoration: none;
 }
 
 .hero-language {
@@ -1063,7 +1068,7 @@ h3,
 	}
 
 	.hero-header-button {
-		display: block;
+		display: inline-flex;
 		height: 52px;
 		min-width: 220px;
 		border-radius: 13px;
