@@ -170,6 +170,9 @@ export function Hero({
 					const tabletImageHeight = compactHeight ? 596 : 653
 					const descriptionWidth = compactHeight ? 310 : 370
 					const actionsWidth = 270
+					const frameWidth = Math.min(width, 1400)
+					const frameLeft = (width - frameWidth) / 2
+					const sideSpace = frameWidth * 0.0825
 
 					return {
 						image: {
@@ -178,15 +181,12 @@ export function Hero({
 							height: tabletImageHeight,
 						},
 						description: {
-							left: compactHeight ? 98 : 135,
+							left: Math.round(frameLeft + sideSpace),
 							top: centeredTop(desc, descriptionWidth, centerY),
 							width: descriptionWidth,
 						},
 						actions: {
-							right: Math.max(
-								compactHeight ? 96 : 134,
-								Math.round((width - 1305) / 2),
-							),
+							right: Math.round(frameLeft + sideSpace),
 							top: centeredTop(actions, actionsWidth, centerY),
 							width: actionsWidth,
 						},
@@ -220,7 +220,7 @@ export function Hero({
 					}
 				}
 
-				if (width >= 640) {
+				if (width >= 720) {
 					const smallTabletImageWidth = 373
 					const smallTabletImageHeight = 653
 
@@ -254,6 +254,7 @@ export function Hero({
 			}
 
 			let frame = 0
+			let isStaticMobile = false
 			let start = {
 				desc: readRect(desc),
 				image: readRect(image),
@@ -284,6 +285,19 @@ export function Hero({
 
 			const update = () => {
 				frame = 0
+
+				if (window.innerWidth < 720) {
+					if (!isStaticMobile) {
+						isStaticMobile = true
+						resetInlineStyles()
+					}
+					return
+				}
+
+				if (isStaticMobile) {
+					isStaticMobile = false
+					resetInlineStyles()
+				}
 
 				const vh = window.innerHeight
 				const maxScroll = Math.max(1, section.offsetHeight - vh)

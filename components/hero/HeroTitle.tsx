@@ -9,6 +9,10 @@ interface HeroTitleProps {
 
 export function HeroTitle({ title }: HeroTitleProps) {
   const containerRef = useRef<HTMLHeadingElement>(null);
+  const compactTitleLines =
+    title === "Студия цифровых технологий и развития молодых специалистов"
+      ? ["Студия цифровых", "технологий", "и развития молодых", "специалистов"]
+      : null;
   const titleLines =
     title === "Студия цифровых технологий и развития молодых специалистов"
       ? ["Студия цифровых технологий", "и развития молодых", "специалистов"]
@@ -52,15 +56,36 @@ export function HeroTitle({ title }: HeroTitleProps) {
       ref={containerRef}
       className="hero-title font-bold text-white"
     >
-      {titleLines.map((line, index) => (
-        <span
-          key={line}
-          className="block whitespace-normal min-[1200px]:whitespace-nowrap"
-        >
-          {line}
-          {index < titleLines.length - 1 ? " " : ""}
-        </span>
-      ))}
+      {compactTitleLines ? (
+        <>
+          <span className="hero-title-lines-default">
+            {titleLines.map((line) => (
+              <span
+                key={line}
+                className="block whitespace-normal min-[1200px]:whitespace-nowrap"
+              >
+                {line}
+              </span>
+            ))}
+          </span>
+          <span className="hero-title-lines-compact">
+            {compactTitleLines.map((line) => (
+              <span key={line} className="block whitespace-nowrap">
+                {line}
+              </span>
+            ))}
+          </span>
+        </>
+      ) : (
+        titleLines.map((line) => (
+          <span
+            key={line}
+            className="block whitespace-normal min-[1200px]:whitespace-nowrap"
+          >
+            {line}
+          </span>
+        ))
+      )}
     </h1>
   );
 }
