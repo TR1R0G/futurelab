@@ -199,7 +199,7 @@ h3,
 
 .hero-copy {
 	left: 50px;
-	top: 232px;
+	top: 192px;
 	width: 300px;
 }
 
@@ -1663,13 +1663,13 @@ h3,
 
 	.hero-copy {
 		left: calc((100vw - 1920px) / 2 + 242px);
-		top: 289px;
+		top: 269px;
 		width: 1172px;
 	}
 
 	.hero-title {
 		font-size: 80px;
-		line-height: 90px;
+		line-height: 80px;
 	}
 
 	.hero-description {
