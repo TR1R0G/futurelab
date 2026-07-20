@@ -1141,22 +1141,25 @@ h3,
 
 @media (max-width: 719px) {
 	.hero-section {
-		--hero-mobile-content-width: min(300px, calc(100vw - 40px));
+		--hero-mobile-content-width: min(
+			calc(100vw - 40px),
+			clamp(300px, 72vw, 520px)
+		);
 		--hero-mobile-inline: calc(
 			(100vw - var(--hero-mobile-content-width)) / 2
 		);
 	}
 
 	.hero-section {
-		height: 1000px;
-		min-height: 1000px;
+		height: 1900px;
+		min-height: 1900px;
 	}
 
 	.hero-stage {
-		position: relative;
-		height: 1000px;
-		min-height: 1000px;
-		overflow: visible;
+		position: sticky;
+		height: 100svh;
+		min-height: 100svh;
+		overflow: hidden;
 	}
 
 	.hero-header {
@@ -1211,6 +1214,7 @@ h3,
 	.hero-title {
 		font-size: clamp(24px, 8.6vw, 30px);
 		line-height: clamp(28px, 9.45vw, 34px);
+		overflow: visible;
 	}
 
 	.hero-description {
@@ -1222,9 +1226,10 @@ h3,
 	}
 
 	.hero-action-panel {
-		left: calc(50% - 120px);
+		left: 50%;
 		top: 505px;
-		width: 240px;
+		width: min(360px, var(--hero-mobile-content-width));
+		transform: translateX(-50%);
 	}
 
 	.hero-actions {

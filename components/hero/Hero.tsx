@@ -168,11 +168,16 @@ export function Hero({
 					const compactHeight = vh <= 820
 					const tabletImageWidth = compactHeight ? 340 : 373
 					const tabletImageHeight = compactHeight ? 596 : 653
-					const descriptionWidth = compactHeight ? 310 : 370
 					const actionsWidth = 270
 					const frameWidth = Math.min(width, 1400)
 					const frameLeft = (width - frameWidth) / 2
 					const sideSpace = frameWidth * 0.0825
+					const contentLeft = frameLeft + sideSpace
+					const imageLeft = (width - tabletImageWidth) / 2
+					const descriptionWidth = Math.min(
+						compactHeight ? 310 : 370,
+						Math.max(240, Math.floor(imageLeft - contentLeft - 36)),
+					)
 
 					return {
 						image: {
@@ -181,12 +186,12 @@ export function Hero({
 							height: tabletImageHeight,
 						},
 						description: {
-							left: Math.round(frameLeft + sideSpace),
+							left: Math.round(contentLeft),
 							top: centeredTop(desc, descriptionWidth, centerY),
 							width: descriptionWidth,
 						},
 						actions: {
-							right: Math.round(frameLeft + sideSpace),
+							right: Math.round(contentLeft),
 							top: centeredTop(actions, actionsWidth, centerY),
 							width: actionsWidth,
 						},
@@ -223,6 +228,21 @@ export function Hero({
 				if (width >= 720) {
 					const smallTabletImageWidth = 373
 					const smallTabletImageHeight = 653
+					const descriptionLeft = 35
+					const imageLeft = (width - smallTabletImageWidth) / 2
+					const descriptionWidth = Math.min(
+						210,
+						Math.max(120, Math.floor(imageLeft - descriptionLeft - 32)),
+					)
+					const imageRight = imageLeft + smallTabletImageWidth
+					const actionsWidth = Math.min(
+						210,
+						Math.max(140, Math.floor(width - imageRight - 32)),
+					)
+					const actionsRight = Math.max(
+						0,
+						Math.round(width - imageRight - 32 - actionsWidth),
+					)
 
 					return {
 						image: {
@@ -231,22 +251,36 @@ export function Hero({
 							height: smallTabletImageHeight,
 						},
 						description: {
-							left: 155,
-							top: centeredTop(desc, 210, centerY),
-							width: 210,
+							left: descriptionLeft,
+							top: centeredTop(desc, descriptionWidth, centerY),
+							width: descriptionWidth,
 						},
 						actions: {
-							right: Math.max(0, width - 845),
-							top: centeredTop(actions, 210, centerY),
-							width: 210,
+							right: actionsRight,
+							top: centeredTop(actions, actionsWidth, centerY),
+							width: actionsWidth,
 						},
 						gradientScale,
 						gradientTop: Math.round((vh - 631.91) / 2 - 60),
 					}
 				}
 
+				const mobileVideoAspect = 530 / 928
+				const mobileMaxHeight = Math.max(360, vh - 48)
+				const mobileMaxWidth = Math.max(280, width - 20)
+				const mobileImageWidth = Math.round(
+					Math.min(mobileMaxWidth, mobileMaxHeight * mobileVideoAspect),
+				)
+				const mobileImageHeight = Math.round(
+					mobileImageWidth / mobileVideoAspect,
+				)
+
 				return {
-					image: { top: 64, width: 300, height: 525 },
+					image: {
+						top: Math.max(20, Math.round((vh - mobileImageHeight) / 2)),
+						width: mobileImageWidth,
+						height: mobileImageHeight,
+					},
 					hideText: true,
 					gradientScale,
 					gradientTop: 120,
@@ -254,7 +288,6 @@ export function Hero({
 			}
 
 			let frame = 0
-			let isStaticMobile = false
 			let start = {
 				desc: readRect(desc),
 				image: readRect(image),
@@ -285,19 +318,6 @@ export function Hero({
 
 			const update = () => {
 				frame = 0
-
-				if (window.innerWidth < 720) {
-					if (!isStaticMobile) {
-						isStaticMobile = true
-						resetInlineStyles()
-					}
-					return
-				}
-
-				if (isStaticMobile) {
-					isStaticMobile = false
-					resetInlineStyles()
-				}
 
 				const vh = window.innerHeight
 				const maxScroll = Math.max(1, section.offsetHeight - vh)
@@ -332,8 +352,8 @@ export function Hero({
 				)}px`
 
 				if (target.hideText) {
-					desc.style.opacity = String(1 - clamp(progress * 2))
-					actions.style.opacity = String(1 - clamp(progress * 2))
+					desc.style.opacity = String(1 - clamp(progress * 5))
+					actions.style.opacity = String(1 - clamp(progress * 5))
 					return
 				}
 
