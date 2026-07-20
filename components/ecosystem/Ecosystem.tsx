@@ -8,6 +8,9 @@ import { useEffect, useRef } from 'react'
 
 const ECOSYSTEM_BLOCK_HEIGHT = 717
 const ECOSYSTEM_SCROLL_SLOWDOWN = 2.4
+const ECOSYSTEM_COMPACT_SCROLL_SLOWDOWN = 3.4
+const ECOSYSTEM_SCROLL_HOLD_RATIO = 0.22
+const ECOSYSTEM_SCROLL_END_PADDING = 32
 interface EcosystemProps {
 	title: string
 	subtitle: string
@@ -35,31 +38,73 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 
 		const media = gsap.matchMedia()
 		const ctx = gsap.context(() => {
+			media.add('(max-width: 1023px)', () => {
+				const getScrollDistance = () =>
+					Math.max(
+						0,
+						track.scrollWidth - wrapper.clientWidth + ECOSYSTEM_SCROLL_END_PADDING,
+					)
+				const getPinDistance = () =>
+					Math.max(
+						window.innerHeight * 1.8,
+						getScrollDistance() * ECOSYSTEM_COMPACT_SCROLL_SLOWDOWN,
+					) / (1 - ECOSYSTEM_SCROLL_HOLD_RATIO)
+
+				const timeline = gsap.timeline({
+					scrollTrigger: {
+						trigger: wrapper,
+						start: 'center center',
+						end: () => `+=${getPinDistance()}`,
+						pin: section,
+						scrub: true,
+						anticipatePin: 1,
+						invalidateOnRefresh: true,
+					},
+				})
+				timeline.to(track, {
+					x: () => -getScrollDistance(),
+					ease: 'none',
+					duration: 1 - ECOSYSTEM_SCROLL_HOLD_RATIO,
+				})
+				timeline.to({}, { duration: ECOSYSTEM_SCROLL_HOLD_RATIO })
+
+				return () => {
+					timeline.kill()
+				}
+			})
+
 			media.add('(min-width: 1024px)', () => {
 				const getScrollDistance = () =>
-					Math.max(0, track.scrollWidth - wrapper.clientWidth)
+					Math.max(
+						0,
+						track.scrollWidth - wrapper.clientWidth + ECOSYSTEM_SCROLL_END_PADDING,
+					)
 				const getPinDistance = () =>
 					Math.max(
 						window.innerHeight * 1.2,
 						getScrollDistance() * ECOSYSTEM_SCROLL_SLOWDOWN,
-					)
+					) / (1 - ECOSYSTEM_SCROLL_HOLD_RATIO)
 
-				const tween = gsap.to(track, {
-					x: () => -getScrollDistance(),
-					ease: 'none',
+				const timeline = gsap.timeline({
 					scrollTrigger: {
 						trigger: section,
 						start: 'top top',
 						end: () => `+=${getPinDistance()}`,
 						pin: true,
-						scrub: 1,
+						scrub: true,
 						anticipatePin: 1,
 						invalidateOnRefresh: true,
 					},
 				})
+				timeline.to(track, {
+					x: () => -getScrollDistance(),
+					ease: 'none',
+					duration: 1 - ECOSYSTEM_SCROLL_HOLD_RATIO,
+				})
+				timeline.to({}, { duration: ECOSYSTEM_SCROLL_HOLD_RATIO })
 
 				return () => {
-					tween.kill()
+					timeline.kill()
 				}
 			})
 		}, section)
@@ -86,7 +131,7 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 			>
 				<div
 					ref={trackRef}
-					className='ecosystem-track relative overflow-hidden rounded-[28px] bg-[#B24ECC] md:rounded-[35px] lg:rounded-[35px]'
+					className='ecosystem-track relative rounded-[28px] bg-[#B24ECC] md:rounded-[35px] lg:overflow-hidden lg:rounded-[35px]'
 				>
 					<div className='absolute left-[135px] top-[54px] w-[260px] md:left-[155px] md:top-[86px] md:w-[420px] lg:left-[242px] lg:top-[100px] lg:w-[615px]'>
 						<h2 className='font-heading whitespace-pre-line text-[21px] font-bold leading-[1.05] tracking-normal text-white md:text-[40px] md:leading-[44px] lg:text-[65px] lg:leading-[73px]'>
@@ -148,32 +193,32 @@ function EcosystemFeature({
 	const position = desktopPositions[index] ?? desktopPositions[0]
 	const compact = [
 		{
-			icon: 'left-[420px] top-[72px] md:left-[532px] md:top-[86px]',
+			icon: 'left-[420px] top-[72px] md:left-[625px] md:top-[86px]',
 			title:
-				'left-[420px] top-[155px] w-[190px] md:left-[532px] md:top-[203px] md:w-[260px]',
+				'left-[420px] top-[155px] w-[190px] md:left-[625px] md:top-[203px] md:w-[260px]',
 			description:
-				'left-[420px] top-[222px] w-[180px] md:left-[532px] md:top-[300px] md:w-[260px]',
+				'left-[420px] top-[222px] w-[180px] md:left-[625px] md:top-[300px] md:w-[260px]',
 		},
 		{
-			icon: 'left-[710px] top-[72px] md:left-[878px] md:top-[86px]',
+			icon: 'left-[710px] top-[72px] md:left-[1000px] md:top-[86px]',
 			title:
-				'left-[710px] top-[155px] w-[220px] md:left-[878px] md:top-[203px] md:w-[310px]',
+				'left-[710px] top-[155px] w-[220px] md:left-[1000px] md:top-[203px] md:w-[310px]',
 			description:
-				'left-[710px] top-[222px] w-[220px] md:left-[878px] md:top-[300px] md:w-[310px]',
+				'left-[710px] top-[222px] w-[220px] md:left-[1000px] md:top-[300px] md:w-[310px]',
 		},
 		{
-			icon: 'left-[1050px] top-[72px] md:left-[1274px] md:top-[86px]',
+			icon: 'left-[1050px] top-[72px] md:left-[1410px] md:top-[86px]',
 			title:
-				'left-[1050px] top-[155px] w-[190px] md:left-[1274px] md:top-[203px] md:w-[260px]',
+				'left-[1050px] top-[155px] w-[190px] md:left-[1410px] md:top-[203px] md:w-[260px]',
 			description:
-				'left-[1050px] top-[222px] w-[190px] md:left-[1274px] md:top-[300px] md:w-[260px]',
+				'left-[1050px] top-[222px] w-[190px] md:left-[1410px] md:top-[300px] md:w-[260px]',
 		},
 	][index] ?? {
-		icon: 'left-[420px] top-[72px] md:left-[532px] md:top-[86px]',
+		icon: 'left-[420px] top-[72px] md:left-[625px] md:top-[86px]',
 		title:
-			'left-[420px] top-[155px] w-[190px] md:left-[532px] md:top-[203px] md:w-[260px]',
+			'left-[420px] top-[155px] w-[190px] md:left-[625px] md:top-[203px] md:w-[260px]',
 		description:
-			'left-[420px] top-[222px] w-[180px] md:left-[532px] md:top-[300px] md:w-[260px]',
+			'left-[420px] top-[222px] w-[180px] md:left-[625px] md:top-[300px] md:w-[260px]',
 	}
 
 	return (

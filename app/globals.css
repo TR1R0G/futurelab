@@ -480,14 +480,16 @@ h3,
 .ecosystem-wrapper {
 	top: 0;
 	transform: none;
-	left: -105px;
-	width: 1727px;
+	left: 0;
+	width: 100%;
 	height: var(--ecosystem-card-height);
+	overflow: hidden;
 }
 
 .ecosystem-track {
-	width: 1727px;
+	width: 1270px;
 	height: var(--ecosystem-card-height);
+	margin-left: -105px;
 }
 
 .academy-section {
@@ -590,14 +592,15 @@ h3,
 	}
 
 	.ecosystem-wrapper {
-		left: -116px;
-		width: 1760px;
+		left: 0;
+		width: 100%;
 		height: var(--ecosystem-card-height);
 	}
 
 	.ecosystem-track {
-		width: 1760px;
+		width: 1270px;
 		height: var(--ecosystem-card-height);
+		margin-left: -116px;
 	}
 
 	.academy-section {
@@ -680,14 +683,15 @@ h3,
 	}
 
 	.ecosystem-wrapper {
-		left: -100px;
-		width: 2240px;
+		left: 0;
+		width: 100%;
 		height: var(--ecosystem-card-height);
 	}
 
 	.ecosystem-track {
-		width: 2240px;
+		width: 1740px;
 		height: var(--ecosystem-card-height);
+		margin-left: -100px;
 	}
 
 	.academy-section {
@@ -780,14 +784,15 @@ h3,
 	}
 
 	.ecosystem-wrapper {
-		left: -116px;
-		width: 1760px;
+		left: 0;
+		width: 100%;
 		height: var(--ecosystem-card-height);
 	}
 
 	.ecosystem-track {
-		width: 1760px;
+		width: 1740px;
 		height: 495px;
+		margin-left: -116px;
 	}
 
 	.academy-section {
@@ -1429,6 +1434,12 @@ h3,
 
 	.ecosystem-wrapper {
 		top: var(--ecosystem-card-offset);
+		width: 100%;
+		overflow: hidden;
+	}
+
+	.ecosystem-track {
+		margin-left: 0;
 	}
 
 	.hero-header {
@@ -1437,6 +1448,146 @@ h3,
 
 	.hero-copy {
 		top: 284px;
+	}
+}
+
+@media (min-width: 1024px) and (max-width: 1199px) {
+	.ecosystem-section {
+		--ecosystem-card-height: 680px;
+	}
+
+	.ecosystem-track {
+		width: 2065px;
+	}
+
+	.ecosystem-track > div:last-child article:nth-child(1) img {
+		left: 820px !important;
+		top: 280px !important;
+	}
+
+	.ecosystem-track > div:last-child article:nth-child(1) h3 {
+		left: 820px !important;
+		top: 419px !important;
+		width: 390px !important;
+	}
+
+	.ecosystem-track > div:last-child article:nth-child(1) p {
+		left: 820px !important;
+		top: 533px !important;
+		width: 330px !important;
+	}
+
+	.ecosystem-track > div:last-child article:nth-child(2) img {
+		left: 1265px !important;
+		top: 100px !important;
+	}
+
+	.ecosystem-track > div:last-child article:nth-child(2) h3 {
+		left: 1265px !important;
+		top: 240px !important;
+		width: 390px !important;
+	}
+
+	.ecosystem-track > div:last-child article:nth-child(2) p {
+		left: 1265px !important;
+		top: 354px !important;
+		width: 390px !important;
+	}
+
+	.ecosystem-track > div:last-child article:nth-child(3) img {
+		left: 1705px !important;
+		top: 280px !important;
+	}
+
+	.ecosystem-track > div:last-child article:nth-child(3) h3,
+	.ecosystem-track > div:last-child article:nth-child(3) p {
+		left: 1705px !important;
+		width: 348px !important;
+	}
+}
+
+@media (max-width: 1023px) {
+	.ecosystem-track > div:last-child article:nth-child(1) img,
+	.ecosystem-track > div:last-child article:nth-child(3) img {
+		top: 220px !important;
+	}
+
+	.ecosystem-track > div:last-child article:nth-child(1) h3,
+	.ecosystem-track > div:last-child article:nth-child(3) h3 {
+		top: 285px !important;
+	}
+
+	.ecosystem-track > div:last-child article:nth-child(1) p,
+	.ecosystem-track > div:last-child article:nth-child(3) p {
+		top: 350px !important;
+	}
+
+	.ecosystem-track > div:last-child article:nth-child(2) img {
+		top: 72px !important;
+	}
+
+	.ecosystem-track > div:last-child article:nth-child(2) h3 {
+		top: 155px !important;
+	}
+
+	.ecosystem-track > div:last-child article:nth-child(2) p {
+		top: 222px !important;
+	}
+}
+
+@media (min-width: 640px) and (max-width: 767px) {
+	.ecosystem-track > div:last-child article img {
+		width: 52px !important;
+		height: 52px !important;
+	}
+
+	.ecosystem-track > div:last-child article h3 {
+		width: 220px !important;
+		font-size: 18px !important;
+		line-height: 22px !important;
+	}
+
+	.ecosystem-track > div:last-child article p {
+		width: 220px !important;
+		font-size: 13px !important;
+		line-height: 16px !important;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+	.ecosystem-section {
+		--ecosystem-card-height: 600px;
+	}
+
+	.ecosystem-track {
+		height: var(--ecosystem-card-height);
+	}
+
+	.ecosystem-track > div:last-child article:nth-child(1) img,
+	.ecosystem-track > div:last-child article:nth-child(3) img {
+		top: 275px !important;
+	}
+
+	.ecosystem-track > div:last-child article:nth-child(1) h3,
+	.ecosystem-track > div:last-child article:nth-child(3) h3 {
+		top: 380px !important;
+	}
+
+	.ecosystem-track > div:last-child article:nth-child(1) p,
+	.ecosystem-track > div:last-child article:nth-child(3) p {
+		top: 465px !important;
+	}
+
+	.ecosystem-track > div:last-child article:nth-child(2) img {
+		top: 86px !important;
+	}
+
+	.ecosystem-track > div:last-child article:nth-child(2) h3 {
+		top: 203px !important;
+	}
+
+	.ecosystem-track > div:last-child article:nth-child(2) p {
+		top: 300px !important;
 	}
 }
 
