@@ -35,6 +35,17 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 		const wrapper = wrapperRef.current
 		const track = trackRef.current
 		if (!section || !wrapper || !track) return
+		const getContentRight = () => {
+			const trackBounds = track.getBoundingClientRect()
+			const contentItems = track.querySelectorAll('img,h2,h3,p')
+			return Math.max(
+				0,
+				...Array.from(contentItems, item => {
+					const itemBounds = item.getBoundingClientRect()
+					return itemBounds.right - trackBounds.left
+				}),
+			)
+		}
 
 		const media = gsap.matchMedia()
 		const ctx = gsap.context(() => {
@@ -42,7 +53,9 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 				const getScrollDistance = () =>
 					Math.max(
 						0,
-						track.scrollWidth - wrapper.clientWidth + ECOSYSTEM_SCROLL_END_PADDING,
+						getContentRight() -
+							wrapper.clientWidth +
+							ECOSYSTEM_SCROLL_END_PADDING,
 					)
 				const getPinDistance = () =>
 					Math.max(
@@ -77,7 +90,9 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 				const getScrollDistance = () =>
 					Math.max(
 						0,
-						track.scrollWidth - wrapper.clientWidth + ECOSYSTEM_SCROLL_END_PADDING,
+						getContentRight() -
+							wrapper.clientWidth +
+							ECOSYSTEM_SCROLL_END_PADDING,
 					)
 				const getPinDistance = () =>
 					Math.max(

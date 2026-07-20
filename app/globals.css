@@ -871,7 +871,7 @@ h3,
 
 	.ecosystem-track {
 		width: 2240px;
-		height: 642px;
+		height: var(--ecosystem-card-height);
 	}
 
 	.academy-section {
@@ -1503,6 +1503,16 @@ h3,
 	.ecosystem-track > div:last-child article:nth-child(3) p {
 		left: 1705px !important;
 		width: 348px !important;
+	}
+}
+
+@media (min-width: 1200px) and (max-width: 1599px) {
+	.ecosystem-section {
+		--ecosystem-card-height: 650px;
+	}
+
+	.ecosystem-track {
+		width: 2600px;
 	}
 }
 
