@@ -64,28 +64,22 @@ export function Directions({
 			: '/videos/academy/academy-ru.mp4'
 
 	return (
-		<section className='directions-section relative z-[80] isolate overflow-visible bg-black px-5 pb-28 pt-20 md:px-8 md:pb-36 md:pt-24 lg:pb-44 lg:pt-20 xl:pt-[380px]'>
-			<div className='directions-board relative mx-auto h-auto max-w-[1436px] overflow-visible md:h-[398px]'>
+		<section className='directions-section relative z-[80] isolate overflow-visible bg-black px-5 pb-28 pt-6 md:px-8 md:pb-36 md:pt-8 min-[960px]:pt-40 lg:pb-44 lg:pt-52 xl:pt-36 min-[1600px]:pt-[380px]'>
+			<div className='directions-board relative mx-auto h-auto max-w-[1436px] overflow-visible'>
 				<div
-					className='pointer-events-none absolute left-0 top-[7px] hidden h-[391px] w-full rounded-[35px] md:block'
+					className='directions-board-gradient pointer-events-none absolute left-0 top-[7px] h-[391px] w-full rounded-[35px]'
 					style={{
 						backgroundImage:
 							'linear-gradient(30.47874796640454deg, rgb(75, 14, 91) 2.4712%, rgb(169, 30, 131) 18.71%, rgb(253, 154, 52) 44.047%, rgb(249, 235, 68) 68.37%)',
 					}}
 					aria-hidden='true'
 				/>
-				<div className='relative min-h-[420px] overflow-visible rounded-[35px] bg-[#1D1D1D] p-8 md:h-[391px] md:min-h-0 md:p-0'>
-					<h2 className='directions-board-title relative z-10 text-[30px] font-semibold leading-none text-white md:absolute md:left-10 md:top-10 md:text-[33px] md:leading-10'>
+				<div className='directions-board-card relative min-h-[420px] overflow-visible rounded-[35px] bg-[#1D1D1D] p-8'>
+					<h2 className='directions-board-title relative z-10 text-[30px] font-semibold leading-none text-white'>
 						{title}
 					</h2>
 
-					<div className='mt-12 flex flex-wrap gap-4 md:hidden'>
-						{chips.map(chip => (
-							<DirectionChip key={chip.label} chip={chip} />
-						))}
-					</div>
-
-					<div className='hidden md:block'>
+					<div className='directions-chip-layer absolute inset-0 z-10'>
 						{chips.map((chip, index) => (
 							<div
 								key={chip.label}
@@ -98,7 +92,7 @@ export function Directions({
 				</div>
 			</div>
 
-			<div className='directions-statement sticky top-[12svh] mx-auto mt-32 max-w-[1436px] text-center md:mt-44 lg:mt-52'>
+			<div className='directions-statement sticky top-[12svh] mx-auto mt-12 max-w-[1436px] text-center md:mt-16 min-[960px]:mt-44 lg:mt-52'>
 				<DirectionsLight className='left-1/2 top-[calc(38svh_-_377.84px)] hidden lg:block' />
 
 				<div className='directions-statement-copy relative z-10 text-[32px] font-semibold leading-[1.48] tracking-normal text-white md:text-[44px] lg:text-[55px] lg:leading-[78px]'>
