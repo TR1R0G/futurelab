@@ -62,6 +62,70 @@ export function Directions({
 		language === 'en'
 			? '/videos/academy/academy-en.mp4'
 			: '/videos/academy/academy-ru.mp4'
+	const desktopStatementLine =
+		language === 'en'
+			? {
+					lead: 'program create',
+					tail: 'a space',
+				}
+			: {
+					lead: 'программа формируют',
+					tail: 'пространство',
+				}
+	const tabletStatementLines =
+		language === 'en'
+			? [
+					'By combining knowledge, practice, and new',
+					'formats of interaction, the Academy and',
+					'acceleration program create a space',
+					'for sustainable professional growth,',
+					'initiative development, and ideas able',
+					'to adapt to the challenges of the future',
+				]
+			: [
+					'Объединяя знания, практику и новые',
+					'форматы взаимодействия, Академия и',
+					'акселерационная программа формируют',
+					'пространство для устойчивого',
+					'профессионального роста, развития',
+					'инициатив и появления идей, способных',
+					'адаптироваться к вызовам будущего',
+				]
+	const mobileStatementLines =
+		language === 'en'
+			? [
+					'By combining',
+					'knowledge, practice',
+					'and new formats',
+					'of interaction,',
+					'the Academy and',
+					'acceleration program',
+					'create a space',
+					'for sustainable',
+					'professional growth,',
+					'initiative development,',
+					'and ideas able',
+					'to adapt to the',
+					'challenges of the future',
+				]
+			: [
+					'Объединяя знания,',
+					'практику и новые',
+					'форматы',
+					'взаимодействия,',
+					'Академия и',
+					'акселерационная',
+					'программа формируют',
+					'пространство',
+					'для устойчивого',
+					'профессионального',
+					'роста, развития',
+					'инициатив и',
+					'появления идей,',
+					'способных',
+					'адаптироваться к',
+					'вызовам будущего',
+				]
 
 	return (
 		<section className='directions-section relative z-[80] isolate overflow-visible bg-black px-5 pb-28 pt-6 md:px-8 md:pb-36 md:pt-8 min-[960px]:pt-40 lg:pb-44 lg:pt-52 xl:pt-36 min-[1600px]:pt-[380px]'>
@@ -93,42 +157,105 @@ export function Directions({
 			</div>
 
 			<div className='directions-statement sticky top-[12svh] mx-auto mt-12 max-w-[1436px] text-center md:mt-16 min-[960px]:mt-44 lg:mt-52'>
-				<DirectionsLight className='left-1/2 top-[calc(38svh_-_377.84px)] hidden lg:block' />
+				<DirectionsLight className='left-1/2 top-[calc(38svh_-_377.84px)] block max-[719px]:[--directions-light-scale:.46] min-[720px]:max-[959px]:[--directions-light-scale:.72] min-[960px]:[--directions-light-scale:1]' />
 
-				<div className='directions-statement-copy relative z-10 text-[32px] font-semibold leading-[1.48] tracking-normal text-white md:text-[44px] lg:text-[55px] lg:leading-[78px]'>
-					<span className='directions-inline-image pointer-events-none absolute left-1/2 top-[155px] z-20 hidden h-[91px] w-[52px] translate-x-[90px] overflow-hidden rounded-[8px] lg:block'>
+				<div className='directions-statement-copy relative z-10 text-[32px] font-semibold leading-[1.18] tracking-normal text-white md:text-[37px] md:leading-[1.24] min-[960px]:max-[1369px]:text-[clamp(31px,3.3vw,44px)] min-[960px]:max-[1369px]:leading-[1.42] min-[1370px]:text-[55px] min-[1370px]:leading-[78px]'>
+					<span className='directions-inline-image pointer-events-none absolute left-1/2 top-[155px] z-20 hidden h-[91px] w-[52px] translate-x-[90px] overflow-hidden rounded-[8px] min-[1370px]:block'>
 						<AcademyInlineVideo
 							poster={statement.imageSrc}
 							videoSrc={academyVideoSrc}
 						/>
 					</span>
-					{statement.linesBeforeImage.map(line => (
-						<p key={line} className='directions-statement-line'>
-							{line}
-						</p>
-					))}
+					<div className='directions-statement-large-desktop hidden min-[1370px]:block'>
+						{statement.linesBeforeImage.map(line => (
+							<p key={line} className='directions-statement-line'>
+								{line}
+							</p>
+						))}
 
-					<p className='directions-statement-line'>
-						{statement.imageLead}
-						<span
-							className='directions-inline-image-spacer mx-5 inline-block h-0 w-[38px] md:mx-7 md:w-[52px]'
-							aria-hidden='true'
-						/>
-						<span className='directions-inline-image mx-5 inline-flex translate-y-[0.18em] overflow-hidden rounded-[8px] align-baseline shadow-[0_10px_34px_rgba(0,0,0,0.45)] md:mx-7 lg:hidden'>
-							<AcademyInlineVideo
-								poster={statement.imageSrc}
-								videoSrc={academyVideoSrc}
-								className='h-[58px] w-[38px] md:h-[78px] md:w-[52px] lg:h-[91px] lg:w-[52px]'
+						<p className='directions-statement-line'>
+							{statement.imageLead}
+							<span
+								className='directions-inline-image-spacer mx-5 inline-block h-0 w-[52px] md:mx-7'
+								aria-hidden='true'
 							/>
-						</span>
-						{statement.imageTail}
-					</p>
-
-					{statement.linesAfterImage.map(line => (
-						<p key={line} className='directions-statement-line'>
-							{line}
+							{statement.imageTail}
 						</p>
-					))}
+
+						{statement.linesAfterImage.map(line => (
+							<p key={line} className='directions-statement-line'>
+								{line}
+							</p>
+						))}
+					</div>
+
+					<div className='directions-statement-desktop hidden min-[960px]:block min-[1370px]:hidden'>
+						{statement.linesBeforeImage.map(line => (
+							<p
+								key={line}
+								className='directions-statement-line whitespace-nowrap'
+							>
+								{line}
+							</p>
+						))}
+
+						<p className='directions-statement-line whitespace-nowrap'>
+							{desktopStatementLine.lead}
+							<span className='directions-inline-image mx-5 inline-flex translate-y-[0.18em] overflow-hidden rounded-[8px] align-baseline shadow-[0_10px_34px_rgba(0,0,0,0.45)] md:mx-7'>
+								<AcademyInlineVideo
+									poster={statement.imageSrc}
+									videoSrc={academyVideoSrc}
+									className='h-[91px] w-[52px]'
+								/>
+							</span>
+							{desktopStatementLine.tail}
+						</p>
+
+						{statement.linesAfterImage.map(line => (
+							<p
+								key={line}
+								className='directions-statement-line whitespace-nowrap'
+							>
+								{line}
+							</p>
+						))}
+					</div>
+
+					<div className='directions-statement-tablet hidden min-[720px]:block min-[960px]:hidden'>
+						{tabletStatementLines.map(line => (
+							<p key={line} className='directions-statement-line'>
+								{line}
+							</p>
+						))}
+
+						<div className='mt-9 flex justify-center md:mt-12'>
+							<span className='directions-inline-image inline-flex overflow-hidden rounded-[8px] shadow-[0_10px_34px_rgba(0,0,0,0.45)]'>
+								<AcademyInlineVideo
+									poster={statement.imageSrc}
+									videoSrc={academyVideoSrc}
+									className='h-[92px] w-[52px] md:h-[132px] md:w-[76px]'
+								/>
+							</span>
+						</div>
+					</div>
+
+					<div className='directions-statement-mobile min-[720px]:hidden'>
+						{mobileStatementLines.map(line => (
+							<p key={line} className='directions-statement-line'>
+								{line}
+							</p>
+						))}
+
+						<div className='mt-9 flex justify-center'>
+							<span className='directions-inline-image inline-flex overflow-hidden rounded-[8px] shadow-[0_10px_34px_rgba(0,0,0,0.45)]'>
+								<AcademyInlineVideo
+									poster={statement.imageSrc}
+									videoSrc={academyVideoSrc}
+									className='h-[92px] w-[52px]'
+								/>
+							</span>
+						</div>
+					</div>
 				</div>
 			</div>
 
