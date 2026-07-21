@@ -157,6 +157,10 @@ export function Directions({
 			</div>
 
 			<div className='directions-statement sticky top-[12svh] mx-auto mt-12 max-w-[1436px] text-center md:mt-16 min-[960px]:mt-44 lg:mt-52'>
+				<div
+					className='pointer-events-none absolute inset-x-[-20px] inset-y-[-8svh] z-0 block bg-[radial-gradient(ellipse_at_50%_45%,rgba(63,161,252,0.42)_0%,rgba(218,127,206,0.36)_34%,rgba(252,204,1,0.28)_68%,rgba(75,14,91,0.22)_100%)] blur-[40px] min-[1370px]:hidden md:inset-x-[-32px] md:blur-[64px]'
+					aria-hidden='true'
+				/>
 				<DirectionsLight className='left-1/2 top-[calc(38svh_-_377.84px)] block max-[719px]:[--directions-light-scale:.46] min-[720px]:max-[959px]:[--directions-light-scale:.72] min-[960px]:[--directions-light-scale:1]' />
 
 				<div className='directions-statement-copy relative z-10 text-[32px] font-semibold leading-[1.18] tracking-normal text-white md:text-[37px] md:leading-[1.24] min-[960px]:max-[1369px]:text-[clamp(31px,3.3vw,44px)] min-[960px]:max-[1369px]:leading-[1.42] min-[1370px]:text-[55px] min-[1370px]:leading-[78px]'>
@@ -269,9 +273,17 @@ export function Directions({
 				sourceSelector='.directions-inline-image'
 			/>
 
-			<div className='directions-post-image relative z-[200] isolate flex min-h-[40svh] flex-col justify-center bg-black'>
+			<div className='directions-post-image relative z-[200] isolate flex min-h-[40svh] flex-col justify-center overflow-hidden bg-[#16071d]'>
 				<div
-					className='pointer-events-none absolute inset-x-0 bottom-[-60svh] z-0 h-[60svh] bg-black'
+					className='pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_50%_0%,#1e3448_0%,#4a2b54_35%,#514319_70%,#16071d_100%)]'
+					aria-hidden='true'
+				/>
+				<div
+					className='pointer-events-none absolute inset-x-[-20px] top-[-24svh] z-0 h-[80svh] bg-[radial-gradient(ellipse_at_50%_40%,rgba(63,161,252,0.42)_0%,rgba(218,127,206,0.36)_34%,rgba(252,204,1,0.28)_68%,rgba(75,14,91,0)_100%)] blur-[52px] md:inset-x-[-32px] md:blur-[76px]'
+					aria-hidden='true'
+				/>
+				<div
+					className='pointer-events-none absolute inset-x-0 bottom-[-60svh] z-0 h-[60svh] bg-[linear-gradient(180deg,#16071d_0%,#000_100%)]'
 					aria-hidden='true'
 				/>
 				<div className='relative z-10 w-full'>
