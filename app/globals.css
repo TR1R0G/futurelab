@@ -549,27 +549,27 @@ h3,
 
 @media (max-width: 719px) {
 	.directions-board {
-		width: min(100%, 600px);
+		width: min(calc(100vw - 60px), 600px);
 		max-width: 600px !important;
-		height: clamp(500px, calc((100vw - 40px) * 1.533), 920px);
+		height: calc(min(calc(100vw - 60px), 600px) * 1.5533);
 	}
 
 	.directions-board-gradient {
-		top: 7px !important;
-		height: 100% !important;
-		border-radius: clamp(28px, 8vw, 50px) !important;
+		top: 26.61% !important;
+		height: 73.39% !important;
+		border-radius: clamp(25px, 8.33vw, 35px) !important;
 	}
 
 	.directions-board-card {
-		height: 100% !important;
-		border-radius: clamp(28px, 8vw, 50px) !important;
+		height: 98.71% !important;
+		border-radius: clamp(25px, 8.33vw, 35px) !important;
 	}
 
 	.directions-board-title {
-		left: 10.3% !important;
-		top: 7.3% !important;
-		width: 72% !important;
-		font-size: clamp(30px, 10vw, 44px) !important;
+		left: 10% !important;
+		top: 6.44% !important;
+		width: 62.33% !important;
+		font-size: clamp(22px, 6.11vw, 36px) !important;
 		line-height: 1.18 !important;
 	}
 
@@ -584,16 +584,18 @@ h3,
 		width: 100% !important;
 		height: 100% !important;
 		max-width: none !important;
-		padding-inline: clamp(12px, 3.5vw, 24px) !important;
-		font-size: clamp(16px, 4.8vw, 29px) !important;
-		line-height: 1.05 !important;
+		padding-inline: clamp(18px, 5vw, 28px) !important;
+		border-radius: 999px !important;
+		font-size: clamp(16px, 4.44vw, 24px) !important;
+		line-height: 1 !important;
 	}
 
 	.directions-chip-slot-0 {
-		left: 3% !important;
-		top: 45.8% !important;
-		width: 42% !important;
-		height: 12.8% !important;
+		left: -1% !important;
+		top: 40% !important;
+		width: 43.33% !important;
+		height: 9.66% !important;
+		z-index: 4 !important;
 	}
 
 	.directions-chip-slot-0 .directions-chip {
@@ -601,10 +603,11 @@ h3,
 	}
 
 	.directions-chip-slot-1 {
-		left: 3% !important;
-		top: 67.8% !important;
+		left: 1.67% !important;
+		top: 67% !important;
 		width: 58% !important;
-		height: 9.8% !important;
+		height: 9.66% !important;
+		z-index: 4 !important;
 	}
 
 	.directions-chip-slot-1 .directions-chip {
@@ -612,36 +615,39 @@ h3,
 	}
 
 	.directions-chip-slot-2 {
-		left: 25% !important;
-		top: 53.5% !important;
-		width: 74% !important;
-		height: 11.2% !important;
+		left: 23.33% !important;
+		top: 50% !important;
+		width: 75% !important;
+		height: 9.66% !important;
+		z-index: 3 !important;
 	}
 
 	.directions-chip-slot-2 .directions-chip {
-		transform: rotate(-6.5deg) !important;
+		transform: rotate(-7.33deg) !important;
 	}
 
 	.directions-chip-slot-3 {
-		left: 3% !important;
-		top: 73.7% !important;
-		width: 94% !important;
-		height: 14.3% !important;
+		left: 0 !important;
+		top: 82% !important;
+		width: 99.33% !important;
+		height: 9.66% !important;
+		z-index: 2 !important;
 	}
 
 	.directions-chip-slot-3 .directions-chip {
-		transform: rotate(-13.5deg) !important;
+		transform: rotate(-15.1deg) !important;
 	}
 
 	.directions-chip-slot-4 {
-		left: 26% !important;
-		top: 34.1% !important;
-		width: 73% !important;
-		height: 15.8% !important;
+		left: 24% !important;
+		top: 28% !important;
+		width: 74.33% !important;
+		height: 9.66% !important;
+		z-index: 5 !important;
 	}
 
 	.directions-chip-slot-4 .directions-chip {
-		transform: rotate(11deg) !important;
+		transform: rotate(11.49deg) !important;
 	}
 }
 
