@@ -66,7 +66,7 @@ export function ContactBlock({
 function ContactGlow() {
 	return (
 		<div
-			className='pointer-events-none absolute left-1/2 top-[378px] z-0 hidden h-[943.61px] w-[1825.34px] -translate-x-1/2 blur-[200px] min-[1440px]:block'
+			className='contact-glow pointer-events-none absolute left-1/2 top-[378px] z-0 hidden h-[943.61px] w-[1825.34px] -translate-x-1/2 blur-[200px] min-[1440px]:block'
 			style={{ marginLeft: '-1.33px' }}
 			aria-hidden='true'
 		>

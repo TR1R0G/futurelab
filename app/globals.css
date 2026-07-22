@@ -2478,6 +2478,108 @@ h3,
 	}
 }
 
+@media (min-width: 960px) and (max-width: 1199px) {
+	.contact-section {
+		height: 704px !important;
+		padding: 100px 35px 0 !important;
+	}
+
+	.contact-content {
+		max-width: 930px !important;
+		height: 504px;
+	}
+
+	.contact-content > h2 {
+		width: 698px;
+		font-size: 40px !important;
+		line-height: 45px !important;
+	}
+
+	.contact-card {
+		position: relative;
+		display: block !important;
+		width: 100% !important;
+		height: 402px !important;
+		margin-top: 57px !important;
+		padding: 0 !important;
+		border-radius: 35px !important;
+	}
+
+	.contact-card > div:first-child {
+		position: absolute;
+		left: 40px !important;
+		top: 40px !important;
+		width: 750px;
+	}
+
+	.contact-card > div:first-child h3 {
+		width: 272px;
+		font-size: 30px !important;
+		line-height: 30px !important;
+	}
+
+	.contact-card > div:first-child p {
+		width: 750px;
+		max-width: 750px;
+		margin-top: 38px !important;
+		font-size: 21px !important;
+		line-height: 36px !important;
+	}
+
+	.contact-item {
+		position: absolute;
+		top: 206px !important;
+	}
+
+	.contact-item-mail {
+		left: 40px !important;
+		width: 292px !important;
+	}
+
+	.contact-item-telegram {
+		left: 480px !important;
+		width: 229px !important;
+	}
+
+	.contact-item p {
+		margin-top: 26px !important;
+		font-size: 21px !important;
+		line-height: 25px !important;
+	}
+
+	.contact-item p + p {
+		margin-top: 10px !important;
+	}
+
+	.contact-glow {
+		display: block;
+		top: 537px;
+		width: 1000px;
+		height: 516.95px;
+		filter: blur(125px);
+	}
+
+	.contact-glow span {
+		width: 243.24px !important;
+		height: 458.54px !important;
+	}
+
+	.contact-glow span:nth-child(1) {
+		left: 483.74px !important;
+		top: 52.59px !important;
+	}
+
+	.contact-glow span:nth-child(2) {
+		left: 0 !important;
+		top: 52.59px !important;
+	}
+
+	.contact-glow span:nth-child(3) {
+		left: 267.89px !important;
+		top: 0 !important;
+	}
+}
+
 @media (min-width: 900px) and (max-width: 1199px) and (max-height: 650px) {
 	.academy-programs-stage {
 		top: 188px !important;
@@ -2512,6 +2614,227 @@ h3,
 
 	.hero-light {
 		top: 270px;
+	}
+}
+
+@media (min-width: 720px) and (max-width: 959px) {
+	.contact-section {
+		height: 639px !important;
+		min-height: 639px !important;
+		padding: 100px 39px 0 !important;
+	}
+
+	.contact-content {
+		max-width: 690px !important;
+		height: 439px;
+	}
+
+	.contact-content > h2 {
+		width: 340px;
+		font-size: 36px !important;
+		line-height: 40px !important;
+	}
+
+	.contact-card {
+		position: relative;
+		display: block !important;
+		width: 100% !important;
+		height: 337px !important;
+		margin-top: 62px !important;
+		padding: 0 !important;
+		border-radius: 35px !important;
+		box-shadow: 0 10px 30px rgb(0 0 0 / 0.15) !important;
+	}
+
+	.contact-card > div:first-child {
+		position: absolute;
+		left: 30px !important;
+		top: 30px !important;
+		width: 563px;
+	}
+
+	.contact-card > div:first-child h3 {
+		width: 272px;
+		font-size: 30px !important;
+		line-height: 30px !important;
+	}
+
+	.contact-card > div:first-child p {
+		width: 563px;
+		max-width: 563px;
+		margin-top: 30px !important;
+		font-size: 18px !important;
+		line-height: 31px !important;
+	}
+
+	.contact-item {
+		position: absolute;
+		top: 164px !important;
+	}
+
+	.contact-item-mail {
+		left: 30px !important;
+		width: 250px !important;
+	}
+
+	.contact-item-telegram {
+		left: 360px !important;
+		width: 196px !important;
+	}
+
+	.contact-item p {
+		margin-top: 26px !important;
+		font-size: 18px !important;
+		line-height: 22px !important;
+	}
+
+	.contact-item p + p {
+		margin-top: 13px !important;
+	}
+
+	.contact-glow {
+		display: block;
+		left: calc(50% + 9.67px);
+		top: 329px;
+		width: 881.34px;
+		height: 455.61px;
+		filter: blur(100px);
+	}
+
+	.contact-glow span {
+		width: 214.38px !important;
+		height: 404.13px !important;
+	}
+
+	.contact-glow span:nth-child(1) {
+		left: 379.34px !important;
+		top: 46.35px !important;
+	}
+
+	.contact-glow span:nth-child(2) {
+		left: 0 !important;
+		top: 46.35px !important;
+	}
+
+	.contact-glow span:nth-child(3) {
+		left: 236.11px !important;
+		top: 0 !important;
+	}
+}
+
+@media (max-width: 719px) {
+	.contact-section {
+		height: 692px !important;
+		min-height: 692px !important;
+		padding: 70px clamp(30px, 5vw, 72px) 0 !important;
+	}
+
+	.contact-content {
+		width: 100%;
+		max-width: none !important;
+		height: 552px;
+	}
+
+	.contact-content > h2 {
+		width: min(100%, 420px);
+		font-size: 26px !important;
+		line-height: 29px !important;
+	}
+
+	.contact-card {
+		position: relative;
+		display: block !important;
+		width: 100% !important;
+		height: 484px !important;
+		margin-top: 39px !important;
+		padding: 0 !important;
+		border-radius: 25px !important;
+		box-shadow: 0 10px 30px rgb(0 0 0 / 0.15) !important;
+	}
+
+	.contact-card > div:first-child {
+		position: absolute;
+		left: 30px !important;
+		top: 30px !important;
+		width: calc(100% - 60px);
+	}
+
+	.contact-card > div:first-child h3 {
+		width: min(100%, 320px);
+		font-size: 22px !important;
+		line-height: 22px !important;
+	}
+
+	.contact-card > div:first-child p {
+		width: 100%;
+		max-width: 100%;
+		margin-top: 30px !important;
+		font-size: 16px !important;
+		line-height: 24px !important;
+	}
+
+	.contact-item {
+		position: absolute;
+		left: 30px !important;
+		width: calc(100% - 60px) !important;
+	}
+
+	.contact-item-mail {
+		top: 194px !important;
+	}
+
+	.contact-item-telegram {
+		top: 339px !important;
+	}
+
+	.contact-item > div:first-child,
+	.contact-item > img:first-child {
+		width: 42px !important;
+		height: 42px !important;
+		border-radius: 9px !important;
+	}
+
+	.contact-item p {
+		margin-top: 15px !important;
+		font-size: 16px !important;
+		line-height: 24px !important;
+	}
+
+	.contact-item p + p {
+		margin-top: 0 !important;
+	}
+
+	.contact-glow {
+		display: block;
+		left: calc(50% + 0.17px);
+		top: 472px;
+		width: 929.34px;
+		height: 629.07px;
+		filter: blur(100px);
+	}
+
+	.contact-glow span:nth-child(1) {
+		left: 450.06px !important;
+		top: 64px !important;
+		width: 287.23px !important;
+		height: 446.96px !important;
+		transform: matrix(0.29, 0.96, -0.88, 0.47, 0, 0) !important;
+	}
+
+	.contact-glow span:nth-child(2) {
+		left: 0.5px !important;
+		top: 64px !important;
+		width: 287.23px !important;
+		height: 446.96px !important;
+		transform: matrix(-0.29, 0.96, 0.88, 0.47, 0, 0) !important;
+	}
+
+	.contact-glow span:nth-child(3) {
+		left: 249.47px !important;
+		top: 0 !important;
+		width: 249px !important;
+		height: 522.13px !important;
+		transform: matrix(-0.76, 0.65, 0.45, 0.9, 0, 0) !important;
 	}
 }
 
@@ -2873,6 +3196,27 @@ h3,
 	.contact-section {
 		height: auto !important;
 		min-height: 0 !important;
+	}
+}
+
+@media (min-width: 960px) and (max-width: 1199px) {
+	.contact-section {
+		height: 704px !important;
+		min-height: 704px !important;
+	}
+}
+
+@media (min-width: 720px) and (max-width: 959px) {
+	.contact-section {
+		height: 639px !important;
+		min-height: 639px !important;
+	}
+}
+
+@media (max-width: 719px) {
+	.contact-section {
+		height: 692px !important;
+		min-height: 692px !important;
 	}
 }
 
