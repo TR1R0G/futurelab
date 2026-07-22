@@ -78,7 +78,7 @@ export function Solutions({
 		const section = sectionRef.current
 		if (!section) return
 
-		const mediaQuery = window.matchMedia('(min-width: 1024px)')
+		const largeDesktopQuery = window.matchMedia('(min-width: 1370px)')
 		const ease = gsap.parseEase('power2.inOut')
 		const clamp = (value: number) => Math.min(1, Math.max(0, value))
 		const lerp = (from: number, to: number, progress: number) =>
@@ -101,7 +101,9 @@ export function Solutions({
 			}
 		}
 
-		const getTargetRect = (): Rect => {
+		const isLargeDesktopLayout = () => largeDesktopQuery.matches
+
+		const getLargeDesktopTargetRect = (): Rect => {
 			const visualScale = Math.min(
 				1,
 				(window.innerWidth * 0.9) / SOLUTION_EXPANDED_MEDIA_WIDTH,
@@ -118,6 +120,30 @@ export function Solutions({
 			}
 		}
 
+		const getResponsiveTargetRect = (source: Rect): Rect => {
+			const horizontalInset =
+				window.innerWidth < 720 ? 16 : window.innerWidth < 960 ? 24 : 32
+			const verticalInset =
+				window.innerWidth < 720 ? 20 : window.innerWidth < 960 ? 28 : 36
+			const aspectRatio = source.width / Math.max(1, source.height)
+			const maxWidth = window.innerWidth - horizontalInset * 2
+			const maxHeight = window.innerHeight - verticalInset * 2
+			let width = maxWidth
+			let height = width / aspectRatio
+
+			if (height > maxHeight) {
+				height = maxHeight
+				width = height * aspectRatio
+			}
+
+			return {
+				left: Math.round((window.innerWidth - width) / 2),
+				top: Math.round((window.innerHeight - height) / 2),
+				width: Math.round(width),
+				height: Math.round(height),
+			}
+		}
+
 		const getGlowPosition = (rect: Rect) => ({
 			left:
 				rect.left +
@@ -128,6 +154,18 @@ export function Solutions({
 		})
 
 		const readSourceRect = (media: HTMLDivElement, index: number): Rect => {
+			if (!isLargeDesktopLayout()) {
+				const source = media.closest<HTMLElement>('.solution-media-slot') ?? media
+				const rect = source.getBoundingClientRect()
+
+				return {
+					left: Math.round(rect.left),
+					top: Math.round(rect.top),
+					width: Math.round(rect.width),
+					height: Math.round(rect.height),
+				}
+			}
+
 			const container = media.closest<HTMLElement>('.solutions-inner')
 			const containerRect = container?.getBoundingClientRect()
 			const { cardTop, start } = getLayout(index)
@@ -232,6 +270,13 @@ export function Solutions({
 		}
 
 		const setSourceState = (media: HTMLDivElement, index: number) => {
+			if (!isLargeDesktopLayout()) {
+				const slot = media.closest<HTMLElement>('.solution-media-slot')
+				if (slot) slot.style.zIndex = ''
+				media.removeAttribute('style')
+				return
+			}
+
 			const { start } = getLayout(index)
 
 			media.style.position = 'absolute'
@@ -263,13 +308,39 @@ export function Solutions({
 			media.style.willChange = 'left, top, width, height, border-radius'
 		}
 
+		const setResponsiveReleasedState = (
+			media: HTMLDivElement,
+			target: Rect,
+			releaseScroll: number,
+		) => {
+			const slot = media.closest<HTMLElement>('.solution-media-slot')
+			const slotRect = slot?.getBoundingClientRect()
+			const slotTop = (slotRect?.top ?? 0) + window.scrollY
+			const slotLeft = slotRect?.left ?? 0
+
+			if (slot) slot.style.zIndex = ''
+			media.style.position = 'absolute'
+			media.style.left = `${Math.round(target.left - slotLeft)}px`
+			media.style.top = `${Math.round(releaseScroll + target.top - slotTop)}px`
+			media.style.width = `${target.width}px`
+			media.style.height = `${target.height}px`
+			media.style.borderRadius = '35px'
+			media.style.zIndex = '20'
+			media.style.transform = 'none'
+			media.style.transformOrigin = 'center center'
+			media.style.willChange = 'left, top, width, height, border-radius'
+		}
+
 		const setFixedState = (
 			media: HTMLDivElement,
 			start: Rect,
 			target: Rect,
 			progress: number,
+			zIndex = 220,
 		) => {
 			const eased = ease(progress)
+			const slot = media.closest<HTMLElement>('.solution-media-slot')
+			if (slot) slot.style.zIndex = `${zIndex}`
 
 			media.style.position = 'fixed'
 			media.style.left = `${lerp(start.left, target.left, eased)}px`
@@ -277,24 +348,21 @@ export function Solutions({
 			media.style.width = `${lerp(start.width, target.width, eased)}px`
 			media.style.height = `${lerp(start.height, target.height, eased)}px`
 			media.style.borderRadius = '35px'
-			media.style.zIndex = '220'
+			media.style.zIndex = `${zIndex}`
 			media.style.transform = 'none'
+			media.style.transformOrigin = 'center center'
 			media.style.willChange = 'left, top, width, height, border-radius'
 		}
 
 		const update = () => {
 			frame = 0
 
-			if (!mediaQuery.matches) {
-				sourceRects.clear()
-				mediaRefs.current.forEach(media => media?.removeAttribute('style'))
-				glowRefs.current.forEach(glow => glow?.removeAttribute('style'))
-				return
-			}
-
 			const sectionTop = section.getBoundingClientRect().top + window.scrollY
 			const sectionBottom = sectionTop + section.offsetHeight
-			const target = getTargetRect()
+			const largeDesktopLayout = isLargeDesktopLayout()
+			const largeDesktopTarget = largeDesktopLayout
+				? getLargeDesktopTargetRect()
+				: null
 
 			mediaRefs.current.forEach((media, index) => {
 				if (!media) return
@@ -311,15 +379,33 @@ export function Solutions({
 				media.style.pointerEvents = ''
 
 				const { cardTop } = getLayout(index)
-				const animationStart =
-					sectionTop + cardTop + SOLUTION_ANIMATION_START_OFFSET
-				const baseReleaseScroll =
-					sectionTop +
-					SOLUTION_EXPANDED_IMAGE_TOP +
-					index * SOLUTION_BLOCK_HEIGHT -
-					target.top
-				const releaseScroll = baseReleaseScroll
-				const transitionDistance = Math.max(1, releaseScroll - animationStart)
+				const responsiveSource = largeDesktopLayout
+					? null
+					: readSourceRect(media, index)
+				const responsiveSourcePageTop = responsiveSource
+					? responsiveSource.top + window.scrollY
+					: 0
+				const animationStart = largeDesktopLayout
+					? sectionTop + cardTop + SOLUTION_ANIMATION_START_OFFSET
+					: responsiveSourcePageTop - window.innerHeight * 0.64
+				const target =
+					largeDesktopTarget ?? getResponsiveTargetRect(responsiveSource!)
+				const expansionDistance = largeDesktopLayout
+					? Math.max(
+							1,
+							sectionTop +
+								SOLUTION_EXPANDED_IMAGE_TOP +
+								index * SOLUTION_BLOCK_HEIGHT -
+								target.top -
+								animationStart,
+						)
+					: Math.max(
+							window.innerHeight * 1.2,
+							Math.abs(target.height - responsiveSource!.height) * 2,
+						)
+				const releaseScroll = animationStart + expansionDistance
+				const holdDistance = largeDesktopLayout ? 0 : window.innerHeight * 0.32
+				const transitionDistance = Math.max(1, expansionDistance)
 				const rawProgress =
 					(window.scrollY - animationStart) / transitionDistance
 
@@ -331,13 +417,39 @@ export function Solutions({
 				}
 
 				if (rawProgress >= 1) {
-					setReleasedState(media, target, releaseScroll)
-					if (glow) setReleasedGlowState(glow, media, target, releaseScroll)
+					if (!largeDesktopLayout && window.scrollY < releaseScroll + holdDistance) {
+						setFixedState(
+							media,
+							{
+								...responsiveSource!,
+								top: responsiveSourcePageTop - animationStart,
+							},
+							target,
+							1,
+							500,
+						)
+						if (glow) glow.removeAttribute('style')
+						sourceRects.delete(media)
+						return
+					}
+
+					if (largeDesktopLayout) {
+						setReleasedState(media, target, releaseScroll)
+						if (glow) setReleasedGlowState(glow, media, target, releaseScroll)
+					} else {
+						setResponsiveReleasedState(media, target, releaseScroll + holdDistance)
+						if (glow) glow.removeAttribute('style')
+					}
 					sourceRects.delete(media)
 					return
 				}
 
-				const startRect = sourceRects.get(media) ?? readSourceRect(media, index)
+				const startRect = largeDesktopLayout
+					? sourceRects.get(media) ?? readSourceRect(media, index)
+					: {
+							...responsiveSource!,
+							top: responsiveSourcePageTop - animationStart,
+						}
 				sourceRects.set(media, startRect)
 
 				setFixedState(
@@ -345,8 +457,9 @@ export function Solutions({
 					startRect,
 					target,
 					clamp(rawProgress / SOLUTION_IMAGE_FINAL_AT),
+					largeDesktopLayout ? 220 : 500,
 				)
-				if (glow) {
+				if (glow && largeDesktopLayout) {
 					setFixedGlowState(
 						glow,
 						startRect,
@@ -363,10 +476,15 @@ export function Solutions({
 		}
 
 		const handleResize = () => {
-			sourceRects.clear()
-			mediaRefs.current.forEach(media => media?.removeAttribute('style'))
-			glowRefs.current.forEach(glow => glow?.removeAttribute('style'))
-			requestUpdate()
+				sourceRects.clear()
+				section
+					.querySelectorAll<HTMLElement>('.solution-media-slot')
+					.forEach(slot => {
+						slot.style.zIndex = ''
+					})
+				mediaRefs.current.forEach(media => media?.removeAttribute('style'))
+				glowRefs.current.forEach(glow => glow?.removeAttribute('style'))
+				requestUpdate()
 		}
 
 		const ctx = gsap.context(() => {
@@ -379,14 +497,14 @@ export function Solutions({
 			update()
 			window.addEventListener('scroll', requestUpdate, { passive: true })
 			window.addEventListener('resize', handleResize)
-			mediaQuery.addEventListener('change', handleResize)
+			largeDesktopQuery.addEventListener('change', handleResize)
 		}, section)
 
 		return () => {
 			if (frame) window.cancelAnimationFrame(frame)
 			window.removeEventListener('scroll', requestUpdate)
 			window.removeEventListener('resize', handleResize)
-			mediaQuery.removeEventListener('change', handleResize)
+			largeDesktopQuery.removeEventListener('change', handleResize)
 			ctx.revert()
 		}
 	}, [cards.length])
@@ -397,7 +515,7 @@ export function Solutions({
 		if (!section || !cursor) return
 
 		const mediaQuery = window.matchMedia(
-			'(min-width: 361px) and (pointer: fine)',
+			'(min-width: 720px) and (pointer: fine)',
 		)
 		let frame = 0
 		let cursorX: number | null = null
@@ -524,7 +642,7 @@ export function Solutions({
 	return (
 		<section
 			ref={sectionRef}
-			className='solutions-section relative z-[120] isolate -mt-20 overflow-hidden bg-black px-5 py-10 md:px-8 md:py-14 lg:mt-[60px] lg:px-0 lg:py-0 min-[1600px]:mt-[-108px]'
+			className='solutions-section relative z-[120] isolate -mt-20 overflow-hidden bg-black px-5 py-10 md:px-8 md:py-14 min-[1370px]:mt-[60px] min-[1370px]:px-0 min-[1370px]:py-0 min-[1600px]:mt-[-108px]'
 			style={
 				{
 					'--solutions-section-height': `${sectionHeight}px`,
@@ -533,16 +651,16 @@ export function Solutions({
 			}
 		>
 			<div
-				className='solutions-inner relative mx-auto max-w-[1436px]'
+				className='solutions-inner relative mx-auto flex max-w-[1436px] flex-col min-[1370px]:block'
 				style={{ height: `${sectionHeight}px` }}
 			>
-				<div className='solutions-heading lg:absolute lg:left-0 lg:top-[40px] lg:w-[857px]'>
-					<h2 className='font-heading whitespace-pre-line text-[42px] font-bold leading-[1.08] tracking-normal text-white md:text-[56px] lg:text-[65px] lg:leading-[73px]'>
+				<div className='solutions-heading min-[1370px]:absolute min-[1370px]:left-0 min-[1370px]:top-[40px] min-[1370px]:w-[857px]'>
+					<h2 className='font-heading whitespace-pre-line text-[42px] font-bold leading-[1.08] tracking-normal text-white md:text-[56px] min-[1370px]:text-[65px] min-[1370px]:leading-[73px]'>
 						{title}
 					</h2>
 				</div>
 
-				<p className='solutions-description mt-10 max-w-[944px] text-[18px] font-medium leading-[1.24] text-[#C4C4C4] md:text-[21px] lg:absolute lg:left-0 lg:top-[256px] lg:mt-0 lg:text-[23px] lg:leading-[28px]'>
+				<p className='solutions-description mt-10 max-w-[944px] text-[18px] font-medium leading-[1.24] text-[#C4C4C4] md:text-[21px] min-[1370px]:absolute min-[1370px]:left-0 min-[1370px]:top-[256px] min-[1370px]:mt-0 min-[1370px]:text-[23px] min-[1370px]:leading-[28px]'>
 					{description}
 				</p>
 
@@ -564,28 +682,38 @@ export function Solutions({
 							: card.videoSrc
 
 					return (
-						<div key={card.title}>
+						<div
+							key={card.title}
+							className='solution-item relative min-[1370px]:contents'
+						>
 							<SolutionCard
 								card={card}
 								href={href}
-								className='mt-16 md:mt-20 lg:absolute lg:left-0 lg:mt-0 lg:top-[var(--solutions-card-top)]'
+								className='mt-16 md:mt-20 min-[1370px]:absolute min-[1370px]:left-0 min-[1370px]:mt-0 min-[1370px]:top-[var(--solutions-card-top)]'
 								style={{ '--solutions-card-top': `${top}px` } as CSSProperties}
 							/>
-							<TransitionExpandedGlow
-								glowRef={element => {
-									glowRefs.current[index] = element
-								}}
+							<div className='solution-media-slot relative z-20 mt-20 aspect-video md:mt-20 min-[1370px]:contents'>
+								<TransitionExpandedGlow
+									glowRef={element => {
+										glowRefs.current[index] = element
+									}}
+								/>
+								<TransitionMedia
+									mediaRef={element => {
+										mediaRefs.current[index] = element
+									}}
+									image={card.image}
+									imageAlt={card.imageAlt}
+									videoSrc={videoSrc}
+									youtubeVideoId={card.youtubeVideoId}
+									top={imageTop}
+								/>
+							</div>
+							<div
+								className='solution-scroll-spacer min-[1370px]:hidden'
+								aria-hidden='true'
 							/>
-							<TransitionMedia
-								mediaRef={element => {
-									mediaRefs.current[index] = element
-								}}
-								image={card.image}
-								imageAlt={card.imageAlt}
-								videoSrc={videoSrc}
-								youtubeVideoId={card.youtubeVideoId}
-								top={imageTop}
-							/>
+							<MobileLearnMoreButton href={href} label={card.cta} />
 						</div>
 					)
 				})}
@@ -615,15 +743,15 @@ function SolutionCard({
 	className?: string
 	style?: CSSProperties
 }) {
-	const classNames = `solutions-card-outline relative block min-h-[560px] overflow-visible rounded-[35px] bg-black md:min-h-[600px] lg:h-[680px] lg:min-h-[680px] lg:w-full ${className}`
+	const classNames = `solutions-card-outline relative block min-h-[560px] overflow-visible rounded-[35px] bg-black md:min-h-[600px] min-[1370px]:h-[680px] min-[1370px]:min-h-[680px] min-[1370px]:w-full ${className}`
 	const content = (
 		<>
-			<div className='relative z-20 px-8 pt-14 md:px-[72px] md:pt-[86px] lg:px-0 lg:pt-0'>
-				<h3 className='text-[38px] font-semibold leading-tight text-[#DE5CFF] md:text-[48px] lg:absolute lg:left-[121px] lg:top-[88px] lg:w-[760px] lg:text-[55px] lg:leading-[66px]'>
+			<div className='relative z-20 px-8 pt-14 md:px-[72px] md:pt-[86px] min-[1370px]:px-0 min-[1370px]:pt-0'>
+				<h3 className='text-[38px] font-semibold leading-tight text-[#DE5CFF] md:text-[48px] min-[1370px]:absolute min-[1370px]:left-[121px] min-[1370px]:top-[88px] min-[1370px]:w-[760px] min-[1370px]:text-[55px] min-[1370px]:leading-[66px]'>
 					{card.title}
 				</h3>
 
-				<p className='mt-10 max-w-[821px] whitespace-pre-line text-[18px] font-medium leading-[1.24] text-[#C4C4C4] md:text-[21px] lg:absolute lg:left-[121px] lg:top-[204px] lg:mt-0 lg:text-[23px] lg:leading-[28px]'>
+				<p className='mt-10 max-w-[821px] whitespace-pre-line text-[18px] font-medium leading-[1.24] text-[#C4C4C4] md:text-[21px] min-[1370px]:absolute min-[1370px]:left-[121px] min-[1370px]:top-[204px] min-[1370px]:mt-0 min-[1370px]:text-[23px] min-[1370px]:leading-[28px]'>
 					{card.description}
 				</p>
 			</div>
@@ -659,13 +787,37 @@ function SolutionCard({
 	)
 }
 
+function MobileLearnMoreButton({
+	href,
+	label,
+}: {
+	href?: string
+	label: string
+}) {
+	if (!href) return null
+
+	const isExternal = isExternalHref(href)
+	const opensInNewTab = isExternal || isPdfPageHref(href)
+
+	return (
+		<a
+			href={href}
+			className='solution-mobile-cta'
+			target={opensInNewTab ? '_blank' : undefined}
+			rel={opensInNewTab ? 'noopener noreferrer' : undefined}
+		>
+			{label}
+		</a>
+	)
+}
+
 function LearnMoreButton({ label }: { label: string }) {
 	const circularLabel = `${label}${LEARN_MORE_SEPARATOR}${label}${LEARN_MORE_SEPARATOR}`
 
 	return (
 		<span
 			aria-hidden='true'
-			className='learn-more-button absolute left-[1107px] top-[160px] z-30 hidden h-[252.42px] w-[252.42px] text-white transition-transform hover:scale-[1.03] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0051FF] active:scale-[0.98] lg:block'
+			className='learn-more-button absolute left-[1107px] top-[160px] z-30 hidden h-[252.42px] w-[252.42px] text-white transition-transform hover:scale-[1.03] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0051FF] active:scale-[0.98] min-[1370px]:block'
 		>
 			<span className='absolute left-[22.21px] top-[22.21px] h-[207px] w-[207px] rounded-full bg-[#0051FF]' />
 			<svg
@@ -758,7 +910,7 @@ function LearnMoreCursor({
 
 function CollapsedGlow() {
 	return (
-		<div className='pointer-events-none absolute left-1/2 top-[420px] z-10 h-[870px] w-[954px] -translate-x-1/2 lg:left-[calc(50%+5.16px)] lg:top-[262.79px]'>
+		<div className='pointer-events-none absolute left-1/2 top-[420px] z-10 h-[870px] w-[954px] -translate-x-1/2 min-[1370px]:left-[calc(50%+5.16px)] min-[1370px]:top-[262.79px]'>
 			<SolutionGlow />
 		</div>
 	)
@@ -772,7 +924,7 @@ function TransitionExpandedGlow({
 	return (
 		<div
 			ref={glowRef}
-			className='solutions-transition-glow pointer-events-none invisible hidden opacity-0 lg:absolute lg:left-0 lg:top-0 lg:block'
+			className='solutions-transition-glow pointer-events-none invisible hidden opacity-0 min-[1370px]:absolute min-[1370px]:left-0 min-[1370px]:top-0 min-[1370px]:block'
 			aria-hidden='true'
 		>
 			<SolutionGlow />
@@ -805,7 +957,7 @@ function TransitionMedia({
 	return (
 		<div
 			ref={mediaRef}
-			className='solutions-transition-media relative z-20 mt-20 aspect-video h-auto w-full overflow-hidden rounded-[35px] shadow-2xl shadow-black/40 lg:absolute lg:left-[371px] lg:top-[var(--solutions-media-top)] lg:mt-0 lg:h-[391px] lg:w-[694px]'
+			className='solutions-transition-media absolute inset-0 z-20 h-full w-full overflow-hidden rounded-[35px] shadow-2xl shadow-black/40 min-[1370px]:bottom-auto min-[1370px]:left-[371px] min-[1370px]:right-auto min-[1370px]:top-[var(--solutions-media-top)] min-[1370px]:mt-0 min-[1370px]:h-[391px] min-[1370px]:w-[694px]'
 			style={{ '--solutions-media-top': `${top}px` } as CSSProperties}
 		>
 			{youtubeSrc ? (
