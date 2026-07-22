@@ -13,7 +13,7 @@ export function DirectionsLight({
 		<div
 			className={`directions-statement-light pointer-events-none absolute h-[755.68px] w-[872.67px] ${className}`}
 			style={{
-				filter: 'blur(160px)',
+				filter: 'blur(var(--directions-light-blur, 160px))',
 				transform:
 					'translateX(-50%) rotate(-12.33deg) scale(var(--directions-light-scale, 1))',
 				...style,

@@ -642,7 +642,7 @@ export function Solutions({
 	return (
 		<section
 			ref={sectionRef}
-			className='solutions-section relative z-[120] isolate -mt-20 overflow-hidden bg-black px-5 py-10 md:px-8 md:py-14 min-[1370px]:mt-[60px] min-[1370px]:px-0 min-[1370px]:py-0 min-[1600px]:mt-[-108px]'
+			className='solutions-section relative z-[120] isolate -mt-20 overflow-hidden bg-black px-5 py-10 md:px-8 md:py-14 min-[1370px]:mt-[-142px] min-[1370px]:px-0 min-[1370px]:py-0 min-[1600px]:mt-[-46px]'
 			style={
 				{
 					'--solutions-section-height': `${sectionHeight}px`,

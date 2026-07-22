@@ -157,11 +157,7 @@ export function Directions({
 			</div>
 
 			<div className='directions-statement sticky top-[12svh] mx-auto mt-12 max-w-[1436px] text-center md:mt-16 min-[960px]:mt-44 lg:mt-52'>
-				<div
-					className='pointer-events-none absolute inset-x-[-20px] inset-y-[-8svh] z-0 block bg-[radial-gradient(ellipse_at_50%_45%,rgba(63,161,252,0.42)_0%,rgba(218,127,206,0.36)_34%,rgba(252,204,1,0.28)_68%,rgba(75,14,91,0.22)_100%)] blur-[40px] min-[1370px]:hidden md:inset-x-[-32px] md:blur-[64px]'
-					aria-hidden='true'
-				/>
-				<DirectionsLight className='left-1/2 top-[calc(38svh_-_377.84px)] block max-[719px]:[--directions-light-scale:.46] min-[720px]:max-[959px]:[--directions-light-scale:.72] min-[960px]:[--directions-light-scale:1]' />
+				<DirectionsLight className='left-1/2 top-[calc(38svh_-_377.84px)] block max-[719px]:left-[calc(50%_-_32px)] max-[719px]:top-[33px] max-[719px]:[--directions-light-blur:75px] max-[719px]:[--directions-light-scale:.447] min-[720px]:max-[959px]:[--directions-light-blur:100px] min-[720px]:max-[959px]:[--directions-light-scale:.72] min-[960px]:[--directions-light-scale:1]' />
 
 				<div className='directions-statement-copy relative z-10 text-[32px] font-semibold leading-[1.18] tracking-normal text-white md:text-[37px] md:leading-[1.24] min-[960px]:max-[1369px]:text-[clamp(31px,3.3vw,44px)] min-[960px]:max-[1369px]:leading-[1.42] min-[1370px]:text-[55px] min-[1370px]:leading-[78px]'>
 					<span className='directions-inline-image pointer-events-none absolute left-1/2 top-[155px] z-20 hidden h-[91px] w-[52px] translate-x-[90px] overflow-hidden rounded-[8px] min-[1370px]:block'>
@@ -271,6 +267,7 @@ export function Directions({
 				movingTextSelector='.directions-statement-copy'
 				fadingElementSelector='.directions-statement > .directions-statement-light'
 				sourceSelector='.directions-inline-image'
+				showGradient={false}
 			/>
 
 			<div className='directions-post-image relative z-[200] isolate flex min-h-[40svh] flex-col justify-center overflow-hidden'>

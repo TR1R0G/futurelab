@@ -178,6 +178,18 @@ export function ExpandedImageScreen({
 			let lastScrollY = window.scrollY
 			let lastFrameTop: number | null = null
 
+			const resetGradient = (autoAlpha = 0) => {
+				if (!gradient) return
+
+				gsap.set(gradient, {
+					autoAlpha,
+					x: 0,
+					y: 0,
+					scale: 1,
+					clearProps: autoAlpha === 0 ? 'zIndex,position' : undefined,
+				})
+			}
+
 			const placeFrameAtSource = () => {
 				startRect = readSourceRect()
 				hasStartRect = true
@@ -207,6 +219,7 @@ export function ExpandedImageScreen({
 					hasStartRect = false
 					lastFrameTop = null
 					lastScrollY = window.scrollY
+					resetGradient(0)
 					return
 				}
 
@@ -222,10 +235,8 @@ export function ExpandedImageScreen({
 					if (movingText) {
 						gsap.set(movingText, { y: 0, opacity: 1 })
 					}
-					gsap.set(fadingElements, { opacity: 1 })
-					if (gradient) {
-						gsap.set(gradient, { opacity: 1, scale: 1 })
-					}
+					gsap.set(fadingElements, { autoAlpha: 1 })
+					resetGradient(0)
 					return
 				}
 
@@ -243,10 +254,8 @@ export function ExpandedImageScreen({
 					if (movingText) {
 						gsap.set(movingText, { y: 0, opacity: 1 })
 					}
-					gsap.set(fadingElements, { opacity: 1 })
-					if (gradient) {
-						gsap.set(gradient, { opacity: 1, scale: 1 })
-					}
+					gsap.set(fadingElements, { autoAlpha: 1 })
+					resetGradient(1)
 					return
 				}
 
@@ -256,6 +265,9 @@ export function ExpandedImageScreen({
 				}
 
 				const imageProgress = clamp(imageScrollProgress / fullSizeAt)
+				const gradientExitProgress = clamp(
+					(imageScrollProgress - fullSizeAt) / 0.08,
+				)
 				if (imageProgress < 0.12) {
 					const currentSourceRect = readSourceRect()
 					startRect = {
@@ -300,15 +312,39 @@ export function ExpandedImageScreen({
 						opacity: 1,
 					})
 					gsap.set(fadingElements, {
-						opacity: 1,
+						autoAlpha: mix(1, 0, gradientExitProgress),
 					})
 				}
 
 				if (gradient) {
-					gsap.set(gradient, {
-						opacity: 1,
-						scale: 1,
-					})
+					const targetCenterX = target.left + target.width / 2
+					const targetCenterY = target.top + target.height / 2
+					const frameCenterX = nextRect.left + nextRect.width / 2
+					const frameCenterY = nextRect.top + nextRect.height / 2
+					const followX = frameCenterX - targetCenterX
+					const followY = frameCenterY - targetCenterY
+					const initialGradientScale = Math.max(
+						0.36,
+						Math.min(
+							1,
+							startRect.width / target.width,
+							startRect.height / target.height,
+						),
+					)
+					const releaseEase = positionEase(gradientExitProgress)
+
+					if (gradientExitProgress >= 0.999) {
+						resetGradient(0)
+					} else {
+						gsap.set(gradient, {
+							autoAlpha: mix(1, 0, gradientExitProgress),
+							x: mix(followX, 0, easedProgress),
+							y:
+								mix(followY, 0, easedProgress) +
+								mix(0, -window.innerHeight * 0.35, releaseEase),
+							scale: mix(initialGradientScale, 1, easedProgress),
+						})
+					}
 				}
 				ensureVideoPlayback()
 			}
@@ -339,6 +375,7 @@ export function ExpandedImageScreen({
 				if (frameId) window.cancelAnimationFrame(frameId)
 				window.removeEventListener('scroll', requestUpdate)
 				window.removeEventListener('resize', handleResize)
+				resetGradient(0)
 			}
 		}, section)
 
@@ -361,7 +398,7 @@ export function ExpandedImageScreen({
 						ref={gradientRef}
 						className='video-gradient-field absolute inset-0'
 					>
-						<DirectionsLight className='expanded-image-light left-1/2 top-[calc(50%_-_377.84px)] hidden lg:block' />
+						<DirectionsLight className='expanded-image-light left-1/2 top-[calc(50%_-_377.84px)] block max-[719px]:[--directions-light-scale:.46] min-[720px]:max-[959px]:[--directions-light-scale:.72] min-[960px]:[--directions-light-scale:1]' />
 					</div>
 				) : null}
 
