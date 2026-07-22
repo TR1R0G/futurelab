@@ -805,6 +805,40 @@ h3,
 	}
 }
 
+@media (max-width: 959px) {
+	.footer-inner {
+		margin-inline: auto !important;
+		text-align: center;
+	}
+
+	.footer-logo {
+		display: block;
+		width: 153.6px !important;
+		margin-inline: auto;
+	}
+
+	.footer-contact-list {
+		width: max-content;
+		max-width: 100%;
+		margin-inline: auto;
+	}
+
+	.footer-contact-list > div {
+		justify-content: center;
+		white-space: normal;
+		text-align: center;
+	}
+
+	.footer-contact-list > div > span:first-child {
+		flex: 0 0 auto;
+	}
+
+	.footer-line,
+	.footer-copyright {
+		margin-inline: auto;
+	}
+}
+
 @media (min-width: 640px) {
 	.ecosystem-section {
 		--ecosystem-card-height: 495px;
