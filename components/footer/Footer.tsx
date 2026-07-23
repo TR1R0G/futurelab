@@ -3,8 +3,8 @@ import type { ReactNode } from 'react'
 
 export function Footer({ address }: { address: string }) {
 	return (
-		<footer className='footer-section font-onest relative h-auto bg-black px-16 py-16 text-white md:px-8 lg:h-[385px] lg:px-28 lg:py-0'>
-			<div className='footer-inner mx-12 max-w-[1436px] lg:relative lg:h-full'>
+		<footer className='footer-section font-onest relative h-auto bg-black px-5 py-16 text-white md:px-8 min-[1200px]:px-0 lg:h-[385px] lg:py-0'>
+			<div className='footer-inner mx-auto w-full max-w-[1436px] lg:relative lg:h-full'>
 				<Image
 					src='/images/logo.svg'
 					alt='futurelab by NAZZAR Innovation'

@@ -156,10 +156,10 @@ export function Directions({
 				</div>
 			</div>
 
-			<div className='directions-statement sticky top-[12svh] mx-auto mt-12 max-w-[1436px] text-center md:mt-16 min-[960px]:mt-44 lg:mt-52'>
-				<DirectionsLight className='left-1/2 top-[calc(38svh_-_377.84px)] block max-[719px]:left-[calc(50%_-_32px)] max-[719px]:top-[33px] max-[719px]:[--directions-light-blur:75px] max-[719px]:[--directions-light-scale:.447] min-[720px]:max-[959px]:[--directions-light-blur:100px] min-[720px]:max-[959px]:[--directions-light-scale:.72] min-[960px]:[--directions-light-scale:1]' />
+			<div className='directions-statement sticky top-[12svh] isolate mx-auto mt-12 max-w-[1436px] text-center md:mt-16 min-[960px]:mt-44 lg:mt-52'>
+				<DirectionsLight className='left-1/2 top-[calc(38svh_-_377.84px)] z-0 block max-[719px]:left-[calc(50%_-_32px)] max-[719px]:top-[33px] max-[719px]:[--directions-light-blur:75px] max-[719px]:[--directions-light-scale:.447] min-[720px]:max-[959px]:[--directions-light-blur:100px] min-[720px]:max-[959px]:[--directions-light-scale:.72] min-[960px]:[--directions-light-scale:1]' />
 
-				<div className='directions-statement-copy relative z-10 text-[32px] font-semibold leading-[1.18] tracking-normal text-white md:text-[37px] md:leading-[1.24] min-[960px]:max-[1369px]:text-[clamp(31px,3.3vw,44px)] min-[960px]:max-[1369px]:leading-[1.42] min-[1370px]:text-[55px] min-[1370px]:leading-[78px]'>
+				<div className='directions-statement-copy relative isolate z-10 text-[32px] font-semibold leading-[1.18] tracking-normal text-white md:text-[37px] md:leading-[1.24] min-[960px]:max-[1369px]:text-[clamp(31px,3.3vw,44px)] min-[960px]:max-[1369px]:leading-[1.42] min-[1370px]:text-[55px] min-[1370px]:leading-[78px]'>
 					<span className='directions-inline-image pointer-events-none absolute left-1/2 top-[155px] z-20 hidden h-[91px] w-[52px] translate-x-[90px] overflow-hidden rounded-[8px] min-[1370px]:block'>
 						<AcademyInlineVideo
 							poster={statement.imageSrc}
@@ -201,7 +201,7 @@ export function Directions({
 
 						<p className='directions-statement-line whitespace-nowrap'>
 							{desktopStatementLine.lead}
-							<span className='directions-inline-image mx-5 inline-flex translate-y-[0.18em] overflow-hidden rounded-[8px] align-baseline shadow-[0_10px_34px_rgba(0,0,0,0.45)] md:mx-7'>
+							<span className='directions-inline-image relative z-20 mx-5 inline-flex translate-y-[0.18em] overflow-hidden rounded-[8px] align-baseline shadow-[0_10px_34px_rgba(0,0,0,0.45)] md:mx-7'>
 								<AcademyInlineVideo
 									poster={statement.imageSrc}
 									videoSrc={academyVideoSrc}
@@ -229,7 +229,7 @@ export function Directions({
 						))}
 
 						<div className='mt-9 flex justify-center md:mt-12'>
-							<span className='directions-inline-image inline-flex overflow-hidden rounded-[8px] shadow-[0_10px_34px_rgba(0,0,0,0.45)]'>
+							<span className='directions-inline-image relative z-20 inline-flex overflow-hidden rounded-[8px] shadow-[0_10px_34px_rgba(0,0,0,0.45)]'>
 								<AcademyInlineVideo
 									poster={statement.imageSrc}
 									videoSrc={academyVideoSrc}
@@ -247,7 +247,7 @@ export function Directions({
 						))}
 
 						<div className='mt-9 flex justify-center'>
-							<span className='directions-inline-image inline-flex overflow-hidden rounded-[8px] shadow-[0_10px_34px_rgba(0,0,0,0.45)]'>
+							<span className='directions-inline-image relative z-20 inline-flex overflow-hidden rounded-[8px] shadow-[0_10px_34px_rgba(0,0,0,0.45)]'>
 								<AcademyInlineVideo
 									poster={statement.imageSrc}
 									videoSrc={academyVideoSrc}

@@ -93,7 +93,7 @@ export function Infrastructure({
 				<h2 className='font-heading max-w-3xl text-[36px] font-bold leading-[1.08] text-white md:text-5xl lg:max-w-[800px] lg:text-[56px]'>
 					{title}
 				</h2>
-				<p className='mt-8 max-w-2xl text-base font-medium text-white/60 md:text-lg'>
+				<p className='section-subtitle-light mt-8 max-w-2xl'>
 					{subtitle}
 				</p>
 			</div>

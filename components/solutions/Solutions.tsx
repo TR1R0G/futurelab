@@ -660,7 +660,7 @@ export function Solutions({
 					</h2>
 				</div>
 
-				<p className='solutions-description mt-10 max-w-[944px] text-[18px] font-medium leading-[1.24] text-[#C4C4C4] md:text-[21px] min-[1370px]:absolute min-[1370px]:left-0 min-[1370px]:top-[256px] min-[1370px]:mt-0 min-[1370px]:text-[23px] min-[1370px]:leading-[28px]'>
+				<p className='solutions-description section-subtitle-light mt-10 max-w-[944px] min-[1370px]:absolute min-[1370px]:left-0 min-[1370px]:top-[256px] min-[1370px]:mt-0'>
 					{description}
 				</p>
 

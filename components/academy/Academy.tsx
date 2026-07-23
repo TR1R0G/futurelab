@@ -406,7 +406,7 @@ export function Academy({
 					<h2 className='font-heading max-w-[805px] text-[42px] font-bold leading-none tracking-normal text-white md:text-6xl lg:text-[65px]'>
 						{title}
 					</h2>
-					<p className='mt-10 max-w-[845px] text-xl font-medium leading-[1.2] text-[#C4C4C4] md:text-2xl lg:mt-[37px] lg:text-[25px]'>
+					<p className='section-subtitle-light mt-10 max-w-[845px] lg:mt-[37px]'>
 						{subtitle}
 					</p>
 				</div>
@@ -433,7 +433,7 @@ export function Academy({
 										transform: `translate(${style.x}, ${style.y}) rotate(${style.rotate})`,
 									}}
 								>
-									<h3 className='max-w-[221px] text-[25px] font-semibold leading-normal tracking-normal text-black'>
+									<h3 className='academy-card-title max-w-[221px] text-[25px] font-semibold leading-normal tracking-normal text-black'>
 										{card.title}
 									</h3>
 								</article>

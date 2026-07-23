@@ -22,12 +22,12 @@ export function ContactBlock({
 		>
 			<ContactGlow />
 
-			<div className='contact-content relative z-10 mx-auto max-w-[1410px] min-[1440px]:h-full'>
+			<div className='contact-content relative z-10 mx-auto w-full max-w-[1436px] min-[1440px]:h-full'>
 				<h2 className='font-heading text-[42px] font-bold leading-[1.08] tracking-normal text-black md:text-[50px] min-[1440px]:absolute min-[1440px]:left-0 min-[1440px]:top-[calc(50%_-_178px)] min-[1440px]:w-[698px] min-[1440px]:text-[55px] min-[1440px]:leading-[62px]'>
 					{title}
 				</h2>
 
-				<div className='contact-card grid gap-10 rounded-[30px] bg-white px-6 py-0 shadow-[0_20px_50px_rgba(0,0,0,0.15)] md:mt-14 md:grid-cols-2 md:rounded-[35px] md:px-6 md:py-12 min-[1200px]:grid-cols-3 min-[1440px]:absolute min-[1440px]:left-0 min-[1440px]:top-[calc(50%_-_72px)] min-[1440px]:mt-0 min-[1440px]:h-[250px] min-[1440px]:w-[1408px] min-[1440px]:grid-cols-none min-[1440px]:gap-0 min-[1440px]:px-0 min-[1440px]:py-0'>
+				<div className='contact-card grid w-full gap-10 rounded-[30px] bg-white px-6 py-0 shadow-[0_20px_50px_rgba(0,0,0,0.15)] md:mt-14 md:grid-cols-2 md:rounded-[35px] md:px-6 md:py-12 min-[1200px]:grid-cols-3 min-[1440px]:absolute min-[1440px]:left-0 min-[1440px]:top-[calc(50%_-_72px)] min-[1440px]:mt-0 min-[1440px]:h-[250px] min-[1440px]:grid-cols-none min-[1440px]:gap-0 min-[1440px]:px-0 min-[1440px]:py-0'>
 					<div className='min-[1440px]:absolute min-[1440px]:left-10 min-[1440px]:top-10 min-[1440px]:w-[412px]'>
 						<h3 className='text-[26px] font-semibold leading-none text-black md:text-[30px]'>
 							{cardTitle}
