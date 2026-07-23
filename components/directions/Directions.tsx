@@ -270,7 +270,7 @@ export function Directions({
 				showGradient={false}
 			/>
 
-			<div className='directions-post-image relative z-[200] isolate flex min-h-[40svh] flex-col justify-center overflow-hidden'>
+			<div className='directions-post-image relative z-[200] isolate flex min-h-[40svh] flex-col justify-start overflow-hidden'>
 				<div
 					className='pointer-events-none absolute inset-0 z-0'
 					aria-hidden='true'
@@ -288,7 +288,7 @@ export function Directions({
 				</div>
 
 				<div
-					className='relative z-10 mx-auto mt-[90px] h-1 w-[calc(100%_-_40px)] max-w-[1436px] rounded-sm bg-[linear-gradient(90deg,#4B0E5B_0%,#A91E83_29.9%,#FD9A34_65.67%,#F9EB44_100%)] md:mt-[110px] md:w-[calc(100%_-_64px)] lg:mt-[130px]'
+					className='directions-post-image-divider relative z-10 mx-auto h-1 w-[calc(100%_-_40px)] max-w-[1436px] rounded-sm bg-[linear-gradient(90deg,#4B0E5B_0%,#A91E83_29.9%,#FD9A34_65.67%,#F9EB44_100%)] md:w-[calc(100%_-_64px)]'
 					aria-hidden='true'
 				/>
 			</div>
