@@ -34,9 +34,14 @@ export function HeroActions({ primaryCta, secondaryCta }: HeroActionsProps) {
 
   return (
     <div ref={containerRef} className="hero-actions flex flex-col">
-      <button className="hero-button bg-[#0B5CFF] font-medium text-white transition-transform hover:scale-[1.01] hover:bg-[#0050f2] active:scale-[0.99]">
+      <a
+        href="https://creativetech.uz/"
+        target="_blank"
+        rel="noreferrer"
+        className="hero-button bg-[#0B5CFF] font-medium text-white transition-transform hover:scale-[1.01] hover:bg-[#0050f2] active:scale-[0.99]"
+      >
         {primaryCta}
-      </button>
+      </a>
       <a
         href="#contacts"
         onClick={(event) => scrollToHashTarget(event, "#contacts")}

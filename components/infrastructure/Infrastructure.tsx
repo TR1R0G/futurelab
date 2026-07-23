@@ -106,7 +106,7 @@ export function Infrastructure({
 
 			<ImageGallery />
 
-			<CTACard text={ctaText} buttonText={ctaButton} />
+			<CTACard text={ctaText} buttonText={ctaButton} href='#contacts' />
 
 			<div className='infrastructure-separator-wrap py-24 md:py-32'>
 				<div

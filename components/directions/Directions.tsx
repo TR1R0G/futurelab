@@ -284,7 +284,12 @@ export function Directions({
 					aria-hidden='true'
 				/>
 				<div className='relative z-10 w-full'>
-					<CTACard variant='wide' text={ctaText} buttonText={ctaButton} />
+					<CTACard
+						variant='wide'
+						text={ctaText}
+						buttonText={ctaButton}
+						href='https://creativetech.uz/'
+					/>
 				</div>
 
 				<div

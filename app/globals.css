@@ -858,6 +858,10 @@ h3,
 }
 
 @media (max-width: 639px) {
+	.footer-section {
+		height: 415px !important;
+	}
+
 	.footer-copyright {
 		margin-top: 22px !important;
 	}
@@ -3580,5 +3584,11 @@ h3,
 	.solutions-inner {
 		height: var(--solutions-section-height) !important;
 		min-height: var(--solutions-section-height) !important;
+	}
+}
+
+@media (min-width: 960px) and (max-width: 1023px) {
+	.footer-section {
+		height: 415px !important;
 	}
 }

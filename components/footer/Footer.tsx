@@ -14,11 +14,14 @@ export function Footer({ address }: { address: string }) {
 					priority={false}
 				/>
 
-				<div className='footer-contact-list mt-12 space-y-[11px] text-[16px] leading-[30px] text-white md:mt-14 lg:absolute lg:right-0 lg:top-24 lg:mt-0'>
-					<FooterContact icon={<LocationIcon />}>{address}</FooterContact>
-					<FooterContact icon={<MailIcon />} href='mailto:info@future-lab.uz'>
-						info@future-lab.uz
-					</FooterContact>
+					<div className='footer-contact-list mt-12 space-y-[11px] text-[16px] leading-[30px] text-white md:mt-14 lg:absolute lg:right-0 lg:top-24 lg:mt-0'>
+						<FooterContact icon={<LocationIcon />}>{address}</FooterContact>
+						<FooterContact icon={<PhoneIcon />} href='tel:+998902514888'>
+							+998 (90) 251-48-88
+						</FooterContact>
+						<FooterContact icon={<MailIcon />} href='mailto:info@future-lab.uz'>
+							info@future-lab.uz
+						</FooterContact>
 				</div>
 
 				<div className='footer-line mt-16 h-px w-full bg-[#2F2F2F] lg:absolute lg:left-0 lg:top-[283px] lg:mt-0' />
@@ -87,6 +90,23 @@ function MailIcon() {
 		>
 			<path
 				d='M1.8 0.5H16.2C17.2 0.5 18 1.3 18 2.3V11.7C18 12.7 17.2 13.5 16.2 13.5H1.8C0.8 13.5 0 12.7 0 11.7V2.3C0 1.3 0.8 0.5 1.8 0.5ZM1.9 2.4L8.1 7.3C8.6 7.7 9.4 7.7 9.9 7.3L16.1 2.4H1.9Z'
+				fill='currentColor'
+			/>
+		</svg>
+	)
+}
+
+function PhoneIcon() {
+	return (
+		<svg
+			width='17'
+			height='17'
+			viewBox='0 0 17 17'
+			fill='none'
+			aria-hidden='true'
+		>
+			<path
+				d='M3.45 1.4C3.9 0.95 4.62 0.95 5.07 1.4L6.85 3.18C7.25 3.58 7.3 4.22 6.96 4.68L5.95 6.06C6.7 7.6 7.94 8.84 9.48 9.59L10.86 8.58C11.32 8.24 11.96 8.29 12.36 8.69L14.14 10.47C14.59 10.92 14.59 11.64 14.14 12.09L13.28 12.95C12.38 13.85 11.03 14.18 9.79 13.74C6.55 12.6 3.94 9.99 2.8 6.75C2.36 5.51 2.69 4.16 3.59 3.26L3.45 1.4Z'
 				fill='currentColor'
 			/>
 		</svg>
