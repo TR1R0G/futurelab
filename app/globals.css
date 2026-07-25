@@ -3206,14 +3206,14 @@ h3,
 	.academy-programs-stage .programs-grid {
 		grid-template-columns: minmax(0, 1fr) !important;
 		width: 100% !important;
-		max-width: min(100%, 452px) !important;
+		max-width: none !important;
 		gap: clamp(22px, 6vw, 34px) !important;
 	}
 
 	.academy-programs-stage .program-card {
 		width: 100% !important;
-		aspect-ratio: 452 / 932 !important;
-		height: auto !important;
+		aspect-ratio: auto !important;
+		height: min(932px, calc(100svh - 76px)) !important;
 		min-height: 0 !important;
 		container-type: inline-size;
 		border-radius: clamp(22px, 7.7cqw, 35px) !important;
@@ -3259,7 +3259,7 @@ h3,
 		width: 82.3% !important;
 		max-width: none !important;
 		min-height: 0 !important;
-		font-size: clamp(21px, 7.3cqw, 33px) !important;
+		font-size: clamp(24px, 7.8cqw, 33px) !important;
 		line-height: 1.21 !important;
 	}
 
@@ -3271,7 +3271,7 @@ h3,
 		max-width: none !important;
 		margin-top: 0 !important;
 		min-height: 0 !important;
-		font-size: clamp(14px, 4.87cqw, 22px) !important;
+		font-size: clamp(16px, 5.2cqw, 22px) !important;
 		line-height: 1.18 !important;
 	}
 
@@ -3289,7 +3289,7 @@ h3,
 		display: flex !important;
 		flex-direction: column !important;
 		gap: clamp(6px, 2.88cqw, 13px) !important;
-		font-size: clamp(14px, 4.87cqw, 22px) !important;
+		font-size: clamp(16px, 5.2cqw, 22px) !important;
 		line-height: 1.18 !important;
 	}
 
@@ -3299,9 +3299,9 @@ h3,
 
 	.academy-programs-stage .program-card-cta {
 		margin-top: 0 !important;
-		height: clamp(34px, 12.17cqw, 55px) !important;
+		height: clamp(42px, 12.5cqw, 55px) !important;
 		border-radius: clamp(8px, 2.88cqw, 13px) !important;
-		font-size: clamp(13px, 4.87cqw, 22px) !important;
+		font-size: clamp(15px, 4.8cqw, 20px) !important;
 		line-height: 1.18 !important;
 	}
 }
