@@ -1496,11 +1496,11 @@ h3,
 
 @media (max-width: 719px) {
 	.hero-section {
-		--hero-mobile-content-width: min(
-			calc(100vw - 40px),
-			clamp(300px, 72vw, 520px)
+		--hero-mobile-content-padding: 20px;
+		--hero-mobile-content-width: calc(
+			100vw - var(--hero-mobile-content-padding) * 2
 		);
-		--hero-mobile-inline: calc((100vw - var(--hero-mobile-content-width)) / 2);
+		--hero-mobile-inline: var(--hero-mobile-content-padding);
 	}
 
 	.hero-section {
@@ -1579,10 +1579,10 @@ h3,
 	}
 
 	.hero-action-panel {
-		left: 50%;
+		left: var(--hero-mobile-inline);
 		top: 505px;
-		width: min(360px, var(--hero-mobile-content-width));
-		transform: translateX(-50%);
+		width: var(--hero-mobile-content-width);
+		transform: none;
 	}
 
 	.hero-actions {
