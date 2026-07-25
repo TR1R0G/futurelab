@@ -3183,6 +3183,13 @@ h3,
 
 	.academy-card-stage {
 		transform-origin: top center !important;
+		overflow: visible !important;
+		isolation: isolate;
+	}
+
+	.academy-card-shell,
+	.academy-card {
+		overflow: visible !important;
 	}
 
 	.academy-section {
@@ -3303,6 +3310,12 @@ h3,
 		border-radius: clamp(8px, 2.88cqw, 13px) !important;
 		font-size: clamp(15px, 4.8cqw, 20px) !important;
 		line-height: 1.18 !important;
+	}
+}
+
+@media (max-width: 639px) {
+	.academy-card-stage {
+		transform: scale(0.49) !important;
 	}
 }
 

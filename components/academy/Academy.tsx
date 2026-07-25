@@ -117,7 +117,6 @@ export function Academy({
 			const academyHeading =
 				section.querySelector<HTMLElement>('.academy-heading')
 			const lastCardIndex = cardShells.length - 1
-			const lastCardExitStart = lastCardIndex * 1.16 + 0.54
 			const cardExitDuration = 0.82
 			const isResponsivePrograms = () => window.innerWidth < 960
 			const getProgramsSafeTop = () => (window.innerWidth < 720 ? 20 : 28)
@@ -232,9 +231,19 @@ export function Academy({
 				})
 			}
 
-			const createCardsTimeline = (responsive: boolean) => {
+			const createCardsTimeline = (responsive: boolean, mobile = false) => {
+				const benefitTimelineOffset = mobile ? 0.42 : 0
+				const benefitCardSpacing = mobile ? 1.34 : 1.16
+				const benefitCardExitLead = mobile ? 0.66 : 0.54
+				const benefitCardExitDuration = mobile ? 1.04 : cardExitDuration
+				const benefitCardSettleDuration = mobile ? 0.48 : 0.32
+				const benefitsCompleteAt =
+					lastCardIndex * benefitCardSpacing +
+					benefitCardExitLead +
+					benefitCardExitDuration +
+					0.12
 				const cardsTimeline = gsap.timeline({
-					defaults: { ease: 'power2.in' },
+					defaults: { ease: mobile ? 'power2.inOut' : 'power2.in' },
 					scrollTrigger: {
 						trigger: section,
 						start: 'top top',
@@ -244,13 +253,35 @@ export function Academy({
 					},
 				})
 
+				if (mobile) {
+					cardsTimeline.fromTo(
+						cardShells,
+						{
+							y: 28,
+							autoAlpha: 0,
+						},
+						{
+							y: 0,
+							autoAlpha: 1,
+							duration: 0.48,
+							ease: 'power2.out',
+							stagger: 0.025,
+						},
+						0,
+					)
+				}
+
 				cardShells.forEach((cardShell, index) => {
 					const cardElement = cardElements[index]
 					const exitRotate = [-8, 7, -5, 6, -7][index] ?? -6
 					const raiseAt =
 						index === 0
-							? 0
-							: (index - 1) * 1.16 + 0.54 + cardExitDuration + 0.01
+							? benefitTimelineOffset
+							: benefitTimelineOffset +
+								(index - 1) * benefitCardSpacing +
+								benefitCardExitLead +
+								benefitCardExitDuration +
+								0.01
 
 					cardsTimeline.set(cardShell, { zIndex: 100 + index }, raiseAt)
 
@@ -260,10 +291,10 @@ export function Academy({
 							x: 0,
 							y: 0,
 							rotate: 0,
-							duration: 0.32,
+							duration: benefitCardSettleDuration,
 							ease: 'power2.out',
 						},
-						index * 1.16,
+						benefitTimelineOffset + index * benefitCardSpacing,
 					)
 
 					cardsTimeline.to(
@@ -271,18 +302,24 @@ export function Academy({
 						{
 							y: () => -window.innerHeight * 1.18 - index * 36,
 							x: 0,
-							duration: cardExitDuration,
+							duration: benefitCardExitDuration,
+							ease: mobile ? 'power2.inOut' : 'power2.in',
 						},
-						index * 1.16 + 0.54,
+						benefitTimelineOffset +
+							index * benefitCardSpacing +
+							benefitCardExitLead,
 					)
 
 					cardsTimeline.to(
 						cardElement,
 						{
 							rotate: exitRotate,
-							duration: cardExitDuration,
+							duration: benefitCardExitDuration,
+							ease: mobile ? 'power2.inOut' : 'power2.in',
 						},
-						index * 1.16 + 0.54,
+						benefitTimelineOffset +
+							index * benefitCardSpacing +
+							benefitCardExitLead,
 					)
 
 					cardsTimeline.set(
@@ -290,7 +327,10 @@ export function Academy({
 						{
 							autoAlpha: 0,
 						},
-						index * 1.16 + 0.54 + cardExitDuration,
+						benefitTimelineOffset +
+							index * benefitCardSpacing +
+							benefitCardExitLead +
+							benefitCardExitDuration,
 					)
 				})
 
@@ -298,7 +338,7 @@ export function Academy({
 
 				cardsTimeline.addLabel(
 					'benefitsComplete',
-					lastCardExitStart + cardExitDuration + 0.12,
+					benefitsCompleteAt,
 				)
 
 				if (responsive && academyHeading && programsScale && programsGrid) {
@@ -372,8 +412,11 @@ export function Academy({
 			}
 
 			responsiveMatchMedia = gsap.matchMedia()
-			responsiveMatchMedia.add('(max-width: 959px)', () =>
-				createCardsTimeline(true),
+			responsiveMatchMedia.add('(max-width: 719px)', () =>
+				createCardsTimeline(true, true),
+			)
+			responsiveMatchMedia.add('(min-width: 720px) and (max-width: 959px)', () =>
+				createCardsTimeline(true, false),
 			)
 			responsiveMatchMedia.add('(min-width: 960px)', () =>
 				createCardsTimeline(false),
