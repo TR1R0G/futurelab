@@ -3174,9 +3174,17 @@ h3,
 }
 
 @media (max-width: 719px) {
+	.solutions-card-copy {
+		padding-top: 32px !important;
+	}
+
+	.solutions-card-description {
+		margin-top: 28px !important;
+	}
+
 	.solution-media-slot {
 		width: min(82vw, 520px);
-		margin-top: clamp(28px, 8vw, 44px) !important;
+		margin-top: clamp(56px, 10vw, 72px) !important;
 	}
 
 	.solution-scroll-spacer {
