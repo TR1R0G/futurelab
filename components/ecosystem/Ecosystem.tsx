@@ -148,13 +148,13 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 					ref={trackRef}
 					className='ecosystem-track relative rounded-[28px] bg-[#B24ECC] md:rounded-[35px] lg:overflow-hidden lg:rounded-[35px]'
 				>
-					<div className='absolute left-[135px] top-[54px] w-[260px] md:left-[155px] md:top-[86px] md:w-[420px] lg:left-[242px] lg:top-[100px] lg:w-[615px]'>
-						<h2 className='font-heading whitespace-pre-line text-[21px] font-bold leading-[1.05] tracking-normal text-white md:text-[40px] md:leading-[44px] lg:text-[65px] lg:leading-[73px]'>
+					<div className='ecosystem-heading-block absolute left-[135px] top-[54px] w-[260px] md:left-[155px] md:top-[86px] md:w-[420px] lg:left-[242px] lg:top-[100px] lg:w-[615px]'>
+						<h2 className='ecosystem-heading font-heading whitespace-pre-line text-[21px] font-bold leading-[1.05] tracking-normal text-white md:text-[40px] md:leading-[44px] lg:text-[65px] lg:leading-[73px]'>
 							{displayTitle}
 						</h2>
 					</div>
 
-					<p className='absolute left-[135px] top-[188px] w-[260px] text-[11px] font-medium leading-[1.22] text-white md:left-[155px] md:top-[240px] md:w-[430px] md:text-[16px] md:leading-[20px] lg:left-[242px] lg:top-[359px] lg:w-[455px] lg:text-[23px] lg:leading-[28px]'>
+					<p className='ecosystem-description absolute left-[135px] top-[188px] w-[260px] text-[11px] font-medium leading-[1.22] text-white md:left-[155px] md:top-[240px] md:w-[430px] md:text-[16px] md:leading-[20px] lg:left-[242px] lg:top-[359px] lg:w-[455px] lg:text-[23px] lg:leading-[28px]'>
 						{subtitle}
 					</p>
 
@@ -243,12 +243,12 @@ function EcosystemFeature({
 				className={`absolute ${compact.icon} ${position.icon}`}
 			/>
 			<h3
-				className={`project-mini-heading absolute text-[14px] font-semibold leading-[1.16] text-white md:text-[24px] md:leading-[29px] lg:text-[33px] lg:leading-[40px] ${compact.title} ${position.title}`}
+				className={`ecosystem-feature-title project-mini-heading absolute text-[14px] font-semibold leading-[1.16] text-white md:text-[24px] md:leading-[29px] lg:text-[33px] lg:leading-[40px] ${compact.title} ${position.title}`}
 			>
 				{card.title}
 			</h3>
 			<p
-				className={`absolute text-[11px] font-medium leading-[1.22] text-white md:text-[16px] md:leading-[20px] lg:text-[23px] lg:leading-[28px] ${compact.description} ${position.description}`}
+				className={`ecosystem-feature-description absolute text-[11px] font-medium leading-[1.22] text-white md:text-[16px] md:leading-[20px] lg:text-[23px] lg:leading-[28px] ${compact.description} ${position.description}`}
 			>
 				{card.description}
 			</p>

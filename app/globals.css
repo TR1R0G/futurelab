@@ -1912,6 +1912,32 @@ h3,
 	}
 }
 
+@media (max-width: 719px) {
+	.ecosystem-heading {
+		font-size: clamp(26px, 7.2vw, 32px) !important;
+		line-height: 1.1 !important;
+	}
+
+	.ecosystem-description {
+		font-size: clamp(15px, 4.2vw, 18px) !important;
+		line-height: 1.35 !important;
+	}
+
+	.ecosystem-track > div:last-child article .ecosystem-feature-title {
+		font-size: clamp(18px, 5vw, 20px) !important;
+		line-height: 1.16 !important;
+	}
+
+	.ecosystem-track > div:last-child article .ecosystem-feature-description {
+		font-size: clamp(14px, 3.9vw, 16px) !important;
+		line-height: 1.32 !important;
+	}
+
+	.ecosystem-track > div:last-child article:nth-child(2) p {
+		top: 244px !important;
+	}
+}
+
 @media (min-width: 768px) and (max-width: 1023px) {
 	.ecosystem-section {
 		--ecosystem-card-height: 600px;
