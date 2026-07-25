@@ -4,7 +4,7 @@ import { DirectionsLight } from '@/components/directions/DirectionsLight'
 import { FadeInImage } from '@/components/media/FadeInImage'
 import { LazyVideo } from '@/components/media/LazyVideo'
 import { useGlobalVideoSound } from '@/components/providers/SoundProvider'
-import { gsap, registerGsapPlugins } from '@/lib/gsap'
+import { ScrollTrigger, gsap, registerGsapPlugins } from '@/lib/gsap'
 import { useEffect, useRef } from 'react'
 
 interface ExpandedImageScreenProps {
@@ -53,7 +53,12 @@ export function ExpandedImageScreen({
 		if (!section || !stage || !frame) return
 
 		const positionEase = gsap.parseEase('power2.inOut')
-		const fullSizeAt = 0.82
+		const previousFullSizeAt = 0.82
+		const fullSizeAt = 1
+		const previousScrollableViewportCount = 2
+		const requiredScrollViewportCount =
+			previousScrollableViewportCount * previousFullSizeAt
+		const gradientExitStart = 0.92
 		const imageScrollRangeMultiplier = 2.5
 		const clamp = (value: number) => Math.min(1, Math.max(0, value))
 		const isRectInViewport = (rect: DOMRect) =>
@@ -157,7 +162,7 @@ export function ExpandedImageScreen({
 
 			return {
 				left: Math.round((window.innerWidth - width) / 2),
-				top: Math.max(32, Math.round((window.innerHeight - height) / 2)),
+				top: Math.max(0, Math.round(window.innerHeight - height)),
 				width,
 				height,
 			}
@@ -177,6 +182,17 @@ export function ExpandedImageScreen({
 			let hasStartRect = false
 			let lastScrollY = window.scrollY
 			let lastFrameTop: number | null = null
+
+			const syncSectionHeight = () => {
+				const viewportHeight = window.innerHeight
+				const animationScrollDistance =
+					viewportHeight * requiredScrollViewportCount
+
+				section.style.setProperty(
+					'--expanded-image-section-height',
+					`${Math.round(viewportHeight + animationScrollDistance)}px`,
+				)
+			}
 
 			const resetGradient = (autoAlpha = 0) => {
 				if (!gradient) return
@@ -266,7 +282,7 @@ export function ExpandedImageScreen({
 
 				const imageProgress = clamp(imageScrollProgress / fullSizeAt)
 				const gradientExitProgress = clamp(
-					(imageScrollProgress - fullSizeAt) / 0.08,
+					(imageScrollProgress - gradientExitStart) / (1 - gradientExitStart),
 				)
 				if (imageProgress < 0.12) {
 					const currentSourceRect = readSourceRect()
@@ -355,10 +371,20 @@ export function ExpandedImageScreen({
 			}
 
 			const handleResize = () => {
+				syncSectionHeight()
 				hasStartRect = false
 				placeFrameAtSource()
 				requestUpdate()
 			}
+
+			const video = videoRef.current
+			const refreshOnReady = () => {
+				syncSectionHeight()
+				requestUpdate()
+				ScrollTrigger.refresh()
+			}
+
+			syncSectionHeight()
 
 			gsap.set(frame, {
 				force3D: true,
@@ -370,11 +396,21 @@ export function ExpandedImageScreen({
 
 			window.addEventListener('scroll', requestUpdate, { passive: true })
 			window.addEventListener('resize', handleResize)
+			window.addEventListener('orientationchange', handleResize)
+			ScrollTrigger.addEventListener('refreshInit', syncSectionHeight)
+			video?.addEventListener('loadedmetadata', refreshOnReady)
+			video?.addEventListener('loadeddata', refreshOnReady)
+			void document.fonts?.ready.then(refreshOnReady)
 
 			return () => {
 				if (frameId) window.cancelAnimationFrame(frameId)
 				window.removeEventListener('scroll', requestUpdate)
 				window.removeEventListener('resize', handleResize)
+				window.removeEventListener('orientationchange', handleResize)
+				ScrollTrigger.removeEventListener('refreshInit', syncSectionHeight)
+				video?.removeEventListener('loadedmetadata', refreshOnReady)
+				video?.removeEventListener('loadeddata', refreshOnReady)
+				section.style.removeProperty('--expanded-image-section-height')
 				resetGradient(0)
 			}
 		}, section)
@@ -387,7 +423,7 @@ export function ExpandedImageScreen({
 	return (
 		<section
 			ref={sectionRef}
-			className={`expanded-image-section relative z-[90] ml-[calc(50%_-_50vw)] h-[300svh] w-screen bg-transparent ${className}`}
+			className={`expanded-image-section relative z-[90] ml-[calc(50%_-_50vw)] h-[var(--expanded-image-section-height,264svh)] w-screen bg-transparent ${className}`}
 		>
 			<div
 				ref={stageRef}
