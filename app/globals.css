@@ -606,10 +606,10 @@ h3,
 	}
 
 	.directions-board-title {
-		left: 10% !important;
+		left: 9.25% !important;
 		top: 6.44% !important;
-		width: 62.33% !important;
-		font-size: clamp(22px, 6.11vw, 36px) !important;
+		width: 70% !important;
+		font-size: clamp(26px, 7.2vw, 36px) !important;
 		line-height: 1.18 !important;
 	}
 
@@ -631,9 +631,9 @@ h3,
 	}
 
 	.directions-chip-slot-0 {
-		left: -1% !important;
-		top: 40% !important;
-		width: 43.33% !important;
+		left: 8% !important;
+		top: 39% !important;
+		width: 40% !important;
 		height: 9.66% !important;
 		z-index: 4 !important;
 	}
@@ -643,9 +643,9 @@ h3,
 	}
 
 	.directions-chip-slot-1 {
-		left: 1.67% !important;
-		top: 67% !important;
-		width: 58% !important;
+		left: 8% !important;
+		top: 63% !important;
+		width: 54% !important;
 		height: 9.66% !important;
 		z-index: 4 !important;
 	}
@@ -655,9 +655,9 @@ h3,
 	}
 
 	.directions-chip-slot-2 {
-		left: 23.33% !important;
-		top: 50% !important;
-		width: 75% !important;
+		left: 24% !important;
+		top: 49% !important;
+		width: 69% !important;
 		height: 9.66% !important;
 		z-index: 3 !important;
 	}
@@ -667,9 +667,9 @@ h3,
 	}
 
 	.directions-chip-slot-3 {
-		left: 0 !important;
-		top: 82% !important;
-		width: 99.33% !important;
+		left: 8% !important;
+		top: 76% !important;
+		width: 84% !important;
 		height: 9.66% !important;
 		z-index: 2 !important;
 	}
@@ -679,9 +679,9 @@ h3,
 	}
 
 	.directions-chip-slot-4 {
-		left: 24% !important;
-		top: 28% !important;
-		width: 74.33% !important;
+		left: 27% !important;
+		top: 30% !important;
+		width: 66% !important;
 		height: 9.66% !important;
 		z-index: 5 !important;
 	}

@@ -121,7 +121,7 @@ export function Academy({
 			const isResponsivePrograms = () => window.innerWidth < 960
 			const getProgramsSafeTop = () => (window.innerWidth < 720 ? 20 : 28)
 			const getProgramsSafeBottom = () =>
-				window.innerHeight - (window.innerWidth < 720 ? 24 : 32)
+				window.innerHeight - (window.innerWidth < 720 ? 72 : 32)
 			const getElementScale = (element: HTMLElement) => {
 				const rect = element.getBoundingClientRect()
 				return element.offsetWidth > 0 ? rect.width / element.offsetWidth : 1
