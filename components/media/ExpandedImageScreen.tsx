@@ -149,7 +149,44 @@ export function ExpandedImageScreen({
 			height: mix(start.height, end.height, progress),
 		})
 
+		const readMediaAspectRatio = () => {
+			const video = videoRef.current
+			if (video?.videoWidth && video.videoHeight) {
+				return video.videoWidth / video.videoHeight
+			}
+
+			const source = getVisibleSourceElement()
+			const sourceRect = source?.getBoundingClientRect()
+			if (sourceRect && sourceRect.width > 0 && sourceRect.height > 0) {
+				return sourceRect.width / sourceRect.height
+			}
+
+			return 530 / 928
+		}
+
 		const readTargetRect = () => {
+			if (window.innerWidth < 720) {
+				const horizontalInset = 20
+				const verticalInset = 20
+				const aspectRatio = readMediaAspectRatio()
+				const maxWidth = Math.max(1, window.innerWidth - horizontalInset * 2)
+				const maxHeight = Math.max(1, window.innerHeight - verticalInset * 2)
+				let width = maxWidth
+				let height = width / aspectRatio
+
+				if (height > maxHeight) {
+					height = maxHeight
+					width = height * aspectRatio
+				}
+
+				return {
+					left: Math.round((window.innerWidth - width) / 2),
+					top: Math.max(0, Math.round(window.innerHeight - height)),
+					width: Math.round(width),
+					height: Math.round(height),
+				}
+			}
+
 			const visualGroupWidth = 1013.91
 			const visualGroupHeight = 946.61
 			const visualScale = Math.min(
