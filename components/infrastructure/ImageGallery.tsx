@@ -2,9 +2,13 @@
 
 import { gsap, registerGsapPlugins } from "@/lib/gsap";
 import { FadeInImage } from "@/components/media/FadeInImage";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const GALLERY_GAP = 20;
+const MOBILE_GALLERY_GAP = 16;
+const MOBILE_SIDE_PADDING = 20;
+const GALLERY_FRAME_HEIGHT = 396;
+const GALLERY_LANDSCAPE_WIDTH = 552;
 
 const carouselPath = (path: string) => encodeURI(path);
 
@@ -71,19 +75,76 @@ const gallerySourceItems = [
   },
 ];
 
-const galleryItems = gallerySourceItems.map((item, index) => ({
-  ...item,
-  left: gallerySourceItems
-    .slice(0, index)
-    .reduce((offset, previous) => offset + previous.width + GALLERY_GAP, 0),
-}));
+const buildGalleryItems = (items: typeof gallerySourceItems, gap: number) =>
+  items.map((item, index) => ({
+    ...item,
+    left: items
+      .slice(0, index)
+      .reduce((offset, previous) => offset + previous.width + gap, 0),
+  }));
 
-const gallerySetWidth =
-  galleryItems.reduce((offset, item) => offset + item.width + GALLERY_GAP, 0);
+const getGallerySetWidth = (
+  items: ReturnType<typeof buildGalleryItems>,
+  gap: number
+) => items.reduce((offset, item) => offset + item.width + gap, 0);
+
+const getMobileGalleryItems = (viewportWidth: number) => {
+  const landscapeWidth = Math.min(
+    GALLERY_LANDSCAPE_WIDTH,
+    Math.max(280, viewportWidth - MOBILE_SIDE_PADDING * 2)
+  );
+  const frameHeight = Math.round(
+    (landscapeWidth / GALLERY_LANDSCAPE_WIDTH) * GALLERY_FRAME_HEIGHT
+  );
+  const scaledItems = gallerySourceItems.map((item) => ({
+    ...item,
+    width: Math.round((item.width / GALLERY_FRAME_HEIGHT) * frameHeight),
+  }));
+
+  return {
+    frameHeight,
+    gap: MOBILE_GALLERY_GAP,
+    items: buildGalleryItems(scaledItems, MOBILE_GALLERY_GAP),
+  };
+};
 
 export function ImageGallery() {
   const galleryRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const [viewportWidth, setViewportWidth] = useState<number | null>(null);
+
+  useEffect(() => {
+    const updateViewportWidth = () => {
+      setViewportWidth(window.innerWidth);
+    };
+
+    updateViewportWidth();
+    window.addEventListener("resize", updateViewportWidth);
+
+    return () => {
+      window.removeEventListener("resize", updateViewportWidth);
+    };
+  }, []);
+
+  const isMobile = viewportWidth !== null && viewportWidth < 720;
+  const galleryLayout = useMemo(() => {
+    if (isMobile) {
+      return getMobileGalleryItems(viewportWidth);
+    }
+
+    return {
+      frameHeight: GALLERY_FRAME_HEIGHT,
+      gap: GALLERY_GAP,
+      items: buildGalleryItems(gallerySourceItems, GALLERY_GAP),
+    };
+  }, [isMobile, viewportWidth]);
+  const galleryItems = galleryLayout.items;
+  const gallerySetWidth = getGallerySetWidth(galleryItems, galleryLayout.gap);
+  const galleryHeight = galleryLayout.frameHeight + 144;
+  const galleryMarginLeft =
+    isMobile && viewportWidth !== null
+      ? Math.max(0, (viewportWidth - galleryItems[0].width) / 2)
+      : undefined;
 
   useEffect(() => {
     registerGsapPlugins();
@@ -159,17 +220,23 @@ export function ImageGallery() {
       document.removeEventListener("visibilitychange", resumeOnVisible);
       tween?.kill();
     };
-  }, []);
+  }, [gallerySetWidth]);
 
   return (
     <div
       ref={galleryRef}
       className="infrastructure-gallery relative mt-16 h-[540px] w-full overflow-hidden pt-[72px] md:mt-24 lg:mt-28"
+      style={isMobile ? { height: galleryHeight } : undefined}
       aria-label="Фотографии пространства FutureLab"
     >
       <div
         ref={trackRef}
         className="infrastructure-gallery-track flex h-[396px] w-max will-change-transform"
+        style={
+          isMobile
+            ? { height: galleryLayout.frameHeight, marginLeft: galleryMarginLeft }
+            : undefined
+        }
       >
         {[0, 1].map((setIndex) => (
           <div
@@ -186,6 +253,7 @@ export function ImageGallery() {
                 style={{
                   left: backplate.left,
                   width: backplate.width,
+                  height: galleryLayout.frameHeight,
                   backgroundColor: "#000",
                 }}
               />
@@ -194,17 +262,20 @@ export function ImageGallery() {
             {galleryItems.map((image) => (
               <div
                 key={`${setIndex}-${image.alt}`}
-                className="infrastructure-gallery-item absolute top-0 h-[396px] overflow-hidden will-change-transform"
+                className={`infrastructure-gallery-item absolute top-0 h-[396px] overflow-hidden will-change-transform ${
+                  isMobile ? "rounded-[18px]" : ""
+                }`}
                 style={{
                   left: image.left,
                   width: image.width,
+                  height: galleryLayout.frameHeight,
                 }}
               >
                 <FadeInImage
                   src={image.src}
                   alt={setIndex === 0 ? image.alt : ""}
                   fill
-                  className="object-cover"
+                  className={isMobile ? "object-contain" : "object-cover"}
                   style={{ objectPosition: image.position }}
                   sizes={`${image.width}px`}
                 />
