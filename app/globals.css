@@ -588,6 +588,10 @@ h3,
 }
 
 @media (max-width: 719px) {
+	.directions-section {
+		--directions-board-statement-gap: 96px;
+	}
+
 	.directions-board {
 		width: min(calc(100vw - 60px), 600px);
 		max-width: 600px !important;
@@ -688,6 +692,26 @@ h3,
 
 	.directions-chip-slot-4 .directions-chip {
 		transform: rotate(11.49deg) !important;
+	}
+
+	.directions-statement {
+		margin-top: var(--directions-board-statement-gap) !important;
+	}
+
+	.directions-statement > .directions-statement-light {
+		top: -140px !important;
+		z-index: 0 !important;
+		pointer-events: none;
+	}
+
+	.directions-statement-copy {
+		position: relative;
+		z-index: 10;
+	}
+
+	.directions-statement .directions-inline-image {
+		position: relative;
+		z-index: 20;
 	}
 }
 
