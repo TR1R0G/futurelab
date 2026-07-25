@@ -86,7 +86,7 @@ function StatCard({ value, label }: { value: string; label: string }) {
 				aria-hidden='true'
 			/>
 			<div className='experience-stat-card-inner absolute bottom-[7px] left-[7px] top-[7px] w-[calc(100%-14px)] rounded-[28px] bg-white min-[1440px]:w-[438px]'>
-				<h3 className='experience-stat-card-title absolute left-8 top-[30px] w-[calc(100%-64px)] text-[25px] font-semibold leading-[1.7] text-black min-[1440px]:left-[33px] min-[1440px]:w-[372px]'>
+				<h3 className='experience-stat-card-title project-mini-heading absolute left-8 top-[30px] w-[calc(100%-64px)] text-[25px] font-semibold leading-[1.7] text-black min-[1440px]:left-[33px] min-[1440px]:w-[372px]'>
 					{value}
 				</h3>
 				<p className='experience-stat-card-label absolute left-8 top-[93px] w-[calc(100%-64px)] whitespace-pre-line text-[21px] font-medium leading-[1.7] text-[#4C4C4C] min-[1440px]:left-[33px] min-[1440px]:top-[93px] min-[1440px]:w-[372px] min-[1440px]:text-[23px]'>

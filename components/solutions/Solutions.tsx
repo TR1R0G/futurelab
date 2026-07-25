@@ -747,7 +747,7 @@ function SolutionCard({
 	const content = (
 		<>
 			<div className='relative z-20 px-8 pt-14 md:px-[72px] md:pt-[86px] min-[1370px]:px-0 min-[1370px]:pt-0'>
-				<h3 className='text-[38px] font-semibold leading-tight text-[#DE5CFF] md:text-[48px] min-[1370px]:absolute min-[1370px]:left-[121px] min-[1370px]:top-[88px] min-[1370px]:w-[760px] min-[1370px]:text-[55px] min-[1370px]:leading-[66px]'>
+				<h3 className='project-mini-heading text-[38px] font-semibold leading-tight text-[#DE5CFF] md:text-[48px] min-[1370px]:absolute min-[1370px]:left-[121px] min-[1370px]:top-[88px] min-[1370px]:w-[760px] min-[1370px]:text-[55px] min-[1370px]:leading-[66px]'>
 					{card.title}
 				</h3>
 

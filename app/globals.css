@@ -7,6 +7,7 @@
 	--foreground: #ffffff;
 	--text-secondary-light: #c4c4c4;
 	--directions-end-gap: 80px;
+	--font-project-mini-heading: var(--font-golos-text), system-ui, sans-serif;
 }
 
 html,
@@ -58,6 +59,10 @@ h3,
 	font-family: var(--font-golos-text), system-ui, sans-serif;
 }
 
+.project-mini-heading {
+	font-family: var(--font-project-mini-heading);
+}
+
 .section-subtitle-light {
 	color: var(--text-secondary-light);
 	font-size: 16px;
@@ -66,7 +71,7 @@ h3,
 }
 
 .academy-card-title {
-	font-family: var(--font-golos-text), system-ui, sans-serif;
+	font-family: var(--font-project-mini-heading);
 }
 
 @media (min-width: 720px) {
@@ -790,12 +795,13 @@ h3,
 }
 
 .directions-post-image {
-	padding-top: var(--directions-end-gap);
+	--directions-cta-gap: var(--directions-end-gap);
 	box-sizing: border-box;
 }
 
+.directions-cta-wrapper,
 .directions-post-image-divider {
-	margin-top: var(--directions-end-gap);
+	margin-top: var(--directions-cta-gap);
 }
 
 .solutions-section {

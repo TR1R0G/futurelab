@@ -30,7 +30,7 @@ export function ProgramCard({ card }: ProgramCardProps) {
         </div>
 
         <div className="program-card-copy program-card-content px-8 pb-10 pt-10 md:px-10 md:pt-10 xl:p-0">
-          <h3 className="program-card-title min-h-[67px] max-w-[330px] text-[31px] font-semibold leading-[1.08] tracking-normal text-[#FFFF19] md:min-h-[80px] md:text-[33px] md:leading-[40px] xl:absolute xl:left-10 xl:top-[490px] xl:w-[372px] xl:min-h-0">
+          <h3 className="program-card-title project-mini-heading min-h-[67px] max-w-[330px] text-[31px] font-semibold leading-[1.08] tracking-normal text-[#FFFF19] md:min-h-[80px] md:text-[33px] md:leading-[40px] xl:absolute xl:left-10 xl:top-[490px] xl:w-[372px] xl:min-h-0">
             {card.title}
           </h3>
           <p className="program-card-description mt-8 min-h-[75px] max-w-[370px] text-[21px] font-medium leading-[1.18] tracking-normal text-[#C4C4C4] md:min-h-[104px] md:text-[22px] md:leading-[26px] xl:absolute xl:left-10 xl:top-[595px] xl:mt-0 xl:w-[372px] xl:min-h-0">

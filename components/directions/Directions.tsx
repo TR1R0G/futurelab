@@ -139,7 +139,7 @@ export function Directions({
 					aria-hidden='true'
 				/>
 				<div className='directions-board-card relative min-h-[420px] overflow-visible rounded-[35px] bg-[#1D1D1D] p-8'>
-					<h2 className='directions-board-title relative z-10 text-[30px] font-semibold leading-none text-white'>
+					<h2 className='directions-board-title project-mini-heading relative z-10 text-[30px] font-semibold leading-none text-white'>
 						{title}
 					</h2>
 
@@ -283,7 +283,7 @@ export function Directions({
 					className='pointer-events-none absolute inset-x-0 bottom-[-60svh] z-0 h-[60svh] '
 					aria-hidden='true'
 				/>
-				<div className='relative z-10 w-full'>
+				<div className='directions-cta-wrapper relative z-10 w-full'>
 					<CTACard
 						variant='wide'
 						text={ctaText}

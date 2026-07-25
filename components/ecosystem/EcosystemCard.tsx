@@ -21,7 +21,7 @@ export function EcosystemCard({ card }: EcosystemCardProps) {
       <div className="ecosystem-card-icon">
         <Icon className="h-20 w-20 md:h-24 md:w-24 lg:h-28 lg:w-28" />
       </div>
-      <h3 className="ecosystem-card-title mt-5 max-w-md text-xl font-bold leading-tight text-white md:mt-7 md:text-2xl lg:mt-8 lg:text-3xl">
+      <h3 className="ecosystem-card-title project-mini-heading mt-5 max-w-md text-xl font-bold leading-tight text-white md:mt-7 md:text-2xl lg:mt-8 lg:text-3xl">
         {card.title}
       </h3>
       <p className="ecosystem-card-description mt-3 max-w-sm text-base leading-relaxed text-white/85 md:mt-4 md:text-lg">

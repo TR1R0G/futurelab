@@ -243,7 +243,7 @@ function EcosystemFeature({
 				className={`absolute ${compact.icon} ${position.icon}`}
 			/>
 			<h3
-				className={`absolute text-[14px] font-semibold leading-[1.16] text-white md:text-[24px] md:leading-[29px] lg:text-[33px] lg:leading-[40px] ${compact.title} ${position.title}`}
+				className={`project-mini-heading absolute text-[14px] font-semibold leading-[1.16] text-white md:text-[24px] md:leading-[29px] lg:text-[33px] lg:leading-[40px] ${compact.title} ${position.title}`}
 			>
 				{card.title}
 			</h3>

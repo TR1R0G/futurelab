@@ -187,7 +187,7 @@ function ProjectCard({
     <article className="realized-project-card relative h-[var(--realized-card-height,874px)] w-[var(--realized-card-width,698px)] shrink-0 origin-top-left overflow-hidden bg-[#1D1D1D]">
       <div className="relative z-10 h-[868px] w-[698px] origin-top-left scale-[var(--realized-card-scale,1)] rounded-[35px] bg-[#1D1D1D]">
         <div className="absolute left-10 top-10 w-[618px]">
-          <h3 className="text-[40px] font-semibold leading-[48px] text-[#DE5CFF]">
+          <h3 className="project-mini-heading text-[40px] font-semibold leading-[48px] text-[#DE5CFF]">
             {project.title}
           </h3>
 

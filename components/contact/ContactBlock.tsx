@@ -29,7 +29,7 @@ export function ContactBlock({
 
 				<div className='contact-card grid w-full gap-10 rounded-[30px] bg-white px-6 py-0 shadow-[0_20px_50px_rgba(0,0,0,0.15)] md:mt-14 md:grid-cols-2 md:rounded-[35px] md:px-6 md:py-12 min-[1200px]:grid-cols-3 min-[1440px]:absolute min-[1440px]:left-0 min-[1440px]:top-[calc(50%_-_72px)] min-[1440px]:mt-0 min-[1440px]:h-[250px] min-[1440px]:grid-cols-none min-[1440px]:gap-0 min-[1440px]:px-0 min-[1440px]:py-0'>
 					<div className='min-[1440px]:absolute min-[1440px]:left-10 min-[1440px]:top-10 min-[1440px]:w-[412px]'>
-						<h3 className='text-[26px] font-semibold leading-none text-black md:text-[30px]'>
+						<h3 className='project-mini-heading text-[26px] font-semibold leading-none text-black md:text-[30px]'>
 							{cardTitle}
 						</h3>
 						<p className='mt-8 max-w-[412px] text-[21px] font-medium leading-[1.7] text-[#4C4C4C] md:text-[23px] min-[1440px]:mt-[42px]'>
@@ -108,10 +108,10 @@ function ContactItem({
 					aria-hidden='true'
 				/>
 			)}
-			<p className='mt-[26px] text-[21px] font-medium leading-[26px] text-[#4C4C4C] md:text-[22px]'>
+			<p className='project-mini-heading mt-[26px] text-[21px] font-medium leading-[26px] text-[#4C4C4C] md:text-[22px]'>
 				{title}
 			</p>
-			<p className='mt-[13px] text-[21px] font-medium leading-[26px] text-[#4C4C4C] md:text-[22px]'>
+			<p className='project-mini-heading mt-[13px] text-[21px] font-medium leading-[26px] text-[#4C4C4C] md:text-[22px]'>
 				{href ? (
 					<a
 						href={href}

@@ -433,7 +433,7 @@ export function Academy({
 										transform: `translate(${style.x}, ${style.y}) rotate(${style.rotate})`,
 									}}
 								>
-									<h3 className='academy-card-title max-w-[221px] text-[25px] font-semibold leading-normal tracking-normal text-black'>
+									<h3 className='academy-card-title project-mini-heading max-w-[221px] text-[25px] font-semibold leading-normal tracking-normal text-black'>
 										{card.title}
 									</h3>
 								</article>

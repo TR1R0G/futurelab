@@ -36,7 +36,7 @@ export function CTACard({
 			}`}
 		>
 			<p
-				className={`font-semibold text-[#202024] ${
+				className={`project-mini-heading font-semibold text-[#202024] ${
 				isProject
 						? 'max-w-[1036px] text-[22px] font-semibold leading-[1.18] md:text-[28px] lg:text-[33px] lg:leading-[40px] min-[1254px]:mt-[53px]'
 					: isWide
