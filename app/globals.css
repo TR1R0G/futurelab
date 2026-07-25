@@ -873,6 +873,26 @@ h3,
 	}
 }
 
+@media (max-width: 719px) {
+	.infrastructure-cta--default {
+		padding: 28px 24px !important;
+	}
+
+	.infrastructure-cta--default .infrastructure-cta-title {
+		font-size: clamp(18px, 5vw, 20px) !important;
+		line-height: 1.18 !important;
+	}
+
+	.infrastructure-cta--default .infrastructure-cta-button {
+		height: 48px !important;
+		min-height: 48px;
+		max-width: none !important;
+		margin-top: 28px !important;
+		font-size: 16px !important;
+		line-height: 19px !important;
+	}
+}
+
 @media (max-width: 959px) {
 	.footer-inner {
 		margin-inline: auto !important;
