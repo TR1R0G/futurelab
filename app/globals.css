@@ -3177,6 +3177,14 @@ h3,
 }
 
 @media (max-width: 719px) {
+	.academy-pin {
+		padding-top: 24px !important;
+	}
+
+	.academy-card-stage {
+		transform-origin: top center !important;
+	}
+
 	.academy-section {
 		height: auto !important;
 		min-height: 0 !important;
