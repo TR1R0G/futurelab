@@ -155,7 +155,10 @@ export function Solutions({
 
 		const readSourceRect = (media: HTMLDivElement, index: number): Rect => {
 			if (!isLargeDesktopLayout()) {
-				const source = media.closest<HTMLElement>('.solution-media-slot') ?? media
+				const source =
+					window.innerWidth < 720
+						? media
+						: (media.closest<HTMLElement>('.solution-media-slot') ?? media)
 				const rect = source.getBoundingClientRect()
 
 				return {
@@ -194,6 +197,22 @@ export function Solutions({
 				left: Math.round(target.left - containerLeft),
 				top: Math.round(releaseScroll - containerTop + target.top),
 			}
+		}
+
+		const setMobileActionState = (
+			media: HTMLDivElement,
+			visible: boolean,
+		) => {
+			if (window.innerWidth >= 720) return
+
+			const action = media
+				.closest<HTMLElement>('.solution-media-slot')
+				?.querySelector<HTMLElement>('.solution-mobile-cta')
+
+			if (!action) return
+
+			action.style.opacity = visible ? '1' : '0'
+			action.style.pointerEvents = visible ? '' : 'none'
 		}
 
 		const setHiddenGlowState = (glow: HTMLDivElement, index: number) => {
@@ -273,6 +292,7 @@ export function Solutions({
 			if (!isLargeDesktopLayout()) {
 				const slot = media.closest<HTMLElement>('.solution-media-slot')
 				if (slot) slot.style.zIndex = ''
+				setMobileActionState(media, true)
 				media.removeAttribute('style')
 				return
 			}
@@ -319,6 +339,7 @@ export function Solutions({
 			const slotLeft = slotRect?.left ?? 0
 
 			if (slot) slot.style.zIndex = ''
+			setMobileActionState(media, false)
 			media.style.position = 'absolute'
 			media.style.left = `${Math.round(target.left - slotLeft)}px`
 			media.style.top = `${Math.round(releaseScroll + target.top - slotTop)}px`
@@ -341,6 +362,7 @@ export function Solutions({
 			const eased = ease(progress)
 			const slot = media.closest<HTMLElement>('.solution-media-slot')
 			if (slot) slot.style.zIndex = `${zIndex}`
+			setMobileActionState(media, false)
 
 			media.style.position = 'fixed'
 			media.style.left = `${lerp(start.left, target.left, eased)}px`
@@ -708,12 +730,12 @@ export function Solutions({
 									youtubeVideoId={card.youtubeVideoId}
 									top={imageTop}
 								/>
+								<MobileLearnMoreButton href={href} label={card.cta} />
 							</div>
 							<div
 								className='solution-scroll-spacer min-[1370px]:hidden'
 								aria-hidden='true'
 							/>
-							<MobileLearnMoreButton href={href} label={card.cta} />
 						</div>
 					)
 				})}

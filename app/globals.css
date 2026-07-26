@@ -3187,6 +3187,13 @@ h3,
 		margin-top: clamp(56px, 10vw, 72px) !important;
 	}
 
+	.solution-media-slot .solutions-transition-media {
+		position: relative;
+		inset: auto;
+		aspect-ratio: 16 / 9;
+		height: auto;
+	}
+
 	.solution-scroll-spacer {
 		height: clamp(980px, 130svh, 1220px);
 	}
@@ -3198,7 +3205,7 @@ h3,
 		align-items: center;
 		justify-content: center;
 		align-self: center;
-		margin-top: 32px;
+		margin: clamp(20px, 6vw, 32px) auto 0;
 		border-radius: 9px;
 		background: #0051ff;
 		color: #fff;
@@ -3208,6 +3215,7 @@ h3,
 		line-height: 19px;
 		text-align: center;
 		text-decoration: none;
+		transition: opacity 180ms ease;
 	}
 }
 
