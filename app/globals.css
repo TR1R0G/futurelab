@@ -903,18 +903,21 @@ h3,
 
 @media (max-width: 719px) {
 	.infrastructure-cta--default,
-	.infrastructure-cta--wide {
+	.infrastructure-cta--wide,
+	.infrastructure-cta--project {
 		padding: 28px 24px !important;
 	}
 
 	.infrastructure-cta--default .infrastructure-cta-title,
-	.infrastructure-cta--wide .infrastructure-cta-title {
+	.infrastructure-cta--wide .infrastructure-cta-title,
+	.infrastructure-cta--project .infrastructure-cta-title {
 		font-size: clamp(18px, 5vw, 20px) !important;
 		line-height: 1.18 !important;
 	}
 
 	.infrastructure-cta--default .infrastructure-cta-button,
-	.infrastructure-cta--wide .infrastructure-cta-button {
+	.infrastructure-cta--wide .infrastructure-cta-button,
+	.infrastructure-cta--project .infrastructure-cta-button {
 		height: 48px !important;
 		min-height: 48px;
 		max-width: none !important;
