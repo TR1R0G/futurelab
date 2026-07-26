@@ -3183,7 +3183,7 @@ h3,
 	}
 
 	.solution-media-slot {
-		width: min(82vw, 520px);
+		width: clamp(180px, 56vw, 420px);
 		margin-top: clamp(56px, 10vw, 72px) !important;
 	}
 
