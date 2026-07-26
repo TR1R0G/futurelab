@@ -2972,6 +2972,18 @@ h3,
 		background: #0048e5;
 	}
 
+	.realized-project-overlay-close {
+		width: 44px !important;
+		height: 44px !important;
+		right: 14px !important;
+		top: 14px !important;
+	}
+
+	.realized-project-overlay-close-line {
+		width: 18px !important;
+		height: 2.5px !important;
+	}
+
 	.contact-section {
 		height: 692px !important;
 		min-height: 692px !important;

@@ -281,10 +281,10 @@ function ProjectVideoOverlay({
           type="button"
           aria-label="Закрыть видео"
           onClick={onClose}
-          className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center text-black transition-transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white md:right-6 md:top-6 md:h-14 md:w-14"
+          className="realized-project-overlay-close absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center text-black transition-transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white md:right-6 md:top-6 md:h-14 md:w-14"
         >
-          <span className="absolute h-[4px] w-10 rotate-45 rounded-full bg-black md:w-12" />
-          <span className="absolute h-[4px] w-10 -rotate-45 rounded-full bg-black md:w-12" />
+          <span className="realized-project-overlay-close-line absolute h-[4px] w-10 rotate-45 rounded-full bg-black md:w-12" />
+          <span className="realized-project-overlay-close-line absolute h-[4px] w-10 -rotate-45 rounded-full bg-black md:w-12" />
         </button>
 
         <LazyVideo
