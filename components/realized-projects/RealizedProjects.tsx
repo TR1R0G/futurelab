@@ -14,6 +14,10 @@ interface RealizedProjectsProps {
 
 type RealizedProjectWithVideo = RealizedProject & { video: string };
 
+const hasCyrillic = (value: string) => /[А-Яа-яЁё]/.test(value);
+const getProjectActionLabel = (project: RealizedProject) =>
+  hasCyrillic(project.title) ? "Смотреть видео" : "Watch video";
+
 export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -185,13 +189,13 @@ function ProjectCard({
 }) {
   return (
     <article className="realized-project-card relative h-[var(--realized-card-height,874px)] w-[var(--realized-card-width,698px)] shrink-0 origin-top-left overflow-hidden bg-[#1D1D1D]">
-      <div className="relative z-10 h-[868px] w-[698px] origin-top-left scale-[var(--realized-card-scale,1)] rounded-[35px] bg-[#1D1D1D]">
-        <div className="absolute left-10 top-10 w-[618px]">
-          <h3 className="project-mini-heading text-[40px] font-semibold leading-[48px] text-[#DE5CFF]">
+      <div className="realized-project-card-shell relative z-10 h-[868px] w-[698px] origin-top-left scale-[var(--realized-card-scale,1)] rounded-[35px] bg-[#1D1D1D]">
+        <div className="realized-project-card-copy absolute left-10 top-10 w-[618px]">
+          <h3 className="realized-project-card-title project-mini-heading text-[40px] font-semibold leading-[48px] text-[#DE5CFF]">
             {project.title}
           </h3>
 
-          <p className="mt-8 whitespace-pre-line text-[23px] font-medium leading-[28px] text-[#C4C4C4]">
+          <p className="realized-project-card-description mt-8 whitespace-pre-line text-[23px] font-medium leading-[28px] text-[#C4C4C4]">
             {project.description}
           </p>
         </div>
@@ -209,8 +213,11 @@ function ProjectMedia({
   project: RealizedProject;
   onOpenVideo: (project: RealizedProject) => void;
 }) {
+  const hasVideo = Boolean(project.video);
+  const actionLabel = getProjectActionLabel(project);
+
   return (
-    <div className="absolute left-10 top-[496px] h-[332px] w-[618px] overflow-hidden rounded-[10px]">
+    <div className="realized-project-media absolute left-10 top-[496px] h-[332px] w-[618px] overflow-hidden rounded-[10px]">
       {project.image ? (
         <FadeInImage
           src={project.image}
@@ -222,10 +229,21 @@ function ProjectMedia({
         />
       ) : null}
 
-      {project.video ? (
+      {hasVideo ? (
         <PlayButton onClick={() => onOpenVideo(project)} />
       ) : project.image ? (
         <PlayIcon />
+      ) : null}
+
+      {hasVideo ? (
+        <button
+          type="button"
+          className="realized-project-case-button project-mini-heading"
+          aria-label={`${actionLabel}: ${project.title}`}
+          onClick={() => onOpenVideo(project)}
+        >
+          {actionLabel}
+        </button>
       ) : null}
     </div>
   );
