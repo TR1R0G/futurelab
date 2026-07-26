@@ -15,44 +15,26 @@ interface AcademyProps {
 const cardStyles = [
 	{
 		color: '#FFCC40',
-		x: '-220px',
-		y: '18px',
-		rotate: '-19deg',
 		zIndex: 6,
 	},
 	{
 		color: '#FFD240',
-		x: '-142px',
-		y: '8px',
-		rotate: '12.42deg',
 		zIndex: 5,
 	},
 	{
 		color: '#FFE240',
-		x: '-29px',
-		y: '26px',
-		rotate: '-0.53deg',
 		zIndex: 4,
 	},
 	{
 		color: '#FFFF40',
-		x: '39px',
-		y: '13px',
-		rotate: '-11.81deg',
 		zIndex: 3,
 	},
 	{
 		color: '#FFFF19',
-		x: '127px',
-		y: '8px',
-		rotate: '-8.17deg',
 		zIndex: 1,
 	},
 	{
 		color: '#DCFF40',
-		x: '213px',
-		y: '30px',
-		rotate: '24.31deg',
 		zIndex: 0,
 	},
 ] as const
@@ -413,7 +395,7 @@ export function Academy({
 
 			responsiveMatchMedia = gsap.matchMedia()
 			responsiveMatchMedia.add('(max-width: 719px)', () =>
-				createCardsTimeline(true, true),
+				createCardsTimeline(true, false),
 			)
 			responsiveMatchMedia.add('(min-width: 720px) and (max-width: 959px)', () =>
 				createCardsTimeline(true, false),
@@ -470,10 +452,9 @@ export function Academy({
 								}}
 							>
 								<article
-									className='academy-card flex h-full w-full items-center justify-center rounded-[35px] px-[29px] text-center shadow-[0_18px_50px_rgba(0,0,0,0.18)]'
+									className={`academy-card academy-card--${index + 1} flex h-full w-full items-center justify-center rounded-[35px] px-[29px] text-center shadow-[0_18px_50px_rgba(0,0,0,0.18)]`}
 									style={{
 										backgroundColor: style.color,
-										transform: `translate(${style.x}, ${style.y}) rotate(${style.rotate})`,
 									}}
 								>
 									<h3 className='academy-card-title project-mini-heading max-w-[221px] text-[25px] font-semibold leading-normal tracking-normal text-black'>

@@ -15,7 +15,12 @@ export function Footer({ address }: { address: string }) {
 				/>
 
 					<div className='footer-contact-list mt-12 space-y-[11px] text-[16px] leading-[30px] text-white md:mt-14 lg:absolute lg:right-0 lg:top-24 lg:mt-0'>
-						<FooterContact icon={<LocationIcon />}>{address}</FooterContact>
+						<FooterContact
+							icon={<LocationIcon />}
+							className='footer-contact-item--address'
+						>
+							{address}
+						</FooterContact>
 						<FooterContact icon={<PhoneIcon />} href='tel:+998902514888'>
 							+998 (90) 251-48-88
 						</FooterContact>
@@ -38,25 +43,29 @@ function FooterContact({
 	icon,
 	href,
 	children,
+	className,
 }: {
 	icon: ReactNode
 	href?: string
 	children: ReactNode
+	className?: string
 }) {
 	return (
-		<div className='flex items-center gap-2 whitespace-nowrap'>
-			<span className='flex h-[18px] w-[17px] items-center justify-center text-white'>
+		<div
+			className={`footer-contact-item flex items-center gap-2 whitespace-nowrap ${className ?? ''}`}
+		>
+			<span className='footer-contact-icon flex h-[18px] w-[17px] items-center justify-center text-white'>
 				{icon}
 			</span>
 			{href ? (
 				<a
 					href={href}
-					className='transition-colors hover:text-[#0051FF] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white'
+					className='footer-contact-text transition-colors hover:text-[#0051FF] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white'
 				>
 					{children}
 				</a>
 			) : (
-				<span>{children}</span>
+				<span className='footer-contact-text'>{children}</span>
 			)}
 		</div>
 	)
