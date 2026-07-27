@@ -123,10 +123,11 @@ export const uiCopy: Record<
 		},
 		contact: {
 			title: 'Остались вопросы?',
-			cardTitle: 'Свяжитесь с нами',
-			cardText: 'Обращайтесь по вопросам\nи предложениям о сотрудничестве!',
-			emailTitle: 'Написать команде futurelab',
-			telegramTitle: 'Начать чат в Telegram',
+			cardTitle: 'Свяжитесь с командой FutureLab',
+			cardText:
+				'Расскажите, что вам нужно из направлений FutureLab и мы предложим подходящий формат.',
+			emailTitle: 'Написать команде FutureLab',
+			telegramTitle: 'Написать в Telegram',
 		},
 		footer: {
 			address: 'Узбекистан, Самарканд, ул. Амира Темура, 162',
