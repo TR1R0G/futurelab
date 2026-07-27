@@ -1,5 +1,57 @@
 import type { Language } from '@/lib/mdx'
 
+const seoKeywords = [
+	'FutureLab',
+	'NazzAR',
+	'CreativeTech',
+	'AI',
+	'AR',
+	'VR',
+	'WebAR',
+	'3D',
+	'GameDev',
+	'Holography',
+	'цифровой туризм',
+	'музейные технологии',
+	'иммерсивные продукты',
+	'Самарканд',
+	'Узбекистан',
+]
+
+export const seoCopy: Record<
+	Language,
+	{
+		title: string
+		description?: string
+		keywords: string[]
+		canonical?: string
+		openGraph?: {
+			title: string
+			description: string
+		}
+	}
+> = {
+	ru: {
+		title:
+			'FutureLab by NazzAR — CreativeTech-хаб для AI, AR/VR, 3D и иммерсивных digital-продуктов',
+		description:
+			'FutureLab by NazzAR — CreativeTech-хаб в Самарканде: обучение, практика и разработка AI, AR/VR, WebAR, 3D, Holography и digital-продуктов для музеев, туризма и бизнеса.',
+		keywords: seoKeywords,
+		canonical: 'https://future-lab.uz/ru',
+		openGraph: {
+			title:
+				'FutureLab by NazzAR — CreativeTech Hub для AI, AR/VR, 3D и Holography',
+			description:
+				'Обучение, проектная практика и разработка иммерсивных digital-продуктов для музеев, туризма, образования и бизнеса.',
+		},
+	},
+	en: {
+		title:
+			'FutureLab by NazzAR — CreativeTech Hub for AI, AR/VR, 3D & Immersive Digital Products',
+		keywords: seoKeywords,
+	},
+}
+
 export const uiCopy: Record<
 	Language,
 	{

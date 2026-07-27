@@ -21,7 +21,7 @@ import {
   loadRealizedProjectsContent,
   normalizeLanguage,
 } from "@/lib/mdx";
-import { uiCopy } from "@/lib/i18n";
+import { seoCopy, uiCopy } from "@/lib/i18n";
 
 interface HomeProps {
   searchParams?: Promise<{
@@ -29,19 +29,31 @@ interface HomeProps {
   }>;
 }
 
-const PAGE_TITLES = {
-  en: "FutureLab by NazzAR — CreativeTech Hub for AI, AR/VR, 3D & Immersive Digital Products",
-  ru: "FutureLab by NazzAR — CreativeTech-хаб для AI, AR/VR, 3D и иммерсивных digital-продуктов",
-} as const;
-
 export async function generateMetadata({
   searchParams,
 }: HomeProps): Promise<Metadata> {
   const params = await searchParams;
   const language = normalizeLanguage(params?.lang);
+  const seo = seoCopy[language];
 
   return {
-    title: PAGE_TITLES[language],
+    title: seo.title,
+    description: seo.description ?? null,
+    keywords: seo.keywords,
+    alternates: seo.canonical
+      ? {
+          canonical: seo.canonical,
+        }
+      : undefined,
+    openGraph: seo.openGraph
+      ? {
+          title: seo.openGraph.title,
+          description: seo.openGraph.description,
+          url: seo.canonical,
+          type: "website",
+          locale: "ru_RU",
+        }
+      : undefined,
   };
 }
 
