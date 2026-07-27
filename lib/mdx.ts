@@ -28,6 +28,7 @@ export interface HeroContent {
   description: string;
   primaryCta: string;
   secondaryCta: string;
+  projectsCta?: string;
   headerCta: string;
   imageAlt: string;
 }

@@ -16,6 +16,7 @@ interface HeroProps {
 	description: string
 	primaryCta: string
 	secondaryCta: string
+	projectsCta?: string
 	headerCta: string
 	imageAlt: string
 	language: Language
@@ -26,6 +27,7 @@ export function Hero({
 	description,
 	primaryCta,
 	secondaryCta,
+	projectsCta,
 	headerCta,
 	imageAlt,
 	language,
@@ -437,7 +439,11 @@ export function Hero({
 				</div>
 
 				<div ref={actionsRef} className='hero-action-panel relative z-10'>
-					<HeroActions primaryCta={primaryCta} secondaryCta={secondaryCta} />
+					<HeroActions
+						primaryCta={primaryCta}
+						secondaryCta={secondaryCta}
+						projectsCta={projectsCta}
+					/>
 				</div>
 			</div>
 		</section>

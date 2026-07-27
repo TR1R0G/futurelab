@@ -8,6 +8,7 @@ import { createPortal } from "react-dom";
 import type { RealizedProject } from "@/lib/mdx";
 
 interface RealizedProjectsProps {
+  id?: string;
   title: string;
   projects: RealizedProject[];
 }
@@ -18,7 +19,7 @@ const hasCyrillic = (value: string) => /[А-Яа-яЁё]/.test(value);
 const getProjectActionLabel = (project: RealizedProject) =>
   hasCyrillic(project.title) ? "Смотреть видео" : "Watch video";
 
-export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
+export function RealizedProjects({ id, title, projects }: RealizedProjectsProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -141,6 +142,7 @@ export function RealizedProjects({ title, projects }: RealizedProjectsProps) {
   return (
     <section
       ref={sectionRef}
+      id={id}
       className="realized-projects-section overflow-hidden bg-black pb-[var(--realized-bottom-padding,112px)] pt-[var(--realized-top-padding,80px)]"
     >
       <div className="realized-title-frame mx-auto max-w-[1436px]">

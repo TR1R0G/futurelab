@@ -7,18 +7,59 @@ interface HeroTitleProps {
   title: string;
 }
 
+const TITLE_LINE_MAP: Record<
+  string,
+  {
+    desktop: string[];
+    compact: string[];
+  }
+> = {
+  "Студия цифровых технологий и развития молодых специалистов": {
+    desktop: [
+      "Студия цифровых технологий",
+      "и развития молодых",
+      "специалистов",
+    ],
+    compact: [
+      "Студия цифровых",
+      "технологий",
+      "и развития молодых",
+      "специалистов",
+    ],
+  },
+  "CreativeTech-хаб для обучения, практики и разработки иммерсивных digital-продуктов":
+    {
+      desktop: [
+        "CreativeTech-хаб для обучения,",
+        "практики и разработки иммерсивных",
+        "digital-продуктов",
+      ],
+      compact: [
+        "CreativeTech-хаб для",
+        "обучения, практики и",
+        "разработки иммерсивных",
+        "digital-продуктов",
+      ],
+    },
+  "Digital technology studio for young specialist development": {
+    desktop: [
+      "Digital technology studio",
+      "for young specialist",
+      "development",
+    ],
+    compact: [
+      "Digital technology",
+      "studio for young",
+      "specialist development",
+    ],
+  },
+};
+
 export function HeroTitle({ title }: HeroTitleProps) {
   const containerRef = useRef<HTMLHeadingElement>(null);
-  const compactTitleLines =
-    title === "Студия цифровых технологий и развития молодых специалистов"
-      ? ["Студия цифровых", "технологий", "и развития молодых", "специалистов"]
-      : null;
-  const titleLines =
-    title === "Студия цифровых технологий и развития молодых специалистов"
-      ? ["Студия цифровых технологий", "и развития молодых", "специалистов"]
-      : title === "Digital technology studio for young specialist development"
-        ? ["Digital technology studio", "for young specialist", "development"]
-        : title.split("|");
+  const lineConfig = TITLE_LINE_MAP[title];
+  const compactTitleLines = lineConfig?.compact ?? null;
+  const titleLines = lineConfig?.desktop ?? title.split("|");
 
   useEffect(() => {
     registerGsapPlugins();

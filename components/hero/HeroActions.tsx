@@ -7,9 +7,14 @@ import { scrollToHashTarget } from "@/lib/smooth-scroll";
 interface HeroActionsProps {
   primaryCta: string;
   secondaryCta: string;
+  projectsCta?: string;
 }
 
-export function HeroActions({ primaryCta, secondaryCta }: HeroActionsProps) {
+export function HeroActions({
+  primaryCta,
+  secondaryCta,
+  projectsCta,
+}: HeroActionsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -49,6 +54,15 @@ export function HeroActions({ primaryCta, secondaryCta }: HeroActionsProps) {
       >
         {secondaryCta}
       </a>
+      {projectsCta ? (
+        <a
+          href="#cases"
+          onClick={(event) => scrollToHashTarget(event, "#cases")}
+          className="hero-button bg-[#0B5CFF] font-medium text-white transition-transform hover:scale-[1.01] hover:bg-[#0050f2] active:scale-[0.99]"
+        >
+          {projectsCta}
+        </a>
+      ) : null}
     </div>
   );
 }

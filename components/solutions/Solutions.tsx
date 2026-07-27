@@ -10,6 +10,7 @@ import type { CSSProperties, RefObject } from 'react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 interface SolutionsProps {
+	id?: string
 	title: string
 	description: string
 	cards: SolutionsContent['cards']
@@ -57,6 +58,7 @@ const isPdfPageHref = (href: string) =>
 	href.startsWith('/museum') || href.startsWith('/temurids')
 
 export function Solutions({
+	id,
 	title,
 	description,
 	cards,
@@ -664,6 +666,7 @@ export function Solutions({
 	return (
 		<section
 			ref={sectionRef}
+			id={id}
 			className='solutions-section relative z-[120] isolate -mt-20 overflow-hidden bg-black px-5 py-10 md:px-8 md:py-14 min-[1370px]:mt-[-142px] min-[1370px]:px-0 min-[1370px]:py-0 min-[1600px]:mt-[-46px]'
 			style={
 				{

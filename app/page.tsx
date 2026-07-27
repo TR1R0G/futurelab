@@ -89,6 +89,7 @@ export default async function Home({ searchParams }: HomeProps) {
         description={heroContent.description}
         primaryCta={heroContent.primaryCta}
         secondaryCta={heroContent.secondaryCta}
+        projectsCta={heroContent.projectsCta}
         headerCta={heroContent.headerCta}
         imageAlt={heroContent.imageAlt}
         language={language}
@@ -120,12 +121,14 @@ export default async function Home({ searchParams }: HomeProps) {
         language={language}
       />
       <Solutions
+        id='solutions'
         title={solutionsContent.title}
         description={solutionsContent.description}
         cards={solutionsContent.cards}
         language={language}
       />
       <RealizedProjects
+        id='cases'
         title={realizedProjectsContent.title}
         projects={realizedProjectsContent.projects}
       />
