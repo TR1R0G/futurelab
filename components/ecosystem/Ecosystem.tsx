@@ -49,7 +49,39 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 
 		const media = gsap.matchMedia()
 		const ctx = gsap.context(() => {
-			media.add('(max-width: 1023px)', () => {
+			media.add('(max-width: 719px)', () => {
+				const getScrollDistance = () =>
+					Math.max(0, track.scrollWidth - wrapper.clientWidth)
+				const getPinDistance = () =>
+					Math.max(
+						window.innerHeight * 1.8,
+						getScrollDistance() * ECOSYSTEM_COMPACT_SCROLL_SLOWDOWN,
+					) / (1 - ECOSYSTEM_SCROLL_HOLD_RATIO)
+
+				const timeline = gsap.timeline({
+					scrollTrigger: {
+						trigger: wrapper,
+						start: 'center center',
+						end: () => `+=${getPinDistance()}`,
+						pin: section,
+						scrub: true,
+						anticipatePin: 1,
+						invalidateOnRefresh: true,
+					},
+				})
+				timeline.to(track, {
+					x: () => -getScrollDistance(),
+					ease: 'none',
+					duration: 1 - ECOSYSTEM_SCROLL_HOLD_RATIO,
+				})
+				timeline.to({}, { duration: ECOSYSTEM_SCROLL_HOLD_RATIO })
+
+				return () => {
+					timeline.kill()
+				}
+			})
+
+			media.add('(min-width: 720px) and (max-width: 1023px)', () => {
 				const getScrollDistance = () =>
 					Math.max(
 						0,
@@ -160,7 +192,7 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 
 					<EcosystemIcon
 						src='/images/block3/icon1.svg'
-						className='absolute left-[135px] top-[330px] md:left-[155px] md:top-[365px] lg:left-[242px] lg:top-[534px]'
+						className='ecosystem-intro-icon absolute left-[135px] top-[330px] md:left-[155px] md:top-[365px] lg:left-[242px] lg:top-[534px]'
 					/>
 
 					<div>
@@ -237,10 +269,10 @@ function EcosystemFeature({
 	}
 
 	return (
-		<article className='static'>
+		<article className={`ecosystem-feature ecosystem-feature-${index + 1} static`}>
 			<EcosystemIcon
 				src={iconMap[card.icon] ?? iconMap.workspace}
-				className={`absolute ${compact.icon} ${position.icon}`}
+				className={`ecosystem-feature-icon ecosystem-feature-icon-${index + 1} absolute ${compact.icon} ${position.icon}`}
 			/>
 			<h3
 				className={`ecosystem-feature-title project-mini-heading absolute text-[14px] font-semibold leading-[1.16] text-white md:text-[24px] md:leading-[29px] lg:text-[33px] lg:leading-[40px] ${compact.title} ${position.title}`}
