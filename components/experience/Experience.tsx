@@ -1,4 +1,5 @@
 import { FadeInImage } from '@/components/media/FadeInImage'
+import { scrollToHashTarget } from '@/lib/smooth-scroll'
 
 interface ExperienceProps {
 	title: string
@@ -66,9 +67,8 @@ export function Experience({
 				</div>
 
 				<a
-					href='https://www.nazzar.group/'
-					target='_blank'
-					rel='noopener noreferrer'
+					href='#cases'
+					onClick={event => scrollToHashTarget(event, '#cases')}
 					className='mt-16 flex h-[55px] w-full max-w-[452px] items-center justify-center rounded-[13px] bg-[#0051FF] px-6 text-[22px] font-medium leading-[26px] text-white transition-transform hover:scale-[1.01] hover:bg-[#0050f2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0051FF] active:scale-[0.99] min-[1440px]:absolute min-[1440px]:left-1/2 min-[1440px]:top-[1179px] min-[1440px]:mt-0 min-[1440px]:-translate-x-1/2'
 				>
 					{buttonText}
