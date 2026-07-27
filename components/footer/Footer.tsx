@@ -24,16 +24,16 @@ export function Footer({ address }: { address: string }) {
 						<FooterContact icon={<PhoneIcon />} href='tel:+998902514888'>
 							+998 (90) 251-48-88
 						</FooterContact>
-						<FooterContact icon={<MailIcon />} href='mailto:info@future-lab.uz'>
-							info@future-lab.uz
+						<FooterContact icon={<MailIcon />} href='mailto:contact@future-lab.uz'>
+							contact@future-lab.uz
 						</FooterContact>
 				</div>
 
 				<div className='footer-line mt-16 h-px w-full bg-[#2F2F2F] lg:absolute lg:left-0 lg:top-[283px] lg:mt-0' />
 
-				<p className='footer-copyright mt-6 text-center text-[16px] leading-[30px] text-[#949494] lg:absolute lg:left-1/2 lg:top-[310px] lg:mt-0 lg:w-auto lg:-translate-x-1/2 lg:whitespace-nowrap'>
-					© 2026 FutureLab by NazzAR Innovation
-				</p>
+					<p className='footer-copyright mt-6 text-center text-[16px] leading-[30px] text-[#949494] lg:absolute lg:left-1/2 lg:top-[310px] lg:mt-0 lg:w-auto lg:-translate-x-1/2 lg:whitespace-nowrap'>
+						© 2026 FutureLab by NazzAR Innovation. Все права защищены.
+					</p>
 			</div>
 		</footer>
 	)

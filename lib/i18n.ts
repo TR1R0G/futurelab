@@ -130,7 +130,7 @@ export const uiCopy: Record<
 			telegramTitle: 'Написать в Telegram',
 		},
 		footer: {
-			address: 'Узбекистан, Самарканд, ул. Амира Темура, 162',
+			address: 'Узбекистан, г. Самарканд, ул. Амира Темура, 162',
 		},
 	},
 	en: {
