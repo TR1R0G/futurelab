@@ -61,6 +61,64 @@ export default async function Home({ searchParams }: HomeProps) {
   const params = await searchParams;
   const language = normalizeLanguage(params?.lang);
   const copy = uiCopy[language];
+  const siteUrl =
+    language === "ru"
+      ? "https://future-lab.uz/ru"
+      : "https://future-lab.uz/?lang=en";
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${siteUrl}#organization`,
+        name: "FutureLab by NazzAR",
+        url: siteUrl,
+        logo: "https://future-lab.uz/images/logo.svg",
+        description:
+          language === "ru"
+            ? "CreativeTech-хаб в Самарканде для обучения, практики и разработки AI, AR/VR, WebAR, 3D, Holography и иммерсивных digital-продуктов."
+            : undefined,
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: "ул. Амира Темура, 162",
+          addressLocality: "Самарканд",
+          addressCountry: "Узбекистан",
+        },
+      },
+      {
+        "@type": "EducationalOrganization",
+        "@id": `${siteUrl}#educational-organization`,
+        name: "FutureLab by NazzAR",
+        url: siteUrl,
+        description:
+          language === "ru"
+            ? "CreativeTech-хаб в Самарканде для обучения, практики и разработки AI, AR/VR, WebAR, 3D, Holography и иммерсивных digital-продуктов."
+            : undefined,
+        parentOrganization: {
+          "@id": `${siteUrl}#organization`,
+        },
+      },
+      {
+        "@type": "LocalBusiness",
+        "@id": `${siteUrl}#local-business`,
+        name: "FutureLab by NazzAR",
+        url: siteUrl,
+        description:
+          language === "ru"
+            ? "CreativeTech-хаб в Самарканде для обучения, практики и разработки AI, AR/VR, WebAR, 3D, Holography и иммерсивных digital-продуктов."
+            : undefined,
+        parentOrganization: {
+          "@id": `${siteUrl}#organization`,
+        },
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: "ул. Амира Темура, 162",
+          addressLocality: "Самарканд",
+          addressCountry: "Узбекистан",
+        },
+      },
+    ],
+  };
 
   const [
     heroContent,
@@ -84,6 +142,12 @@ export default async function Home({ searchParams }: HomeProps) {
 
   return (
     <main className="flex-1" lang={language}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData),
+        }}
+      />
       <Hero
         title={heroContent.title}
         description={heroContent.description}
