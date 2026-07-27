@@ -22,8 +22,8 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 	const wrapperRef = useRef<HTMLDivElement>(null)
 	const trackRef = useRef<HTMLDivElement>(null)
 	const displayTitle =
-		title === 'Единая экосистема разработки и роста'
-			? 'Единая экосистема\nразработки\nи роста'
+		title === 'Экосистема FutureLab: обучение, практика и внедрение'
+			? 'Экосистема FutureLab:\nобучение, практика и\nвнедрение'
 			: title === 'Unified ecosystem for development and growth'
 				? 'Unified ecosystem\nfor development\nand growth'
 				: title
