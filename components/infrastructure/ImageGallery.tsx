@@ -108,7 +108,7 @@ const getMobileGalleryItems = (viewportWidth: number) => {
   };
 };
 
-export function ImageGallery() {
+export function ImageGallery({ alts }: { alts: string[] }) {
   const galleryRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [viewportWidth, setViewportWidth] = useState<number | null>(null);
@@ -139,6 +139,10 @@ export function ImageGallery() {
     };
   }, [isMobile, viewportWidth]);
   const galleryItems = galleryLayout.items;
+  const galleryItemsWithAlts = galleryItems.map((item, index) => ({
+    ...item,
+    alt: alts[index] ?? item.alt,
+  }));
   const gallerySetWidth = getGallerySetWidth(galleryItems, galleryLayout.gap);
   const galleryHeight = galleryLayout.frameHeight + 144;
   const galleryMarginLeft =
@@ -259,7 +263,7 @@ export function ImageGallery() {
               />
             ))}
 
-            {galleryItems.map((image) => (
+            {galleryItemsWithAlts.map((image) => (
               <div
                 key={`${setIndex}-${image.alt}`}
                 className={`infrastructure-gallery-item absolute top-0 h-[396px] overflow-hidden will-change-transform ${

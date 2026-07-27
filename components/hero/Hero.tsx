@@ -494,7 +494,7 @@ function HeroHeader({
 				<a className='hero-brand' href='#' aria-label='Future Lab'>
 					<Image
 						src='/images/logo.svg'
-						alt='futurelab by NAZZAR Innovation'
+						alt='FutureLab by NazzAR Innovation — CreativeTech Hub'
 						width={144}
 						height={30}
 						priority

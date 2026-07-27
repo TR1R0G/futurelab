@@ -12,6 +12,7 @@ interface InfrastructureProps {
 	subtitle: string
 	ctaText: string
 	ctaButton: string
+	galleryAlts: string[]
 	cards: InfrastructureContent['cards']
 }
 
@@ -20,6 +21,7 @@ export function Infrastructure({
 	subtitle,
 	ctaText,
 	ctaButton,
+	galleryAlts,
 	cards,
 }: InfrastructureProps) {
 	const sectionRef = useRef<HTMLElement>(null)
@@ -104,7 +106,7 @@ export function Infrastructure({
 				))}
 			</div>
 
-			<ImageGallery />
+			<ImageGallery alts={galleryAlts} />
 
 			<CTACard text={ctaText} buttonText={ctaButton} href='#contacts' />
 

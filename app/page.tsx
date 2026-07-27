@@ -104,6 +104,7 @@ export default async function Home({ searchParams }: HomeProps) {
         subtitle={infrastructureContent.subtitle}
         ctaText={infrastructureContent.ctaText}
         ctaButton={infrastructureContent.ctaButton}
+        galleryAlts={infrastructureContent.galleryAlts}
         cards={infrastructureContent.cards}
       />
       <Academy

@@ -64,6 +64,7 @@ export interface InfrastructureContent {
   subtitle: string;
   ctaText: string;
   ctaButton: string;
+  galleryAlts: string[];
   cards: InfrastructureCard[];
 }
 
