@@ -1438,7 +1438,7 @@ h3,
 	}
 
 	.directions-section {
-		height: calc(3780px + var(--expanded-image-flow-adjust) - 840);
+		height: auto;
 		min-height: 0;
 	}
 
@@ -3538,9 +3538,12 @@ h3,
 
 @media (min-width: 1600px) {
 	.directions-section {
-		height: calc(
-			3780px + var(--expanded-image-flow-adjust) - 840px + 191px
-		);
+		height: auto;
+		padding-bottom: var(--directions-end-gap) !important;
+	}
+
+	.directions-post-image {
+		min-height: 0;
 	}
 }
 
