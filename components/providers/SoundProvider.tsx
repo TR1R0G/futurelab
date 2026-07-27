@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type RefObject,
 } from "react";
@@ -276,6 +277,59 @@ function syncPageMedia(soundEnabled: boolean) {
   return { visibleCount };
 }
 
+function getAudibleVideoCandidates() {
+  const candidates: HTMLVideoElement[] = [];
+  const groupedCandidates = new Map<
+    string,
+    { video: HTMLVideoElement; visibleRatio: number }
+  >();
+
+  document
+    .querySelectorAll<HTMLVideoElement>(
+      'video:not([data-manual-sound="true"])'
+    )
+    .forEach((video) => {
+      const visibleRatio = getVisibleRatio(video);
+      if (visibleRatio < MIN_VISIBLE_RATIO) return;
+
+      const soundGroup = video.dataset.soundGroup;
+      if (!soundGroup) {
+        candidates.push(video);
+        return;
+      }
+
+      const current = groupedCandidates.get(soundGroup);
+      if (!current || visibleRatio > current.visibleRatio) {
+        groupedCandidates.set(soundGroup, { video, visibleRatio });
+      }
+    });
+
+  groupedCandidates.forEach(({ video }) => candidates.push(video));
+  return candidates;
+}
+
+async function tryUnlockPageAudio() {
+  const videos = getAudibleVideoCandidates();
+  const youtubeCount = syncYoutubeEmbeds(true);
+
+  if (videos.length === 0) {
+    return youtubeCount > 0;
+  }
+
+  const attempts = videos.map(async (video) => {
+    try {
+      await playVideoAudibly(video);
+      return !video.muted && !video.paused;
+    } catch {
+      await playVideoMuted(video);
+      return false;
+    }
+  });
+
+  const results = await Promise.all(attempts);
+  return results.some(Boolean) || youtubeCount > 0;
+}
+
 export function useGlobalSound() {
   const context = useContext(SoundContext);
   if (!context) {
@@ -307,8 +361,11 @@ export function useGlobalVideoSound(
 }
 
 export function SoundProvider({ children }: { children: React.ReactNode }) {
-  const [soundEnabled, setSoundEnabledState] = useState(true);
+  const [soundPreferenceEnabled, setSoundPreferenceEnabled] = useState(true);
+  const [soundUnlocked, setSoundUnlocked] = useState(false);
   const [hasVisibleMedia, setHasVisibleMedia] = useState(false);
+  const unlockAttemptInFlight = useRef(false);
+  const soundEnabled = soundPreferenceEnabled && soundUnlocked;
 
   const setVisibleMediaState = useCallback((visibleCount: number) => {
     const nextHasVisibleMedia = visibleCount > 0;
@@ -323,34 +380,68 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
     setVisibleMediaState(visibleCount);
   }, [setVisibleMediaState, soundEnabled]);
 
-  const setSoundEnabled = useCallback((enabled: boolean) => {
-    setSoundEnabledState(enabled);
+  const requestSoundUnlock = useCallback((force = false) => {
+    if (
+      typeof window === "undefined" ||
+      (!force && !soundPreferenceEnabled) ||
+      soundUnlocked ||
+      unlockAttemptInFlight.current
+    ) {
+      return;
+    }
 
-    if (typeof window === "undefined") return;
+    unlockAttemptInFlight.current = true;
 
-    window.localStorage.setItem(SOUND_STORAGE_KEY, enabled ? "1" : "0");
-    const { visibleCount } = syncPageMedia(enabled);
-    setVisibleMediaState(visibleCount);
+    void tryUnlockPageAudio().then((unlocked) => {
+      unlockAttemptInFlight.current = false;
 
-    window.requestAnimationFrame(() => {
-      const nextState = syncPageMedia(enabled);
-      setVisibleMediaState(nextState.visibleCount);
+      if (!unlocked) {
+        setSoundUnlocked(false);
+        const { visibleCount } = syncPageMedia(false);
+        setVisibleMediaState(visibleCount);
+        return;
+      }
+
+      setSoundUnlocked(true);
+      const { visibleCount } = syncPageMedia(true);
+      setVisibleMediaState(visibleCount);
     });
-  }, [setVisibleMediaState]);
+  }, [
+    setVisibleMediaState,
+    soundPreferenceEnabled,
+    soundUnlocked,
+  ]);
+
+  const setSoundEnabled = useCallback(
+    (enabled: boolean) => {
+      setSoundPreferenceEnabled(enabled);
+
+      if (typeof window === "undefined") return;
+
+      window.localStorage.setItem(SOUND_STORAGE_KEY, enabled ? "1" : "0");
+
+      if (!enabled) {
+        setSoundUnlocked(false);
+        const { visibleCount } = syncPageMedia(false);
+        setVisibleMediaState(visibleCount);
+        return;
+      }
+
+      requestSoundUnlock(true);
+    },
+    [requestSoundUnlock, setVisibleMediaState]
+  );
 
   const toggleSound = useCallback(() => {
     setSoundEnabled(!soundEnabled);
   }, [setSoundEnabled, soundEnabled]);
 
-  const requestSoundUnlock = useCallback(() => {
-    setSoundEnabled(true);
-  }, [setSoundEnabled]);
-
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
       const storedSoundPreference = window.localStorage.getItem(SOUND_STORAGE_KEY);
 
-      setSoundEnabledState(storedSoundPreference !== "0");
+      setSoundPreferenceEnabled(storedSoundPreference !== "0");
+      setSoundUnlocked(false);
     });
 
     return () => {
@@ -394,21 +485,17 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
       "scroll",
       "wheel",
       "touchstart",
+      "touchmove",
       "pointerdown",
       "keydown",
     ];
 
     const handleFirstInteraction = () => {
       requestSoundUnlock();
-
-      window.requestAnimationFrame(() => {
-        requestSoundUnlock();
-      });
     };
 
     unlockEvents.forEach((eventName) => {
       window.addEventListener(eventName, handleFirstInteraction, {
-        once: true,
         passive: true,
       });
     });
