@@ -14,60 +14,70 @@ const carouselPath = (path: string) => encodeURI(path);
 
 const gallerySourceItems = [
   {
+    id: "futurelab-main-space",
     src: carouselPath("/images/block4/carousel/Shourum.jpeg"),
     alt: "Современное пространство FutureLab",
     width: 552,
     position: "50% 50%",
   },
   {
+    id: "futurelab-space-vertical-1",
     src: carouselPath("/images/block4/carousel/Вертикальные/IMG_3752.JPG"),
     alt: "Вертикальное фото пространства FutureLab",
     width: 306,
     position: "50% 50%",
   },
   {
+    id: "futurelab-coworking-zone",
     src: carouselPath("/images/block4/carousel/IMG_2708.JPG"),
     alt: "Коворкинг зона FutureLab",
     width: 552,
     position: "50% 50%",
   },
   {
+    id: "futurelab-gaming-zone",
     src: carouselPath("/images/block4/carousel/Вертикальные/IMG game.png"),
     alt: "Игровая зона FutureLab",
     width: 306,
     position: "50% 50%",
   },
   {
+    id: "futurelab-team-work",
     src: carouselPath("/images/block4/carousel/IMG_2723.JPG"),
     alt: "Команда за совместной работой в FutureLab",
     width: 552,
     position: "50% 50%",
   },
   {
+    id: "futurelab-gaming-vertical",
     src: carouselPath("/images/block4/carousel/Вертикальные/IMG game2.png"),
     alt: "Вертикальное фото игровой зоны FutureLab",
     width: 306,
     position: "50% 50%",
   },
   {
+    id: "futurelab-coworking-space",
     src: carouselPath("/images/block4/carousel/koworking zone.jpeg"),
     alt: "Коворкинг пространство FutureLab",
     width: 552,
     position: "50% 50%",
   },
   {
+    id: "futurelab-participant-vertical",
     src: carouselPath("/images/block4/carousel/Вертикальные/IMG_4442.JPG"),
     alt: "Вертикальное фото участника FutureLab",
     width: 306,
     position: "50% 50%",
   },
   {
+    id: "futurelab-terrace",
     src: carouselPath("/images/block4/carousel/terrassa.jpeg"),
     alt: "Терраса FutureLab",
     width: 552,
     position: "50% 50%",
   },
   {
+    id: "futurelab-lab",
     src: carouselPath("/images/block4/carousel/ARVR lab.jpeg"),
     alt: "Технологическая лаборатория FutureLab",
     width: 552,
@@ -244,7 +254,7 @@ export function ImageGallery({ alts }: { alts: string[] }) {
       >
         {[0, 1].map((setIndex) => (
           <div
-            key={setIndex}
+            key={`set-${setIndex}`}
             data-gallery-set={setIndex === 0 ? "original" : "clone"}
             className="relative h-[396px] shrink-0"
             style={{ width: gallerySetWidth }}
@@ -252,7 +262,7 @@ export function ImageGallery({ alts }: { alts: string[] }) {
           >
             {galleryItems.map((backplate) => (
               <div
-                key={`${setIndex}-backplate-${backplate.src}`}
+                key={`set-${setIndex}-backplate-${backplate.id}`}
                 className="absolute top-0 h-[396px]"
                 style={{
                   left: backplate.left,
@@ -265,7 +275,7 @@ export function ImageGallery({ alts }: { alts: string[] }) {
 
             {galleryItemsWithAlts.map((image) => (
               <div
-                key={`${setIndex}-${image.alt}`}
+                key={`set-${setIndex}-${image.id}`}
                 className={`infrastructure-gallery-item absolute top-0 h-[396px] overflow-hidden will-change-transform ${
                   isMobile ? "rounded-[18px]" : ""
                 }`}
