@@ -4167,3 +4167,294 @@ h3,
 		height: 415px !important;
 	}
 }
+
+/* Ecosystem semantic flow layout */
+.ecosystem-section {
+	--ecosystem-card-height: 717px;
+	--ecosystem-track-padding-inline: clamp(24px, 4vw, 96px);
+	--ecosystem-track-padding-block: clamp(28px, 4vw, 72px);
+	--ecosystem-track-gap: clamp(48px, 4vw, 116px);
+	--ecosystem-intro-width: clamp(320px, 28vw, 615px);
+	--ecosystem-feature-width: clamp(250px, 22vw, 452px);
+	background: #000;
+}
+
+.ecosystem-wrapper {
+	height: var(--ecosystem-card-height);
+}
+
+.ecosystem-track {
+	display: flex;
+	width: max-content;
+	min-width: 100%;
+	height: var(--ecosystem-card-height);
+	padding: var(--ecosystem-track-padding-block)
+		var(--ecosystem-track-padding-inline);
+	gap: var(--ecosystem-track-gap);
+	will-change: transform;
+}
+
+.ecosystem-column {
+	position: relative;
+	display: flex;
+	flex: 0 0 auto;
+	min-width: 0;
+}
+
+.ecosystem-intro-column {
+	width: var(--ecosystem-intro-width);
+	flex-direction: column;
+	justify-content: space-between;
+	gap: 24px;
+}
+
+.ecosystem-intro-copy {
+	display: flex;
+	flex-direction: column;
+	gap: clamp(16px, 1.8vw, 28px);
+	max-width: 100%;
+}
+
+.ecosystem-title {
+	max-width: 100%;
+	font-size: clamp(34px, 4vw, 65px);
+	line-height: 1.08;
+	letter-spacing: 0;
+}
+
+.ecosystem-description {
+	max-width: 100%;
+	font-size: clamp(16px, 1.5vw, 23px);
+	font-weight: 500;
+	line-height: 1.35;
+}
+
+.ecosystem-intro-icon {
+	align-self: flex-start;
+	width: clamp(52px, 4.8vw, 83px);
+	height: clamp(52px, 4.8vw, 83px);
+}
+
+.ecosystem-feature-column {
+	width: var(--ecosystem-feature-width);
+	flex-direction: column;
+	gap: 18px;
+}
+
+.ecosystem-feature-column-1,
+.ecosystem-feature-column-3 {
+	margin-top: clamp(120px, 10vw, 180px);
+}
+
+.ecosystem-feature-column-2 {
+	margin-top: clamp(12px, 2vw, 64px);
+}
+
+.ecosystem-feature-icon {
+	width: clamp(48px, 4.8vw, 83px);
+	height: clamp(48px, 4.8vw, 83px);
+}
+
+.ecosystem-feature-title {
+	max-width: 100%;
+	font-size: clamp(22px, 2.2vw, 33px);
+	line-height: 1.1;
+	letter-spacing: 0;
+}
+
+.ecosystem-feature-description {
+	max-width: 100%;
+	font-size: clamp(16px, 1.4vw, 23px);
+	font-weight: 500;
+	line-height: 1.35;
+}
+
+@media (max-width: 719px) {
+	.ecosystem-section {
+		--ecosystem-card-height: clamp(430px, 78vw, 520px);
+		--ecosystem-track-padding-inline: clamp(24px, 6vw, 40px);
+		--ecosystem-track-padding-block: clamp(24px, 6vw, 40px);
+		--ecosystem-track-gap: clamp(48px, 14vw, 92px);
+		--ecosystem-intro-width: clamp(260px, 78vw, 340px);
+		--ecosystem-feature-width: clamp(250px, 72vw, 320px);
+		height: calc(var(--ecosystem-card-height) + 112px) !important;
+	}
+
+	.ecosystem-wrapper {
+		left: 20px !important;
+		width: calc(100vw - 40px) !important;
+		height: var(--ecosystem-card-height) !important;
+		border-radius: 28px;
+	}
+
+	.ecosystem-track {
+		height: var(--ecosystem-card-height) !important;
+		padding: var(--ecosystem-track-padding-block)
+			var(--ecosystem-track-padding-inline) !important;
+		gap: var(--ecosystem-track-gap) !important;
+	}
+
+	.ecosystem-intro-column {
+		width: var(--ecosystem-intro-width) !important;
+	}
+
+	.ecosystem-title {
+		font-size: clamp(26px, 7vw, 34px) !important;
+		line-height: 1.05 !important;
+	}
+
+	.ecosystem-description {
+		font-size: clamp(15px, 4vw, 18px) !important;
+		line-height: 1.35 !important;
+	}
+
+	.ecosystem-intro-icon {
+		width: clamp(48px, 12vw, 64px) !important;
+		height: clamp(48px, 12vw, 64px) !important;
+	}
+
+	.ecosystem-feature-column {
+		width: var(--ecosystem-feature-width) !important;
+		gap: 14px;
+	}
+
+	.ecosystem-feature-column-1,
+	.ecosystem-feature-column-3 {
+		margin-top: clamp(150px, 32vw, 210px) !important;
+	}
+
+	.ecosystem-feature-column-2 {
+		margin-top: clamp(0px, 8vw, 56px) !important;
+	}
+
+	.ecosystem-feature-icon {
+		width: clamp(48px, 12vw, 64px) !important;
+		height: clamp(48px, 12vw, 64px) !important;
+	}
+
+	.ecosystem-feature-title {
+		font-size: clamp(20px, 5.5vw, 26px) !important;
+		line-height: 1.1 !important;
+	}
+
+	.ecosystem-feature-description {
+		font-size: clamp(15px, 4vw, 18px) !important;
+		line-height: 1.35 !important;
+	}
+}
+
+@media (min-width: 720px) and (max-width: 767px) {
+	.ecosystem-section {
+		--ecosystem-card-height: 600px;
+		--ecosystem-track-padding-inline: 40px;
+		--ecosystem-track-padding-block: 40px;
+		--ecosystem-track-gap: 72px;
+		--ecosystem-intro-width: 420px;
+		--ecosystem-feature-width: 310px;
+	}
+
+	.ecosystem-title {
+		font-size: 32px !important;
+		line-height: 1.08 !important;
+	}
+
+	.ecosystem-feature-title {
+		font-size: 23px !important;
+		line-height: 1.12 !important;
+	}
+
+	.ecosystem-description,
+	.ecosystem-feature-description {
+		font-size: 17px !important;
+		line-height: 1.35 !important;
+	}
+
+	.ecosystem-intro-icon,
+	.ecosystem-feature-icon {
+		width: 48px !important;
+		height: 48px !important;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+	.ecosystem-section {
+		--ecosystem-card-height: 600px;
+		--ecosystem-track-padding-inline: 48px;
+		--ecosystem-track-padding-block: 48px;
+		--ecosystem-track-gap: 84px;
+		--ecosystem-intro-width: 450px;
+		--ecosystem-feature-width: 320px;
+	}
+
+	.ecosystem-title {
+		font-size: clamp(38px, 4.6vw, 40px) !important;
+		line-height: 1.1 !important;
+	}
+
+	.ecosystem-description {
+		font-size: 18px !important;
+		line-height: 1.35 !important;
+	}
+
+	.ecosystem-feature-title {
+		font-size: 24px !important;
+		line-height: 1.15 !important;
+	}
+
+	.ecosystem-feature-description {
+		font-size: 18px !important;
+		line-height: 1.35 !important;
+	}
+}
+
+@media (min-width: 1024px) and (max-width: 1199px) {
+	.ecosystem-section {
+		--ecosystem-card-height: 680px;
+		--ecosystem-track-padding-inline: clamp(72px, 6vw, 120px);
+		--ecosystem-track-padding-block: 72px;
+		--ecosystem-track-gap: clamp(96px, 7vw, 140px);
+		--ecosystem-intro-width: 615px;
+		--ecosystem-feature-width: 390px;
+	}
+
+	.ecosystem-feature-column-1,
+	.ecosystem-feature-column-3 {
+		margin-top: 112px;
+	}
+
+	.ecosystem-feature-column-2 {
+		margin-top: 0;
+	}
+}
+
+@media (min-width: 1200px) and (max-width: 1599px) {
+	.ecosystem-section {
+		--ecosystem-card-height: 650px;
+		--ecosystem-track-padding-inline: clamp(96px, 6vw, 154px);
+		--ecosystem-track-padding-block: 72px;
+		--ecosystem-track-gap: clamp(104px, 7vw, 160px);
+		--ecosystem-intro-width: 615px;
+		--ecosystem-feature-width: 420px;
+	}
+
+	.ecosystem-feature-column-1,
+	.ecosystem-feature-column-3 {
+		margin-top: 124px;
+	}
+}
+
+@media (min-width: 1600px) {
+	.ecosystem-section {
+		--ecosystem-card-height: 717px;
+		--ecosystem-track-padding-inline: clamp(120px, 7vw, 192px);
+		--ecosystem-track-padding-block: 80px;
+		--ecosystem-track-gap: clamp(112px, 7vw, 180px);
+		--ecosystem-intro-width: 615px;
+		--ecosystem-feature-width: 452px;
+	}
+
+	.ecosystem-feature-column-1,
+	.ecosystem-feature-column-3 {
+		margin-top: 140px;
+	}
+}

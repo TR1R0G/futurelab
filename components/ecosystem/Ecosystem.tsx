@@ -10,7 +10,7 @@ const ECOSYSTEM_BLOCK_HEIGHT = 717
 const ECOSYSTEM_SCROLL_SLOWDOWN = 2.4
 const ECOSYSTEM_COMPACT_SCROLL_SLOWDOWN = 3.4
 const ECOSYSTEM_SCROLL_HOLD_RATIO = 0.22
-const ECOSYSTEM_SCROLL_END_PADDING = 32
+
 interface EcosystemProps {
 	title: string
 	subtitle: string
@@ -35,42 +35,31 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 		const wrapper = wrapperRef.current
 		const track = trackRef.current
 		if (!section || !wrapper || !track) return
-		const getContentRight = () => {
-			const trackBounds = track.getBoundingClientRect()
-			const contentItems = track.querySelectorAll('img,h2,h3,p')
-			return Math.max(
-				0,
-				...Array.from(contentItems, item => {
-					const itemBounds = item.getBoundingClientRect()
-					return itemBounds.right - trackBounds.left
-				}),
-			)
-		}
+
+		const getTravel = () => Math.max(0, track.scrollWidth - wrapper.clientWidth)
+		const getPinDistance = (slowdown: number) =>
+			Math.max(
+				window.innerHeight * 1.2,
+				getTravel() * slowdown,
+			) / (1 - ECOSYSTEM_SCROLL_HOLD_RATIO)
 
 		const media = gsap.matchMedia()
 		const ctx = gsap.context(() => {
 			media.add('(max-width: 719px)', () => {
-				const getScrollDistance = () =>
-					Math.max(0, track.scrollWidth - wrapper.clientWidth)
-				const getPinDistance = () =>
-					Math.max(
-						window.innerHeight * 1.8,
-						getScrollDistance() * ECOSYSTEM_COMPACT_SCROLL_SLOWDOWN,
-					) / (1 - ECOSYSTEM_SCROLL_HOLD_RATIO)
-
 				const timeline = gsap.timeline({
 					scrollTrigger: {
 						trigger: wrapper,
 						start: 'center center',
-						end: () => `+=${getPinDistance()}`,
+						end: () => `+=${getPinDistance(ECOSYSTEM_COMPACT_SCROLL_SLOWDOWN)}`,
 						pin: section,
 						scrub: true,
 						anticipatePin: 1,
 						invalidateOnRefresh: true,
 					},
 				})
+
 				timeline.to(track, {
-					x: () => -getScrollDistance(),
+					x: () => -getTravel(),
 					ease: 'none',
 					duration: 1 - ECOSYSTEM_SCROLL_HOLD_RATIO,
 				})
@@ -82,32 +71,20 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 			})
 
 			media.add('(min-width: 720px) and (max-width: 1023px)', () => {
-				const getScrollDistance = () =>
-					Math.max(
-						0,
-						getContentRight() -
-							wrapper.clientWidth +
-							ECOSYSTEM_SCROLL_END_PADDING,
-					)
-				const getPinDistance = () =>
-					Math.max(
-						window.innerHeight * 1.8,
-						getScrollDistance() * ECOSYSTEM_COMPACT_SCROLL_SLOWDOWN,
-					) / (1 - ECOSYSTEM_SCROLL_HOLD_RATIO)
-
 				const timeline = gsap.timeline({
 					scrollTrigger: {
 						trigger: wrapper,
 						start: 'center center',
-						end: () => `+=${getPinDistance()}`,
+						end: () => `+=${getPinDistance(ECOSYSTEM_COMPACT_SCROLL_SLOWDOWN)}`,
 						pin: section,
 						scrub: true,
 						anticipatePin: 1,
 						invalidateOnRefresh: true,
 					},
 				})
+
 				timeline.to(track, {
-					x: () => -getScrollDistance(),
+					x: () => -getTravel(),
 					ease: 'none',
 					duration: 1 - ECOSYSTEM_SCROLL_HOLD_RATIO,
 				})
@@ -119,32 +96,20 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 			})
 
 			media.add('(min-width: 1024px)', () => {
-				const getScrollDistance = () =>
-					Math.max(
-						0,
-						getContentRight() -
-							wrapper.clientWidth +
-							ECOSYSTEM_SCROLL_END_PADDING,
-					)
-				const getPinDistance = () =>
-					Math.max(
-						window.innerHeight * 1.2,
-						getScrollDistance() * ECOSYSTEM_SCROLL_SLOWDOWN,
-					) / (1 - ECOSYSTEM_SCROLL_HOLD_RATIO)
-
 				const timeline = gsap.timeline({
 					scrollTrigger: {
 						trigger: section,
 						start: 'top top',
-						end: () => `+=${getPinDistance()}`,
+						end: () => `+=${getPinDistance(ECOSYSTEM_SCROLL_SLOWDOWN)}`,
 						pin: true,
 						scrub: true,
 						anticipatePin: 1,
 						invalidateOnRefresh: true,
 					},
 				})
+
 				timeline.to(track, {
-					x: () => -getScrollDistance(),
+					x: () => -getTravel(),
 					ease: 'none',
 					duration: 1 - ECOSYSTEM_SCROLL_HOLD_RATIO,
 				})
@@ -165,7 +130,7 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 	return (
 		<section
 			ref={sectionRef}
-			className='ecosystem-section relative w-full overflow-hidden'
+			className='ecosystem-section relative w-full overflow-hidden bg-black'
 			style={
 				{
 					'--ecosystem-block-height': `${ECOSYSTEM_BLOCK_HEIGHT}px`,
@@ -174,55 +139,32 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 		>
 			<div
 				ref={wrapperRef}
-				className='ecosystem-wrapper absolute left-0 overflow-hidden rounded-[28px] bg-[#B24ECC] md:rounded-[35px] lg:rounded-[35px]'
+				className='ecosystem-wrapper absolute left-0 top-0 h-full w-full overflow-hidden rounded-[28px] bg-[#B24ECC] md:rounded-[35px]'
 			>
-				<div
-					ref={trackRef}
-					className='ecosystem-track relative rounded-[28px] bg-[#B24ECC] md:rounded-[35px] lg:overflow-hidden lg:rounded-[35px]'
-				>
-					<div className='ecosystem-heading-block absolute left-[135px] top-[54px] w-[260px] md:left-[155px] md:top-[86px] md:w-[420px] lg:left-[242px] lg:top-[100px] lg:w-[615px]'>
-						<h2 className='ecosystem-heading font-heading whitespace-pre-line text-[21px] font-bold leading-[1.05] tracking-normal text-white md:text-[40px] md:leading-[44px] lg:text-[65px] lg:leading-[73px]'>
-							{displayTitle}
-						</h2>
+				<div ref={trackRef} className='ecosystem-track'>
+					<div className='ecosystem-column ecosystem-intro-column'>
+						<div className='ecosystem-intro-copy'>
+							<h2 className='ecosystem-title font-heading whitespace-pre-line text-white'>
+								{displayTitle}
+							</h2>
+							<p className='ecosystem-description text-white'>
+								{subtitle}
+							</p>
+						</div>
+						<EcosystemIcon
+							src='/images/block3/icon1.svg'
+							className='ecosystem-intro-icon'
+						/>
 					</div>
 
-					<p className='ecosystem-description absolute left-[135px] top-[188px] w-[260px] text-[11px] font-medium leading-[1.22] text-white md:left-[155px] md:top-[240px] md:w-[430px] md:text-[16px] md:leading-[20px] lg:left-[242px] lg:top-[359px] lg:w-[455px] lg:text-[23px] lg:leading-[28px]'>
-						{subtitle}
-					</p>
-
-					<EcosystemIcon
-						src='/images/block3/icon1.svg'
-						className='ecosystem-intro-icon absolute left-[135px] top-[330px] md:left-[155px] md:top-[365px] lg:left-[242px] lg:top-[534px]'
-					/>
-
-					<div>
-						{cards.map((card, index) => (
-							<EcosystemFeature key={card.title} card={card} index={index} />
-						))}
-					</div>
+					{cards.map((card, index) => (
+						<EcosystemFeature key={card.title} card={card} index={index} />
+					))}
 				</div>
 			</div>
 		</section>
 	)
 }
-
-const desktopPositions = [
-	{
-		icon: 'lg:left-[980px] lg:top-[280px]',
-		title: 'lg:left-[980px] lg:top-[419px] lg:w-[452px]',
-		description: 'lg:left-[980px] lg:top-[533px] lg:w-[330px]',
-	},
-	{
-		icon: 'lg:left-[1595px] lg:top-[100px]',
-		title: 'lg:left-[1595px] lg:top-[240px] lg:w-[452px]',
-		description: 'lg:left-[1595px] lg:top-[354px] lg:w-[452px]',
-	},
-	{
-		icon: 'lg:left-[2210px] lg:top-[280px]',
-		title: 'lg:left-[2210px] lg:top-[419px] lg:w-[348px]',
-		description: 'lg:left-[2210px] lg:top-[533px] lg:w-[348px]',
-	},
-]
 
 const iconMap: Record<string, string> = {
 	workspace: '/images/block3/icon2.svg',
@@ -237,51 +179,20 @@ function EcosystemFeature({
 	card: EcosystemContent['cards'][number]
 	index: number
 }) {
-	const position = desktopPositions[index] ?? desktopPositions[0]
-	const compact = [
-		{
-			icon: 'left-[420px] top-[72px] md:left-[625px] md:top-[86px]',
-			title:
-				'left-[420px] top-[155px] w-[190px] md:left-[625px] md:top-[203px] md:w-[260px]',
-			description:
-				'left-[420px] top-[222px] w-[180px] md:left-[625px] md:top-[300px] md:w-[260px]',
-		},
-		{
-			icon: 'left-[710px] top-[72px] md:left-[1000px] md:top-[86px]',
-			title:
-				'left-[710px] top-[155px] w-[220px] md:left-[1000px] md:top-[203px] md:w-[310px]',
-			description:
-				'left-[710px] top-[222px] w-[220px] md:left-[1000px] md:top-[300px] md:w-[310px]',
-		},
-		{
-			icon: 'left-[1050px] top-[72px] md:left-[1410px] md:top-[86px]',
-			title:
-				'left-[1050px] top-[155px] w-[190px] md:left-[1410px] md:top-[203px] md:w-[260px]',
-			description:
-				'left-[1050px] top-[222px] w-[190px] md:left-[1410px] md:top-[300px] md:w-[260px]',
-		},
-	][index] ?? {
-		icon: 'left-[420px] top-[72px] md:left-[625px] md:top-[86px]',
-		title:
-			'left-[420px] top-[155px] w-[190px] md:left-[625px] md:top-[203px] md:w-[260px]',
-		description:
-			'left-[420px] top-[222px] w-[180px] md:left-[625px] md:top-[300px] md:w-[260px]',
-	}
-
 	return (
-		<article className={`ecosystem-feature ecosystem-feature-${index + 1} static`}>
+		<article
+			className={`ecosystem-column ecosystem-feature-column ecosystem-feature-column-${
+				index + 1
+			}`}
+		>
 			<EcosystemIcon
 				src={iconMap[card.icon] ?? iconMap.workspace}
-				className={`ecosystem-feature-icon ecosystem-feature-icon-${index + 1} absolute ${compact.icon} ${position.icon}`}
+				className='ecosystem-feature-icon'
 			/>
-			<h3
-				className={`ecosystem-feature-title project-mini-heading absolute text-[14px] font-semibold leading-[1.16] text-white md:text-[24px] md:leading-[29px] lg:text-[33px] lg:leading-[40px] ${compact.title} ${position.title}`}
-			>
+			<h3 className='ecosystem-feature-title project-mini-heading text-white'>
 				{card.title}
 			</h3>
-			<p
-				className={`ecosystem-feature-description absolute text-[11px] font-medium leading-[1.22] text-white md:text-[16px] md:leading-[20px] lg:text-[23px] lg:leading-[28px] ${compact.description} ${position.description}`}
-			>
+			<p className='ecosystem-feature-description text-white/85'>
 				{card.description}
 			</p>
 		</article>
@@ -301,7 +212,7 @@ function EcosystemIcon({
 			alt=''
 			width={83}
 			height={84}
-			className={`h-[42px] w-[42px] md:h-[64px] md:w-[64px] lg:h-[83px] lg:w-[83px] ${className}`}
+			className={className}
 			aria-hidden='true'
 		/>
 	)
