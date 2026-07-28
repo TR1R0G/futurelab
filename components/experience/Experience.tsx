@@ -1,3 +1,5 @@
+'use client'
+
 import { FadeInImage } from '@/components/media/FadeInImage'
 import { scrollToHashTarget } from '@/lib/smooth-scroll'
 
