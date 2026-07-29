@@ -37,7 +37,7 @@ export function CTACard({
 				isProject
 					? 'mt-0 h-auto rounded-[30px] px-6 py-12 md:rounded-[34px] md:px-12 md:py-14 lg:max-w-[1190px] lg:rounded-[35px] min-[1254px]:h-[253px] min-[1254px]:px-[77px] min-[1254px]:py-0'
 					: isWide
-						? 'mt-0 h-auto rounded-[30px] px-6 py-12 md:rounded-[34px] md:px-12 md:py-14 lg:max-w-[1190px] lg:rounded-[35px] min-[1254px]:h-[253px] min-[1254px]:px-[77px] min-[1254px]:py-0'
+						? 'mt-0 h-auto rounded-[30px] px-6 py-12 md:rounded-[34px] md:px-12 md:py-14 lg:max-w-[1190px] lg:rounded-[35px] min-[1254px]:h-auto min-[1254px]:px-[77px] min-[1254px]:py-10'
 						: 'mt-24 h-auto rounded-[30px] px-6 py-12 md:mt-32 md:rounded-[34px] md:px-12 md:py-14 lg:rounded-[35px] min-[1254px]:px-[56px] min-[1254px]:py-10'
 			}`}
 		>
@@ -46,7 +46,7 @@ export function CTACard({
 				isProject
 						? 'max-w-[1036px] text-[22px] font-semibold leading-[1.18] md:text-[28px] lg:text-[33px] lg:leading-[40px] min-[1254px]:mt-[53px]'
 					: isWide
-						? 'max-w-[1036px] text-[22px] font-semibold leading-[1.18] md:text-[28px] lg:text-[33px] lg:leading-[40px] min-[1254px]:mt-[53px]'
+						? 'max-w-[1036px] text-[22px] font-semibold leading-[1.18] md:text-[28px] lg:text-[33px] lg:leading-[40px] min-[1254px]:mt-0'
 						: 'max-w-[1078px] text-[22px] font-semibold leading-[1.18] md:text-[28px] lg:w-[1078px] lg:text-[33px] lg:leading-[40px] min-[1254px]:mt-0'
 				}`}
 			>
