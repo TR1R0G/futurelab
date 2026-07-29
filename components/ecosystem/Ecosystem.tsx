@@ -1,6 +1,6 @@
 'use client'
 
-import { gsap, registerGsapPlugins } from '@/lib/gsap'
+import { gsap, registerGsapPlugins, ScrollTrigger } from '@/lib/gsap'
 import type { EcosystemContent } from '@/lib/mdx'
 import Image from 'next/image'
 import type { CSSProperties } from 'react'
@@ -21,12 +21,11 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 	const sectionRef = useRef<HTMLElement>(null)
 	const wrapperRef = useRef<HTMLDivElement>(null)
 	const trackRef = useRef<HTMLDivElement>(null)
-	const displayTitle =
-		title === 'Экосистема FutureLab: обучение, практика и внедрение'
-			? 'Экосистема FutureLab:\nобучение, практика и\nвнедрение'
-			: title === 'Unified ecosystem for development and growth'
-				? 'Unified ecosystem\nfor development\nand growth'
-				: title
+	const titleSeparatorIndex = title.indexOf(':')
+	const titleLead =
+		titleSeparatorIndex >= 0 ? title.slice(0, titleSeparatorIndex + 1) : title
+	const titleTail =
+		titleSeparatorIndex >= 0 ? title.slice(titleSeparatorIndex + 1) : ''
 
 	useEffect(() => {
 		registerGsapPlugins()
@@ -44,6 +43,12 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 			) / (1 - ECOSYSTEM_SCROLL_HOLD_RATIO)
 
 		const media = gsap.matchMedia()
+		let isDisposed = false
+		document.fonts?.ready
+			.then(() => {
+				if (!isDisposed) ScrollTrigger.refresh()
+			})
+			.catch(() => {})
 		const ctx = gsap.context(() => {
 			media.add('(max-width: 719px)', () => {
 				const timeline = gsap.timeline({
@@ -122,6 +127,7 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 		}, section)
 
 		return () => {
+			isDisposed = true
 			media.revert()
 			ctx.revert()
 		}
@@ -144,8 +150,11 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 				<div ref={trackRef} className='ecosystem-track'>
 					<div className='ecosystem-column ecosystem-intro-column'>
 						<div className='ecosystem-intro-copy'>
-							<h2 className='ecosystem-title font-heading whitespace-pre-line text-white'>
-								{displayTitle}
+							<h2 className='ecosystem-title font-heading text-white'>
+								<span className={titleTail ? 'ecosystem-title-lead' : undefined}>
+									{titleLead}
+								</span>
+								{titleTail}
 							</h2>
 							<p className='ecosystem-description text-white'>
 								{subtitle}

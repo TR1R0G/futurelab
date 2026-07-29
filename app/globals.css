@@ -4405,6 +4405,10 @@ h3,
 	--ecosystem-track-gap: clamp(48px, 4vw, 116px);
 	--ecosystem-intro-width: clamp(320px, 28vw, 615px);
 	--ecosystem-feature-width: clamp(250px, 22vw, 452px);
+	--ecosystem-intro-copy-gap: 32px;
+	--ecosystem-icon-to-title-gap: 40px;
+	--ecosystem-title-to-description-gap: 24px;
+	--ecosystem-intro-description-to-icon-gap: 64px;
 	background: #000;
 }
 
@@ -4433,22 +4437,28 @@ h3,
 .ecosystem-intro-column {
 	width: var(--ecosystem-intro-width);
 	flex-direction: column;
-	justify-content: space-between;
-	gap: 24px;
+	justify-content: flex-start;
 }
 
 .ecosystem-intro-copy {
 	display: flex;
 	flex-direction: column;
-	gap: clamp(16px, 1.8vw, 28px);
+	gap: var(--ecosystem-intro-copy-gap);
 	max-width: 100%;
 }
 
 .ecosystem-title {
-	max-width: 100%;
-	font-size: clamp(34px, 4vw, 65px);
-	line-height: 1.08;
+	max-width: min(100%, 615px);
+	font-family: var(--font-sansation), var(--font-golos-text), sans-serif;
+	font-size: clamp(36px, 3.8vw, 60px);
+	font-weight: 700;
+	line-height: 1.04;
 	letter-spacing: 0;
+	text-wrap: balance;
+}
+
+.ecosystem-title-lead {
+	white-space: nowrap;
 }
 
 .ecosystem-description {
@@ -4460,6 +4470,7 @@ h3,
 
 .ecosystem-intro-icon {
 	align-self: flex-start;
+	margin-top: var(--ecosystem-intro-description-to-icon-gap);
 	width: clamp(52px, 4.8vw, 83px);
 	height: clamp(52px, 4.8vw, 83px);
 }
@@ -4467,7 +4478,7 @@ h3,
 .ecosystem-feature-column {
 	width: var(--ecosystem-feature-width);
 	flex-direction: column;
-	gap: 18px;
+	gap: 0;
 }
 
 .ecosystem-feature-column-1,
@@ -4486,16 +4497,22 @@ h3,
 
 .ecosystem-feature-title {
 	max-width: 100%;
+	margin-top: var(--ecosystem-icon-to-title-gap);
+	font-family: var(--font-project-mini-heading);
 	font-size: clamp(22px, 2.2vw, 33px);
+	font-weight: 600;
 	line-height: 1.1;
 	letter-spacing: 0;
+	text-wrap: balance;
 }
 
 .ecosystem-feature-description {
 	max-width: 100%;
+	margin-top: var(--ecosystem-title-to-description-gap);
 	font-size: clamp(16px, 1.4vw, 23px);
 	font-weight: 500;
 	line-height: 1.35;
+	text-wrap: pretty;
 }
 
 @media (max-width: 719px) {
@@ -4506,6 +4523,10 @@ h3,
 		--ecosystem-track-gap: clamp(48px, 14vw, 92px);
 		--ecosystem-intro-width: clamp(260px, 78vw, 340px);
 		--ecosystem-feature-width: clamp(250px, 72vw, 320px);
+		--ecosystem-intro-copy-gap: 24px;
+		--ecosystem-icon-to-title-gap: 24px;
+		--ecosystem-title-to-description-gap: 16px;
+		--ecosystem-intro-description-to-icon-gap: 28px;
 		height: calc(var(--ecosystem-card-height) + 112px) !important;
 	}
 
@@ -4530,6 +4551,10 @@ h3,
 	.ecosystem-title {
 		font-size: clamp(26px, 7vw, 34px) !important;
 		line-height: 1.05 !important;
+	}
+
+	.ecosystem-title-lead {
+		white-space: normal;
 	}
 
 	.ecosystem-description {
@@ -4580,6 +4605,10 @@ h3,
 		--ecosystem-track-gap: 72px;
 		--ecosystem-intro-width: 420px;
 		--ecosystem-feature-width: 310px;
+		--ecosystem-intro-copy-gap: 28px;
+		--ecosystem-icon-to-title-gap: 28px;
+		--ecosystem-title-to-description-gap: 18px;
+		--ecosystem-intro-description-to-icon-gap: 44px;
 	}
 
 	.ecosystem-title {
@@ -4613,6 +4642,10 @@ h3,
 		--ecosystem-track-gap: 84px;
 		--ecosystem-intro-width: 450px;
 		--ecosystem-feature-width: 320px;
+		--ecosystem-intro-copy-gap: 28px;
+		--ecosystem-icon-to-title-gap: 28px;
+		--ecosystem-title-to-description-gap: 18px;
+		--ecosystem-intro-description-to-icon-gap: 44px;
 	}
 
 	.ecosystem-title {
