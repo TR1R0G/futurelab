@@ -819,8 +819,8 @@ h3,
 	width: 100% !important;
 }
 
-	.infrastructure-section {
-		min-height: 2500px;
+.infrastructure-section {
+	min-height: 2500px;
 }
 
 .programs-section {
@@ -834,8 +834,7 @@ h3,
 .directions-section {
 	--expanded-image-flow-adjust: 84svh;
 	height: calc(
-		3183px + var(--expanded-image-flow-adjust) +
-			var(--directions-end-gap)
+		3183px + var(--expanded-image-flow-adjust) + var(--directions-end-gap)
 	);
 	min-height: 0;
 	margin-top: 0;
@@ -1059,8 +1058,7 @@ h3,
 
 	.directions-section {
 		height: calc(
-			3370px + var(--expanded-image-flow-adjust) +
-				var(--directions-end-gap)
+			3370px + var(--expanded-image-flow-adjust) + var(--directions-end-gap)
 		);
 		min-height: 0;
 	}
@@ -1154,8 +1152,7 @@ h3,
 
 	.directions-section {
 		height: calc(
-			3200px + var(--expanded-image-flow-adjust) +
-				var(--directions-end-gap)
+			3200px + var(--expanded-image-flow-adjust) + var(--directions-end-gap)
 		);
 		min-height: 0;
 	}
@@ -1259,8 +1256,7 @@ h3,
 
 	.directions-section {
 		height: calc(
-			3370px + var(--expanded-image-flow-adjust) +
-				var(--directions-end-gap)
+			3370px + var(--expanded-image-flow-adjust) + var(--directions-end-gap)
 		);
 		min-height: 0;
 	}
@@ -1346,8 +1342,7 @@ h3,
 
 	.directions-section {
 		height: calc(
-			3215px + var(--expanded-image-flow-adjust) +
-				var(--directions-end-gap)
+			3215px + var(--expanded-image-flow-adjust) + var(--directions-end-gap)
 		);
 		min-height: 0;
 	}
@@ -2180,16 +2175,16 @@ h3,
 		--ecosystem-feature-column-width: clamp(250px, 72vw, 340px);
 		--ecosystem-column-gap: clamp(56px, 14vw, 92px);
 		--ecosystem-feature-1-left: calc(
-			var(--ecosystem-mobile-padding) +
-				var(--ecosystem-intro-column-width) + var(--ecosystem-column-gap)
+			var(--ecosystem-mobile-padding) + var(--ecosystem-intro-column-width) +
+				var(--ecosystem-column-gap)
 		);
 		--ecosystem-feature-2-left: calc(
-			var(--ecosystem-feature-1-left) +
-				var(--ecosystem-feature-column-width) + var(--ecosystem-column-gap)
+			var(--ecosystem-feature-1-left) + var(--ecosystem-feature-column-width) +
+				var(--ecosystem-column-gap)
 		);
 		--ecosystem-feature-3-left: calc(
-			var(--ecosystem-feature-2-left) +
-				var(--ecosystem-feature-column-width) + var(--ecosystem-column-gap)
+			var(--ecosystem-feature-2-left) + var(--ecosystem-feature-column-width) +
+				var(--ecosystem-column-gap)
 		);
 
 		height: calc(var(--ecosystem-card-height) + 112px) !important;
@@ -2205,15 +2200,12 @@ h3,
 
 	.ecosystem-track {
 		width: calc(
-			var(--ecosystem-mobile-padding) +
-				var(--ecosystem-mobile-padding) +
+			var(--ecosystem-mobile-padding) + var(--ecosystem-mobile-padding) +
 				var(--ecosystem-intro-column-width) +
 				var(--ecosystem-feature-column-width) +
 				var(--ecosystem-feature-column-width) +
-				var(--ecosystem-feature-column-width) +
-				var(--ecosystem-column-gap) +
-				var(--ecosystem-column-gap) +
-				var(--ecosystem-column-gap)
+				var(--ecosystem-feature-column-width) + var(--ecosystem-column-gap) +
+				var(--ecosystem-column-gap) + var(--ecosystem-column-gap)
 		) !important;
 		height: var(--ecosystem-card-height) !important;
 		margin-left: 0 !important;
@@ -2241,7 +2233,9 @@ h3,
 
 	.ecosystem-intro-icon {
 		left: var(--ecosystem-mobile-padding) !important;
-		top: calc(var(--ecosystem-card-height) - clamp(104px, 20vw, 132px)) !important;
+		top: calc(
+			var(--ecosystem-card-height) - clamp(104px, 20vw, 132px)
+		) !important;
 		width: clamp(48px, 12vw, 64px) !important;
 		height: clamp(48px, 12vw, 64px) !important;
 	}
@@ -3514,8 +3508,8 @@ h3,
 @media (min-width: 900px) and (max-width: 959px) {
 	.directions-section {
 		height: calc(
-			2868px + var(--expanded-image-flow-adjust) +
-				var(--directions-end-gap) - 350.39px
+			2868px + var(--expanded-image-flow-adjust) + var(--directions-end-gap) -
+				350.39px
 		);
 	}
 }
@@ -3523,8 +3517,8 @@ h3,
 @media (min-width: 960px) and (max-width: 1023px) {
 	.directions-section {
 		height: calc(
-			2868px + var(--expanded-image-flow-adjust) +
-				var(--directions-end-gap) - 498.61px + 25.625vw
+			2868px + var(--expanded-image-flow-adjust) + var(--directions-end-gap) -
+				498.61px + 25.625vw
 		);
 	}
 }
@@ -3532,8 +3526,8 @@ h3,
 @media (min-width: 1024px) and (max-width: 1199px) {
 	.directions-section {
 		height: calc(
-			2868px + var(--expanded-image-flow-adjust) +
-				var(--directions-end-gap) + 45vw - 603.47px
+			2868px + var(--expanded-image-flow-adjust) + var(--directions-end-gap) +
+				45vw - 603.47px
 		);
 	}
 }
@@ -3541,8 +3535,8 @@ h3,
 @media (min-width: 1185px) and (max-width: 1199px) {
 	.directions-section {
 		height: calc(
-			2868px + var(--expanded-image-flow-adjust) +
-				var(--directions-end-gap) + 136vw - 1680.91px
+			2868px + var(--expanded-image-flow-adjust) + var(--directions-end-gap) +
+				136vw - 1680.91px
 		);
 	}
 }
@@ -3568,8 +3562,8 @@ h3,
 @media (min-width: 1370px) and (max-width: 1599px) {
 	.directions-section {
 		height: calc(
-			3215px + var(--expanded-image-flow-adjust) +
-				var(--directions-end-gap) - 322px
+			3215px + var(--expanded-image-flow-adjust) + var(--directions-end-gap) -
+				322px
 		);
 	}
 }
@@ -3662,7 +3656,9 @@ h3,
 	.academy-card-stage {
 		--academy-mobile-card-size: clamp(250px, 68vw, 430px);
 		--academy-mobile-card-offset: calc(var(--academy-mobile-card-size) * 0.05);
-		height: calc(var(--academy-mobile-card-size) + var(--academy-mobile-card-offset) * 6) !important;
+		height: calc(
+			var(--academy-mobile-card-size) + var(--academy-mobile-card-offset) * 6
+		) !important;
 		margin-top: var(--academy-cards-gap) !important;
 		transform: scale(1) !important;
 		transform-origin: top center !important;
@@ -3683,7 +3679,9 @@ h3,
 	}
 
 	.academy-card-title {
-		max-width: calc(var(--academy-mobile-card-size) - clamp(58px, 16vw, 116px)) !important;
+		max-width: calc(
+			var(--academy-mobile-card-size) - clamp(58px, 16vw, 116px)
+		) !important;
 		font-size: clamp(24px, 5.35vw, 34px) !important;
 		line-height: 1.14 !important;
 	}
@@ -4789,8 +4787,7 @@ h3,
 
 @media (min-width: 1200px) {
 	.contact-card {
-		grid-template-columns:
-			minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) !important;
+		grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) !important;
 		padding: 40px !important;
 		gap: 56px !important;
 	}
@@ -4811,24 +4808,36 @@ h3,
 }
 
 /* Directions chips use stable variants and a content-safe six-chip composition. */
+.directions-section {
+	--academy-to-directions-gap: 128px;
+
+	margin-top: var(--academy-to-directions-gap);
+}
+
 .directions-board {
+	--directions-board-radius: 35px;
+
 	width: 100% !important;
 	max-width: 1436px !important;
 	height: auto !important;
 }
 
 .directions-board-gradient {
-	top: auto !important;
-	bottom: -7px !important;
-	height: 8px !important;
-	border-radius: 0 0 35px 35px !important;
+	top: 8px !important;
+	bottom: auto !important;
+	z-index: 0;
+	display: block !important;
+	height: 100% !important;
+	border-radius: var(--directions-board-radius) !important;
 }
 
 .directions-board-card {
+	z-index: 1;
 	min-height: 560px !important;
 	height: auto !important;
 	padding: 40px !important;
 	overflow: visible !important;
+	border-radius: var(--directions-board-radius) !important;
 }
 
 .directions-board-title {
@@ -4905,6 +4914,10 @@ h3,
 }
 
 @media (max-width: 959px) {
+	.directions-section {
+		--academy-to-directions-gap: 96px;
+	}
+
 	.directions-board {
 		width: 100% !important;
 		max-width: none !important;
@@ -4947,15 +4960,20 @@ h3,
 }
 
 @media (max-width: 719px) {
+	.directions-section {
+		--academy-to-directions-gap: 64px;
+	}
+
+	.directions-board {
+		--directions-board-radius: 25px;
+	}
+
 	.directions-board-card {
 		padding: 30px !important;
-		border-radius: 25px !important;
 	}
 
 	.directions-board-gradient {
-		bottom: -6px !important;
-		height: 7px !important;
-		border-radius: 0 0 25px 25px !important;
+		top: 7px !important;
 	}
 
 	.directions-board-title {
@@ -5006,6 +5024,12 @@ h3,
 
 	.directions-chip-slot--digital-tourism .directions-chip {
 		transform: rotate(-1deg) !important;
+	}
+}
+
+@media (min-width: 1600px) {
+	.directions-section {
+		--academy-to-directions-gap: 122px;
 	}
 }
 
