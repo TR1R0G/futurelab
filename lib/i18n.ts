@@ -87,8 +87,8 @@ export const uiCopy: Record<
 > = {
 	ru: {
 		projectCta: {
-			text: 'Обсудим и предложим решение под Ваш проект',
-			buttonText: 'Обсудить проект',
+			text: 'Расскажите о задаче — мы предложим формат digital-решения под ваш проект',
+			buttonText: 'Обсудить решение',
 		},
 		directionsCta: {
 			text: 'Начните путь в CreativeTech через обучение, воркшопы и проектную практику',
