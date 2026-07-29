@@ -17,6 +17,7 @@ export function CTACard({
 }: CTACardProps) {
 	const isWide = variant === 'wide'
 	const isProject = variant === 'project'
+	const isExternalHref = href?.startsWith('http')
 	const variantClassName = isProject
 		? 'infrastructure-cta--project'
 		: isWide
@@ -54,7 +55,9 @@ export function CTACard({
 			{href ? (
 				<a
 					href={href}
-					onClick={event => scrollToHashTarget(event, href)}
+					onClick={isExternalHref ? undefined : event => scrollToHashTarget(event, href)}
+					target={isExternalHref ? '_blank' : undefined}
+					rel={isExternalHref ? 'noopener noreferrer' : undefined}
 					className={`infrastructure-cta-button ${buttonClassName}`}
 				>
 					{buttonText}
