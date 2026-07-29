@@ -771,12 +771,12 @@ function SolutionCard({
 	const classNames = `solutions-card-outline relative block min-h-[560px] overflow-visible rounded-[35px] bg-black md:min-h-[600px] min-[1370px]:h-[680px] min-[1370px]:min-h-[680px] min-[1370px]:w-full ${className}`
 	const content = (
 		<>
-			<div className='solutions-card-copy relative z-20 px-8 pt-14 md:px-[72px] md:pt-[86px] min-[1370px]:px-0 min-[1370px]:pt-0'>
-				<h3 className='project-mini-heading text-[38px] font-semibold leading-tight text-[#DE5CFF] md:text-[48px] min-[1370px]:absolute min-[1370px]:left-[121px] min-[1370px]:top-[88px] min-[1370px]:w-[760px] min-[1370px]:text-[55px] min-[1370px]:leading-[66px]'>
+			<div className='solutions-card-copy relative z-20 flex flex-col gap-[var(--solution-copy-gap)] px-8 pt-14 md:px-[72px] md:pt-[86px] min-[1370px]:absolute min-[1370px]:left-[121px] min-[1370px]:top-[88px] min-[1370px]:w-[821px] min-[1370px]:px-0 min-[1370px]:pt-0'>
+				<h3 className='solutions-card-title project-mini-heading text-[38px] font-semibold leading-tight text-[#DE5CFF] md:text-[48px] min-[1370px]:w-[760px] min-[1370px]:text-[55px] min-[1370px]:leading-[66px]'>
 					{card.title}
 				</h3>
 
-				<p className='solutions-card-description mt-10 max-w-[821px] whitespace-pre-line text-[18px] font-medium leading-[1.24] text-[#C4C4C4] md:text-[21px] min-[1370px]:absolute min-[1370px]:left-[121px] min-[1370px]:top-[204px] min-[1370px]:mt-0 min-[1370px]:text-[23px] min-[1370px]:leading-[28px]'>
+				<p className='solutions-card-description max-w-[821px] whitespace-pre-line text-[18px] font-medium leading-[1.24] text-[#C4C4C4] md:text-[21px] min-[1370px]:text-[23px] min-[1370px]:leading-[28px]'>
 					{card.description}
 				</p>
 			</div>

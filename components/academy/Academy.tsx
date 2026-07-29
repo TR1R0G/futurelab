@@ -431,13 +431,13 @@ export function Academy({
 					<h2 className='font-heading max-w-[805px] text-[42px] font-bold leading-none tracking-normal text-white md:text-6xl lg:text-[65px]'>
 						{title}
 					</h2>
-					<p className='section-subtitle-light mt-10 max-w-[845px] lg:mt-[37px]'>
+					<p className='academy-description section-subtitle-light mt-[var(--academy-copy-gap)] max-w-[845px]'>
 						{subtitle}
 					</p>
 				</div>
 
 				<div
-					className='academy-card-stage relative z-[700] mx-auto mt-8 h-[440px] w-full max-w-[980px] scale-[0.52] sm:scale-75 md:mt-16 md:h-[520px] md:scale-90 lg:mt-24 lg:scale-100'
+					className='academy-card-stage relative z-[700] mx-auto mt-[var(--academy-cards-gap)] h-[440px] w-full max-w-[980px] scale-[0.52] sm:scale-75 md:h-[520px] md:scale-90 lg:scale-100'
 					aria-label='Преимущества академии и акселерации'
 				>
 					{cards.map((card, index) => {

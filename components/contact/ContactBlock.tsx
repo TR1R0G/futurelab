@@ -18,21 +18,21 @@ export function ContactBlock({
 	return (
 		<section
 			id='contacts'
-			className='contact-section relative overflow-hidden bg-white px-5 py-24 text-black md:px-8 md:py-28 h-60 min-[1440px]:h-[538px] min-[1440px]:px-0 min-[1440px]:py-0'
+			className='contact-section relative overflow-hidden bg-white px-5 py-24 text-black md:px-8 md:py-28 min-[1440px]:px-0 min-[1440px]:py-0'
 		>
 			<ContactGlow />
 
-			<div className='contact-content relative z-10 mx-auto w-full max-w-[1436px] min-[1440px]:h-full'>
-				<h2 className='font-heading text-[42px] font-bold leading-[1.08] tracking-normal text-black md:text-[50px] min-[1440px]:absolute min-[1440px]:left-0 min-[1440px]:top-[calc(50%_-_178px)] min-[1440px]:w-[698px] min-[1440px]:text-[55px] min-[1440px]:leading-[62px]'>
+			<div className='contact-content relative z-10 mx-auto w-full max-w-[1436px]'>
+				<h2 className='font-heading text-[42px] font-bold leading-[1.08] tracking-normal text-black md:text-[50px] min-[1440px]:w-[698px] min-[1440px]:text-[55px] min-[1440px]:leading-[62px]'>
 					{title}
 				</h2>
 
-				<div className='contact-card grid w-full gap-10 rounded-[30px] bg-white px-6 py-0 shadow-[0_20px_50px_rgba(0,0,0,0.15)] md:mt-14 md:grid-cols-2 md:rounded-[35px] md:px-6 md:py-12 min-[1200px]:grid-cols-3 min-[1440px]:absolute min-[1440px]:left-0 min-[1440px]:top-[calc(50%_-_72px)] min-[1440px]:mt-0 min-[1440px]:h-[250px] min-[1440px]:grid-cols-none min-[1440px]:gap-0 min-[1440px]:px-0 min-[1440px]:py-0'>
-					<div className='min-[1440px]:absolute min-[1440px]:left-10 min-[1440px]:top-10 min-[1440px]:w-[412px]'>
+				<div className='contact-card grid w-full rounded-[30px] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.15)] md:rounded-[35px]'>
+					<div className='contact-card-intro'>
 						<h3 className='project-mini-heading text-[26px] font-semibold leading-none text-black md:text-[30px]'>
 							{cardTitle}
 						</h3>
-						<p className='mt-8 max-w-[412px] text-[21px] font-medium leading-[1.7] text-[#4C4C4C] md:text-[23px] min-[1440px]:mt-[42px]'>
+						<p className='contact-card-description max-w-[412px] text-[21px] font-medium leading-[1.7] text-[#4C4C4C] md:text-[23px]'>
 							{cardText.split('\n').map((line, index) => (
 								<span key={line}>
 									{line}
@@ -43,7 +43,7 @@ export function ContactBlock({
 					</div>
 
 					<ContactItem
-						className='contact-item-mail min-[1440px]:absolute min-[1440px]:left-[637px] min-[1440px]:top-[34px] min-[1440px]:w-[306px]'
+						className='contact-item-mail'
 						icon='mail'
 						title={emailTitle}
 						value='contact@future-lab.uz'
@@ -51,7 +51,7 @@ export function ContactBlock({
 					/>
 
 					<ContactItem
-						className='contact-item-telegram min-[1440px]:absolute min-[1440px]:left-[1128px] min-[1440px]:top-[34px] min-[1440px]:w-[240px]'
+						className='contact-item-telegram'
 						icon='telegram'
 						title={telegramTitle}
 						value='@nazzar_group'

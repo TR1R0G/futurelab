@@ -1481,6 +1481,34 @@ h3,
 	}
 }
 
+/* Academy copy and benefit-stack spacing share one visual rhythm. */
+.academy-section {
+	--academy-copy-gap: 40px;
+	--academy-cards-gap: 40px;
+}
+
+.academy-heading .academy-description {
+	margin-top: var(--academy-copy-gap) !important;
+}
+
+.academy-card-stage {
+	margin-top: var(--academy-cards-gap) !important;
+}
+
+/* Keep scaled tablet cards anchored to their normal-flow top edge. */
+@media (min-width: 720px) and (max-width: 1023px) {
+	.academy-card-stage {
+		transform-origin: top center !important;
+	}
+}
+
+@media (min-width: 1024px) {
+	.academy-section {
+		--academy-copy-gap: 37px;
+		--academy-cards-gap: 37px;
+	}
+}
+
 @media (min-width: 1440px) and (max-width: 1599px) {
 	.contact-item-mail {
 		left: 637px !important;
@@ -3586,7 +3614,7 @@ h3,
 	}
 
 	.solutions-card-description {
-		margin-top: 28px !important;
+		margin-top: 0 !important;
 	}
 
 	.solution-media-slot {
@@ -3635,7 +3663,7 @@ h3,
 		--academy-mobile-card-size: clamp(250px, 68vw, 430px);
 		--academy-mobile-card-offset: calc(var(--academy-mobile-card-size) * 0.05);
 		height: calc(var(--academy-mobile-card-size) + var(--academy-mobile-card-offset) * 6) !important;
-		margin-top: 24px !important;
+		margin-top: var(--academy-cards-gap) !important;
 		transform: scale(1) !important;
 		transform-origin: top center !important;
 		overflow: visible !important;
@@ -4115,6 +4143,67 @@ h3,
 	);
 }
 
+.solutions-card-copy {
+	--solution-copy-gap: clamp(20px, 2vw, 32px);
+}
+
+.solutions-card-title,
+.solutions-card-description {
+	position: static;
+	margin: 0;
+}
+
+.trust-section {
+	--trust-intro-to-stats-gap: 56px;
+	height: auto !important;
+	min-height: 0 !important;
+}
+
+.trust-intro {
+	margin-top: 64px;
+}
+
+.trust-stats-grid {
+	position: relative;
+	margin-top: var(--trust-intro-to-stats-gap);
+}
+
+.trust-additional-copy,
+.trust-cta {
+	margin-top: 64px;
+}
+
+@media (max-width: 959px) {
+	.trust-section {
+		--trust-intro-to-stats-gap: 40px;
+	}
+}
+
+@media (max-width: 719px) {
+	.trust-section {
+		--trust-intro-to-stats-gap: 32px;
+	}
+}
+
+@media (min-width: 1440px) {
+	.experience-flow {
+		padding-top: 150px;
+	}
+
+	.trust-intro {
+		margin-top: 69px;
+	}
+
+	.trust-additional-copy,
+	.trust-cta {
+		margin-top: 56px;
+	}
+
+	.trust-cta {
+		align-self: center;
+	}
+}
+
 .learn-more-title-ring {
 	transform: rotate(-48deg);
 	transform-origin: center;
@@ -4466,5 +4555,94 @@ h3,
 	.ecosystem-feature-column-1,
 	.ecosystem-feature-column-3 {
 		margin-top: 140px;
+	}
+}
+
+/* Contact card content must determine its own height after locale copy changes. */
+.contact-section {
+	height: auto !important;
+	min-height: 0 !important;
+	padding-block: 96px !important;
+}
+
+.contact-content {
+	height: auto !important;
+}
+
+.contact-card {
+	display: grid !important;
+	position: relative !important;
+	left: auto !important;
+	top: auto !important;
+	width: 100% !important;
+	height: auto !important;
+	min-height: 0 !important;
+	margin-top: 64px !important;
+	padding: 32px !important;
+	grid-template-columns: minmax(0, 1fr) !important;
+	align-items: start;
+	gap: 40px !important;
+	overflow: visible;
+}
+
+.contact-card-intro {
+	display: flex;
+	position: static !important;
+	left: auto !important;
+	top: auto !important;
+	width: auto !important;
+	min-width: 0;
+	flex-direction: column;
+	gap: 30px;
+}
+
+.contact-card-description {
+	position: static !important;
+	margin: 0 !important;
+	overflow-wrap: anywhere;
+}
+
+.contact-item,
+.contact-item-mail,
+.contact-item-telegram {
+	position: static !important;
+	left: auto !important;
+	top: auto !important;
+	width: auto !important;
+	min-width: 0;
+}
+
+@media (min-width: 720px) {
+	.contact-card {
+		grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+		padding: 40px !important;
+		gap: 48px 56px !important;
+	}
+
+	.contact-card-intro {
+		grid-column: 1 / -1;
+	}
+}
+
+@media (min-width: 1200px) {
+	.contact-card {
+		grid-template-columns:
+			minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) !important;
+		padding: 40px !important;
+		gap: 56px !important;
+	}
+
+	.contact-card-intro {
+		grid-column: auto;
+	}
+}
+
+@media (min-width: 1440px) {
+	.contact-section {
+		padding-block: 90px !important;
+	}
+
+	.contact-card {
+		margin-top: 55px !important;
 	}
 }
