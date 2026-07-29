@@ -66,21 +66,16 @@ export function Hero({
 			const imageFrame = imageFrameRef.current
 			const actions = actionsRef.current
 			const light = section?.querySelector<HTMLElement>('.hero-light')
-			const stage = section?.querySelector<HTMLElement>('.hero-stage')
-			const gradientTail =
-				section?.querySelector<HTMLElement>('.hero-gradient-tail')
 
 			if (
 				!section ||
-				!stage ||
 				!header ||
 				!copy ||
 				!desc ||
 				!image ||
 				!imageFrame ||
 				!actions ||
-				!light ||
-				!gradientTail
+				!light
 			) {
 				return
 			}
@@ -89,7 +84,6 @@ export function Hero({
 			const lerp = (start: number, end: number, progress: number) =>
 				start + (end - start) * progress
 			const finalImageAt = 0.82
-			const gradientRotation = (12.33 * Math.PI) / 180
 
 			const readRect = (element: HTMLElement) => {
 				const computed = getComputedStyle(element)
@@ -123,20 +117,6 @@ export function Hero({
 
 			const centeredTop = (element: HTMLElement, width: number, centerY: number) =>
 				Math.round(centerY - measureTargetHeight(element, width) / 2)
-
-			const measureGradientTail = (
-				gradientTop: number,
-				gradientScale: number,
-			) => {
-				const transformedHeight =
-					gradientScale *
-					(Math.abs(start.light.width * Math.sin(gradientRotation)) +
-						Math.abs(start.light.height * Math.cos(gradientRotation)))
-				const gradientBottom =
-					gradientTop + start.light.height / 2 + transformedHeight / 2
-
-				return Math.max(0, stage.offsetHeight - gradientBottom)
-			}
 
 			const getTarget = (vh: number): ScrollTarget => {
 				const width = window.innerWidth
@@ -326,11 +306,9 @@ export function Hero({
 					imageFrame,
 					actions,
 					light,
-					gradientTail,
 				]) {
 					element.removeAttribute('style')
 				}
-				section.style.removeProperty('--hero-to-ecosystem-transfer')
 
 				start = {
 					desc: readRect(desc),
@@ -350,15 +328,6 @@ export function Hero({
 				const imageProgress = clamp(progress / finalImageAt)
 				const eased = gsap.parseEase('power2.inOut')(imageProgress)
 				const target = getTarget(vh)
-				const gradientTailHeight = measureGradientTail(
-					target.gradientTop,
-					target.gradientScale,
-				)
-				const transitionProgress = clamp((progress - 0.64) / 0.18)
-				section.style.setProperty(
-					'--hero-to-ecosystem-transfer',
-					`${gradientTailHeight.toFixed(2)}px`,
-				)
 
 				header.style.opacity = String(1 - clamp(progress * 3))
 				header.style.transform = `translateY(${-90 * eased}px)`
@@ -369,7 +338,6 @@ export function Hero({
 				light.style.opacity = '1'
 				light.style.top = `${lerp(start.light.top, target.gradientTop, eased)}px`
 				light.style.transform = `rotate(-12.33deg) scale(${lerp(1, target.gradientScale, eased)})`
-				gradientTail.style.opacity = String(transitionProgress)
 
 				image.style.left = '50%'
 				image.style.top = `${lerp(start.image.top, target.image.top, eased)}px`
@@ -436,10 +404,6 @@ export function Hero({
 			<div className='hero-stage sticky top-0 h-screen w-full overflow-hidden bg-black'>
 				<div className='absolute inset-0 z-0'>
 					<GradientOrb />
-					<div
-						className='hero-gradient-tail pointer-events-none absolute inset-x-0 bottom-0'
-						aria-hidden='true'
-					/>
 				</div>
 
 				<HeroHeader cta={headerCta} headerRef={headerRef} language={language} />
