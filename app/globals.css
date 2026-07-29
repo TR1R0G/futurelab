@@ -325,6 +325,25 @@ h3,
 	transform-origin: 50% 50%;
 }
 
+.hero-gradient-tail {
+	height: calc(var(--hero-to-ecosystem-transfer, 0px) + 1px);
+	background:
+		radial-gradient(
+			ellipse 58% 145% at 50% 0%,
+			rgba(252, 204, 1, 0.48) 0%,
+			rgba(218, 127, 206, 0.42) 44%,
+			rgba(63, 161, 252, 0.36) 74%,
+			rgba(75, 14, 91, 0.72) 100%
+		),
+		linear-gradient(
+			180deg,
+			rgba(218, 127, 206, 0.16) 0%,
+			rgba(75, 14, 91, 0.68) 100%
+		);
+	opacity: 0;
+	will-change: height, opacity;
+}
+
 .hero-light-inner {
 	position: relative;
 	width: 100%;
@@ -744,7 +763,11 @@ h3,
 	--ecosystem-card-offset: 0px;
 	--ecosystem-bottom-space: clamp(188px, 20svh, 320px);
 
-	background: #000;
+	background: linear-gradient(
+		180deg,
+		transparent 0 var(--ecosystem-card-offset),
+		#000 var(--ecosystem-card-offset) 100%
+	);
 }
 
 .ecosystem-track {
@@ -4407,7 +4430,11 @@ h3,
 	--ecosystem-icon-to-title-gap: 40px;
 	--ecosystem-title-to-description-gap: 24px;
 	--ecosystem-intro-description-to-icon-gap: 64px;
-	background: #000;
+	background: linear-gradient(
+		180deg,
+		transparent 0 var(--ecosystem-card-offset),
+		#000 var(--ecosystem-card-offset) 100%
+	);
 }
 
 .ecosystem-wrapper {
