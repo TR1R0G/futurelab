@@ -4186,6 +4186,10 @@ h3,
 }
 
 @media (min-width: 1440px) {
+	.experience-section {
+		padding-bottom: 80px !important;
+	}
+
 	.experience-flow {
 		padding-top: 150px;
 	}
