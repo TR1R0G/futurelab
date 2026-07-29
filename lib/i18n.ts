@@ -91,7 +91,7 @@ export const uiCopy: Record<
 			buttonText: 'Обсудить проект',
 		},
 		directionsCta: {
-			text: 'Начните путь в цифровой профессии через реальные проекты',
+			text: 'Начните путь в CreativeTech через обучение, воркшопы и проектную практику',
 			buttonText: 'Начать обучение',
 		},
 		experience: {

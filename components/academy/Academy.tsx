@@ -471,7 +471,7 @@ export function Academy({
 					style={{ visibility: 'hidden' }}
 				>
 					<div className='academy-programs-scale'>
-						<div className='programs-grid mx-auto grid max-w-[1436px] gap-8 min-[720px]:grid-cols-2 min-[960px]:grid-cols-3 md:gap-10'>
+						<div className='programs-grid mx-auto grid max-w-[1436px] items-stretch gap-8 min-[720px]:grid-cols-2 min-[960px]:grid-cols-3 md:gap-10'>
 							{programCards.map(card => (
 								<ProgramCard key={card.title} card={card} />
 							))}

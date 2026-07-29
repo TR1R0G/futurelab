@@ -106,14 +106,18 @@ export async function loadProgramsContent(language: Language = "ru"): Promise<Pr
 }
 
 export interface DirectionChip {
+  id: string;
   label: string;
   variant: "gradient" | "light" | "outline";
+  gradient?: "primary" | "secondary";
 }
 
 export interface DirectionsContent {
   title: string;
   chips: DirectionChip[];
   statement: {
+    inlineBefore: string;
+    inlineAfter: string;
     linesBeforeImage: string[];
     imageAlt: string;
     imageSrc: string;
