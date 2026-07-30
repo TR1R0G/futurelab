@@ -5486,3 +5486,33 @@ h3,
 		top: var(--academy-programs-flow-top) !important;
 	}
 }
+
+/* Keep the Directions video, CTA, divider, and Solutions heading in one rhythm. */
+:root {
+	--video-to-cta-gap: clamp(88px, 10svh, 112px);
+	--cta-to-divider-gap: clamp(96px, 11svh, 120px);
+	--divider-to-next-section-gap: clamp(56px, 7svh, 80px);
+}
+
+.directions-post-image {
+	min-height: 0;
+}
+
+.directions-cta-wrapper {
+	margin-top: var(--video-to-cta-gap);
+}
+
+.directions-post-image-divider {
+	margin-top: var(--cta-to-divider-gap);
+}
+
+.directions-section {
+	height: auto !important;
+	min-height: 0 !important;
+	padding-bottom: 0 !important;
+}
+
+.solutions-section {
+	margin-top: 0 !important;
+	padding-top: var(--divider-to-next-section-gap) !important;
+}
