@@ -38,7 +38,7 @@ export function CTACard({
 					? 'mt-0 h-auto rounded-[30px] px-6 py-12 md:rounded-[34px] md:px-12 md:py-14 lg:max-w-[1190px] lg:rounded-[35px] min-[1254px]:h-auto min-[1254px]:px-[77px] min-[1254px]:py-10'
 					: isWide
 						? 'mt-0 h-auto rounded-[30px] px-6 py-12 md:rounded-[34px] md:px-12 md:py-14 lg:max-w-[1190px] lg:rounded-[35px] min-[1254px]:h-auto min-[1254px]:px-[77px] min-[1254px]:py-10'
-						: 'mt-24 h-auto rounded-[30px] px-6 py-12 md:mt-32 md:rounded-[34px] md:px-12 md:py-14 lg:rounded-[35px] min-[1254px]:px-[56px] min-[1254px]:py-10'
+						: 'mt-24 h-auto rounded-[30px] px-6 py-12 md:mt-32 md:rounded-[34px] md:px-12 md:py-14 lg:rounded-[35px] min-[1254px]:px-[56px] min-[1254px]:py-14'
 			}`}
 		>
 			<p
