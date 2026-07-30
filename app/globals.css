@@ -5465,3 +5465,24 @@ h3,
 		transform: none !important;
 	}
 }
+
+/* ProgramCards follow the rendered Academy copy instead of legacy fixed tops. */
+.academy-section {
+	--academy-description-to-programs-gap: 36px;
+}
+
+@media (min-width: 720px) {
+	.academy-section {
+		--academy-description-to-programs-gap: 48px;
+	}
+}
+
+@media (min-width: 960px) {
+	.academy-section {
+		--academy-description-to-programs-gap: 64px;
+	}
+
+	.academy-programs-stage {
+		top: var(--academy-programs-flow-top) !important;
+	}
+}

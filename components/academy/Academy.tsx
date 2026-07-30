@@ -58,6 +58,7 @@ export function Academy({
 		let resizeObserver: ResizeObserver | undefined
 		let responsiveMatchMedia: ReturnType<typeof gsap.matchMedia> | undefined
 		let refreshResponsiveLayout = () => ScrollTrigger.refresh()
+		let applyProgramsFlowTop = () => {}
 		let refreshTimeout = 0
 		const scheduleRefresh = () => {
 			window.clearTimeout(refreshTimeout)
@@ -101,6 +102,18 @@ export function Academy({
 			const lastCardIndex = cardShells.length - 1
 			const cardExitDuration = 0.82
 			const isResponsivePrograms = () => window.innerWidth < 960
+			const getProgramsGap = () => {
+				const configuredGap = Number.parseFloat(
+					window
+						.getComputedStyle(section)
+						.getPropertyValue('--academy-description-to-programs-gap'),
+				)
+
+				if (Number.isFinite(configuredGap)) return configuredGap
+				if (window.innerWidth < 720) return 36
+				if (window.innerWidth < 960) return 48
+				return 64
+			}
 			const getProgramsSafeTop = () => (window.innerWidth < 720 ? 20 : 28)
 			const getProgramsSafeBottom = () =>
 				window.innerHeight - (window.innerWidth < 720 ? 72 : 32)
@@ -153,7 +166,7 @@ export function Academy({
 				const headingRect = academyHeading.getBoundingClientRect()
 				const pinRect = pin.getBoundingClientRect()
 				const headingBottomAtRest = headingRect.bottom - pinRect.top - currentY
-				const targetBottom = getProgramsSafeTop() - 36
+				const targetBottom = getProgramsSafeTop() - getProgramsGap()
 
 				return -Math.max(0, headingBottomAtRest - targetBottom)
 			}
@@ -168,15 +181,34 @@ export function Academy({
 					section.style.removeProperty('min-height')
 				}
 			}
+			applyProgramsFlowTop = () => {
+				if (!academyHeading || !programsStage || window.innerWidth < 960) {
+					section.style.removeProperty('--academy-programs-flow-top')
+					return
+				}
+
+				const programsTop =
+					academyHeading.offsetTop +
+					academyHeading.offsetHeight +
+					getProgramsGap()
+
+				section.style.setProperty(
+					'--academy-programs-flow-top',
+					`${Math.ceil(programsTop)}px`,
+				)
+			}
 			refreshResponsiveLayout = () => {
+				applyProgramsFlowTop()
 				applyResponsiveSectionHeight()
 				ScrollTrigger.refresh()
 			}
+			ScrollTrigger.addEventListener('refreshInit', applyProgramsFlowTop)
 
 			if (programsGrid && 'ResizeObserver' in window) {
 				resizeObserver = new ResizeObserver(refreshResponsiveLayout)
 				resizeObserver.observe(programsGrid)
 			}
+			applyProgramsFlowTop()
 			applyResponsiveSectionHeight()
 
 			gsap.set(cardShells, {
@@ -410,10 +442,12 @@ export function Academy({
 			window.removeEventListener('load', scheduleRefresh)
 			window.removeEventListener('resize', scheduleRefresh)
 			window.removeEventListener('orientationchange', scheduleRefresh)
+			ScrollTrigger.removeEventListener('refreshInit', applyProgramsFlowTop)
 			resizeObserver?.disconnect()
 			responsiveMatchMedia?.revert()
 			section.style.removeProperty('height')
 			section.style.removeProperty('min-height')
+			section.style.removeProperty('--academy-programs-flow-top')
 			ctx.revert()
 		}
 	}, [])
