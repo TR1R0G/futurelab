@@ -3,6 +3,7 @@
 import { CTACard } from '@/components/infrastructure/CTACard'
 import { ExpandedImageScreen } from '@/components/media/ExpandedImageScreen'
 import { LazyVideo } from '@/components/media/LazyVideo'
+import { registerGsapPlugins, ScrollTrigger } from '@/lib/gsap'
 import type { DirectionsContent, Language } from '@/lib/mdx'
 import { useEffect, useRef } from 'react'
 import { DirectionsLight } from './DirectionsLight'
@@ -23,6 +24,32 @@ const directionGradients = {
 		'linear-gradient(90deg, #4B0E5B 0%, #A91E83 22%, #FD9A34 58%, #F9EB44 100%)',
 } as const
 
+const DIRECTIONS_CANVAS_WIDTH = 696
+const DIRECTIONS_CANVAS_HEIGHT = 256
+const DIRECTIONS_NARROW_CANVAS_WIDTH = 430
+const DIRECTIONS_NARROW_CANVAS_HEIGHT = 390
+const DIRECTIONS_ULTRA_NARROW_CANVAS_HEIGHT = 780
+const DIRECTIONS_DESKTOP_BOARD_HEIGHT = 340
+const DIRECTIONS_CANVAS_TOP = 70
+const DIRECTIONS_CANVAS_RIGHT = -14
+const DIRECTIONS_CANVAS_VISUAL_TOP = 16
+const DIRECTIONS_CANVAS_VISUAL_HEIGHT =
+	DIRECTIONS_CANVAS_HEIGHT - DIRECTIONS_CANVAS_VISUAL_TOP
+const DIRECTIONS_CANONICAL_FONT_SIZE = 13.44
+const DIRECTIONS_MIN_VISUAL_FONT_SIZE = 10
+const DIRECTIONS_NARROW_MIN_VISUAL_FONT_SIZE = 8.5
+const DIRECTIONS_RESPONSIVE_PROPERTIES = [
+	'--directions-chip-scale',
+	'--directions-chip-canvas-width',
+	'--directions-chip-canvas-height',
+	'--directions-responsive-board-height',
+	'--directions-chip-canvas-top',
+	'--directions-chip-canvas-right',
+	'--directions-chip-mobile-top',
+	'--directions-chip-mobile-height',
+	'--directions-responsive-font-size',
+] as const
+
 export function Directions({
 	title,
 	chips,
@@ -36,6 +63,156 @@ export function Directions({
 			? '/videos/academy/academy-en.mp4'
 			: '/videos/academy/academy-ru.mp4'
 	const compactStatement = `${statement.inlineBefore} ${statement.inlineAfter}`
+	const boardCardRef = useRef<HTMLDivElement>(null)
+	const chipViewportRef = useRef<HTMLDivElement>(null)
+
+	useEffect(() => {
+		const boardCard = boardCardRef.current
+		const chipViewport = chipViewportRef.current
+		if (!boardCard || !chipViewport) return
+
+		registerGsapPlugins()
+
+		let updateFrame = 0
+		let refreshTimer = 0
+		let previousScale = -1
+		let previousMobile = false
+		let previousNarrow = false
+		let previousUltraNarrow = false
+
+		const clearResponsiveProperties = () => {
+			DIRECTIONS_RESPONSIVE_PROPERTIES.forEach(property =>
+				boardCard.style.removeProperty(property),
+			)
+		}
+
+		const scheduleRefresh = () => {
+			window.clearTimeout(refreshTimer)
+			refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 80)
+		}
+
+		const updateResponsiveCanvas = () => {
+			const isResponsive = window.matchMedia('(max-width: 1279px)').matches
+			if (!isResponsive) {
+				if (previousScale !== -1) {
+					clearResponsiveProperties()
+					previousScale = -1
+					scheduleRefresh()
+				}
+				return
+			}
+
+			const viewportWidth = chipViewport.clientWidth
+			if (viewportWidth <= 0) return
+
+			const isMobile = window.matchMedia('(max-width: 844px)').matches
+			const isNarrow = window.matchMedia('(max-width: 456px)').matches
+			const isUltraNarrow = window.matchMedia('(max-width: 319px)').matches
+			const canvasWidth = isNarrow
+				? DIRECTIONS_NARROW_CANVAS_WIDTH
+				: DIRECTIONS_CANVAS_WIDTH
+			const canvasHeight = isUltraNarrow
+				? DIRECTIONS_ULTRA_NARROW_CANVAS_HEIGHT
+				: isNarrow
+					? DIRECTIONS_NARROW_CANVAS_HEIGHT
+					: DIRECTIONS_CANVAS_HEIGHT
+			const canvasVisualTop = isNarrow
+				? 0
+				: DIRECTIONS_CANVAS_VISUAL_TOP
+			const canvasVisualHeight = isUltraNarrow
+				? DIRECTIONS_ULTRA_NARROW_CANVAS_HEIGHT
+				: isNarrow
+					? DIRECTIONS_NARROW_CANVAS_HEIGHT
+					: DIRECTIONS_CANVAS_VISUAL_HEIGHT
+			const canonicalFontSize = isNarrow
+				? 14.5
+				: DIRECTIONS_CANONICAL_FONT_SIZE
+			const scale = Math.min(1, viewportWidth / canvasWidth)
+
+			if (
+				Math.abs(scale - previousScale) < 0.001 &&
+				isMobile === previousMobile &&
+				isNarrow === previousNarrow &&
+				isUltraNarrow === previousUltraNarrow
+			) {
+				return
+			}
+
+			const minimumVisualFontSize = Math.min(
+				DIRECTIONS_MIN_VISUAL_FONT_SIZE,
+				Math.max(
+					DIRECTIONS_NARROW_MIN_VISUAL_FONT_SIZE,
+					window.innerWidth / 60,
+				),
+			)
+			const responsiveFontSize = Math.max(
+				canonicalFontSize,
+				minimumVisualFontSize / scale,
+			)
+
+			boardCard.style.setProperty(
+				'--directions-chip-canvas-width',
+				`${canvasWidth}px`,
+			)
+			boardCard.style.setProperty(
+				'--directions-chip-canvas-height',
+				`${canvasHeight}px`,
+			)
+			boardCard.style.setProperty(
+				'--directions-chip-scale',
+				scale.toFixed(5),
+			)
+			boardCard.style.setProperty(
+				'--directions-responsive-board-height',
+				`${DIRECTIONS_DESKTOP_BOARD_HEIGHT * scale}px`,
+			)
+			boardCard.style.setProperty(
+				'--directions-chip-canvas-top',
+				`${DIRECTIONS_CANVAS_TOP * scale}px`,
+			)
+			boardCard.style.setProperty(
+				'--directions-chip-canvas-right',
+				`${DIRECTIONS_CANVAS_RIGHT * scale}px`,
+			)
+			boardCard.style.setProperty(
+				'--directions-chip-mobile-top',
+				`${-canvasVisualTop * scale}px`,
+			)
+			boardCard.style.setProperty(
+				'--directions-chip-mobile-height',
+				`${canvasVisualHeight * scale}px`,
+			)
+			boardCard.style.setProperty(
+				'--directions-responsive-font-size',
+				`${responsiveFontSize}px`,
+			)
+
+			previousScale = scale
+			previousMobile = isMobile
+			previousNarrow = isNarrow
+			previousUltraNarrow = isUltraNarrow
+			scheduleRefresh()
+		}
+
+		const scheduleUpdate = () => {
+			window.cancelAnimationFrame(updateFrame)
+			updateFrame = window.requestAnimationFrame(updateResponsiveCanvas)
+		}
+
+		const resizeObserver = new ResizeObserver(scheduleUpdate)
+		resizeObserver.observe(chipViewport)
+		window.addEventListener('orientationchange', scheduleUpdate)
+		void document.fonts.ready.then(scheduleUpdate)
+		scheduleUpdate()
+
+		return () => {
+			resizeObserver.disconnect()
+			window.removeEventListener('orientationchange', scheduleUpdate)
+			window.cancelAnimationFrame(updateFrame)
+			window.clearTimeout(refreshTimer)
+			clearResponsiveProperties()
+		}
+	}, [])
 
 	return (
 		<section className='directions-section relative z-[80] isolate overflow-visible bg-black px-5 pb-28 pt-6 md:px-8 md:pb-36 md:pt-8 min-[960px]:pt-40 lg:pb-44 lg:pt-52 xl:pt-36 min-[1600px]:pt-[380px]'>
@@ -48,20 +225,30 @@ export function Directions({
 					}}
 					aria-hidden='true'
 				/>
-				<div className='directions-board-card relative min-h-[420px] overflow-visible rounded-[35px] bg-[#1D1D1D] p-8'>
+				<div
+					ref={boardCardRef}
+					className='directions-board-card relative min-h-[420px] overflow-visible rounded-[35px] bg-[#1D1D1D] p-8'
+				>
 					<h2 className='directions-board-title project-mini-heading relative z-10 text-[30px] font-semibold leading-none text-white'>
 						{title}
 					</h2>
 
-					<div className='directions-chip-layer z-10'>
-						{chips.map(chip => (
-							<div
-								key={chip.id}
-								className={`directions-chip-slot directions-chip-slot--${chip.id}`}
-							>
-								<DirectionChip chip={chip} />
+					<div
+						ref={chipViewportRef}
+						className='directions-chip-viewport'
+					>
+						<div className='directions-chip-canvas'>
+							<div className='directions-chip-layer z-10'>
+								{chips.map(chip => (
+									<div
+										key={chip.id}
+										className={`directions-chip-slot directions-chip-slot--${chip.id}`}
+									>
+										<DirectionChip chip={chip} />
+									</div>
+								))}
 							</div>
-						))}
+						</div>
 					</div>
 				</div>
 			</div>
