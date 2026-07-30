@@ -10,6 +10,7 @@ import { CTACard } from "@/components/infrastructure/CTACard";
 import { Experience } from "@/components/experience/Experience";
 import { ContactBlock } from "@/components/contact/ContactBlock";
 import { Footer } from "@/components/footer/Footer";
+import { GlobalSoundToggle } from "@/components/providers/SoundProvider";
 import {
   loadHeroContent,
   loadEcosystemContent,
@@ -51,7 +52,7 @@ export async function generateMetadata({
           description: seo.openGraph.description,
           url: seo.canonical,
           type: "website",
-          locale: "ru_RU",
+          locale: language === "ru" ? "ru_RU" : "en_US",
         }
       : undefined,
   };
@@ -61,10 +62,24 @@ export default async function Home({ searchParams }: HomeProps) {
   const params = await searchParams;
   const language = normalizeLanguage(params?.lang);
   const copy = uiCopy[language];
-  const siteUrl =
+  const seo = seoCopy[language];
+  const siteUrl = seo.canonical ?? "https://future-lab.uz/ru";
+  const structuredDataDescription =
     language === "ru"
-      ? "https://future-lab.uz/ru"
-      : "https://future-lab.uz/?lang=en";
+      ? "CreativeTech-хаб в Самарканде для обучения, практики и разработки AI, AR/VR, WebAR, 3D, Holography и иммерсивных digital-продуктов."
+      : seo.structuredData?.description;
+  const structuredDataAddress =
+    language === "ru"
+      ? {
+          "@type": "PostalAddress",
+          streetAddress: "ул. Амира Темура, 162",
+          addressLocality: "Самарканд",
+          addressCountry: "Узбекистан",
+        }
+      : {
+          "@type": "PostalAddress",
+          ...seo.structuredData?.address,
+        };
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -74,26 +89,15 @@ export default async function Home({ searchParams }: HomeProps) {
         name: "FutureLab by NazzAR",
         url: siteUrl,
         logo: "https://future-lab.uz/images/logo.svg",
-        description:
-          language === "ru"
-            ? "CreativeTech-хаб в Самарканде для обучения, практики и разработки AI, AR/VR, WebAR, 3D, Holography и иммерсивных digital-продуктов."
-            : undefined,
-        address: {
-          "@type": "PostalAddress",
-          streetAddress: "ул. Амира Темура, 162",
-          addressLocality: "Самарканд",
-          addressCountry: "Узбекистан",
-        },
+        description: structuredDataDescription,
+        address: structuredDataAddress,
       },
       {
         "@type": "EducationalOrganization",
         "@id": `${siteUrl}#educational-organization`,
         name: "FutureLab by NazzAR",
         url: siteUrl,
-        description:
-          language === "ru"
-            ? "CreativeTech-хаб в Самарканде для обучения, практики и разработки AI, AR/VR, WebAR, 3D, Holography и иммерсивных digital-продуктов."
-            : undefined,
+        description: structuredDataDescription,
         parentOrganization: {
           "@id": `${siteUrl}#organization`,
         },
@@ -103,19 +107,11 @@ export default async function Home({ searchParams }: HomeProps) {
         "@id": `${siteUrl}#local-business`,
         name: "FutureLab by NazzAR",
         url: siteUrl,
-        description:
-          language === "ru"
-            ? "CreativeTech-хаб в Самарканде для обучения, практики и разработки AI, AR/VR, WebAR, 3D, Holography и иммерсивных digital-продуктов."
-            : undefined,
+        description: structuredDataDescription,
         parentOrganization: {
           "@id": `${siteUrl}#organization`,
         },
-        address: {
-          "@type": "PostalAddress",
-          streetAddress: "ул. Амира Темура, 162",
-          addressLocality: "Самарканд",
-          addressCountry: "Узбекистан",
-        },
+        address: structuredDataAddress,
       },
     ],
   };
@@ -147,6 +143,9 @@ export default async function Home({ searchParams }: HomeProps) {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(structuredData),
         }}
+      />
+      <GlobalSoundToggle
+        enableLabel={language === "en" ? "Turn on sound" : undefined}
       />
       <Hero
         title={heroContent.title}
@@ -207,7 +206,10 @@ export default async function Home({ searchParams }: HomeProps) {
       </section>
       <Experience {...copy.experience} />
       <ContactBlock {...copy.contact} />
-      <Footer address={copy.footer.address} />
+      <Footer
+        address={copy.footer.address}
+        copyright={copy.footer.copyright}
+      />
     </main>
   );
 }

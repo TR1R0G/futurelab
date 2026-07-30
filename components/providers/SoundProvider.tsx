@@ -515,14 +515,17 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
   return (
     <SoundContext.Provider value={value}>
       {children}
-      <GlobalSoundToggle />
     </SoundContext.Provider>
   );
 }
 
-function GlobalSoundToggle() {
+export function GlobalSoundToggle({
+  enableLabel = "Включить звук",
+}: {
+  enableLabel?: string;
+}) {
   const { soundEnabled, hasVisibleMedia, toggleSound } = useGlobalSound();
-  const label = soundEnabled ? "Выключить звук" : "Включить звук";
+  const label = soundEnabled ? "Выключить звук" : enableLabel;
 
   return (
     <button

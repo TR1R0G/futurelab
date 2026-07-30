@@ -1,7 +1,13 @@
 import Image from 'next/image'
 import type { ReactNode } from 'react'
 
-export function Footer({ address }: { address: string }) {
+export function Footer({
+	address,
+	copyright,
+}: {
+	address: string
+	copyright?: string
+}) {
 	return (
 		<footer className='footer-section font-onest relative h-auto bg-black px-5 py-16 text-white md:px-8 min-[1200px]:px-0 lg:h-[385px] lg:py-0'>
 			<div className='footer-inner mx-auto w-full max-w-[1436px] lg:relative lg:h-full'>
@@ -32,7 +38,8 @@ export function Footer({ address }: { address: string }) {
 				<div className='footer-line mt-16 h-px w-full bg-[#2F2F2F] lg:absolute lg:left-0 lg:top-[283px] lg:mt-0' />
 
 				<p className='footer-copyright mt-6 text-center text-[16px] leading-[30px] text-[#949494] lg:absolute lg:left-1/2 lg:top-[310px] lg:mt-0 lg:w-auto lg:-translate-x-1/2 lg:whitespace-nowrap'>
-					© 2026 FutureLab by NazzAR Innovation. Все права защищены.
+					{copyright ??
+						'© 2026 FutureLab by NazzAR Innovation. Все права защищены.'}
 				</p>
 			</div>
 		</footer>

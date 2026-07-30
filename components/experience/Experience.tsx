@@ -11,6 +11,7 @@ interface ExperienceProps {
 	}[]
 	outro: string[]
 	buttonText: string
+	aboutText?: string
 }
 
 const mosaicTiles = [
@@ -33,12 +34,15 @@ const mosaicTiles = [
 	{ src: '/images/block7/row7/02.png', left: 414, top: 1087, width: 268 },
 ]
 
+const statIds = ['solutions', 'interactions', 'experience'] as const
+
 export function Experience({
 	title,
 	intro,
 	stats,
 	outro,
 	buttonText,
+	aboutText,
 }: ExperienceProps) {
 	return (
 		<section className='experience-section trust-section relative overflow-hidden bg-black px-5 py-24 md:px-8 md:py-28 min-[1440px]:h-[1384px] min-[1440px]:px-0 min-[1440px]:py-0'>
@@ -57,8 +61,13 @@ export function Experience({
 					</div>
 
 					<div className='experience-stats trust-stats-grid grid gap-5 md:grid-cols-2 min-[1200px]:grid-cols-3 min-[1440px]:flex min-[1440px]:gap-10'>
-						{stats.map(stat => (
-							<StatCard key={stat.value} value={stat.value} label={stat.label} />
+						{stats.map((stat, index) => (
+							<StatCard
+								key={statIds[index] ?? `stat-${index}`}
+								id={statIds[index] ?? `stat-${index}`}
+								value={stat.value}
+								label={stat.label}
+							/>
 						))}
 					</div>
 
@@ -66,6 +75,7 @@ export function Experience({
 						{outro.map(paragraph => (
 							<p key={paragraph}>{paragraph}</p>
 						))}
+						{aboutText ? <p data-about-project>{aboutText}</p> : null}
 					</div>
 
 					<a
@@ -82,9 +92,20 @@ export function Experience({
 	)
 }
 
-function StatCard({ value, label }: { value: string; label: string }) {
+function StatCard({
+	id,
+	value,
+	label,
+}: {
+	id: string
+	value: string
+	label: string
+}) {
 	return (
-		<article className='experience-stat-card relative h-[340px] w-full overflow-hidden rounded-[35px] bg-white md:h-[320px] md:w-auto min-[1440px]:h-[281px] min-[1440px]:w-[452px]'>
+		<article
+			data-stat-id={id}
+			className='experience-stat-card relative h-[340px] w-full overflow-hidden rounded-[35px] bg-white md:h-[320px] md:w-auto min-[1440px]:h-[281px] min-[1440px]:w-[452px]'
+		>
 			<span
 				className='absolute left-0 top-0 h-full w-[83px] bg-[linear-gradient(46.02deg,#4B0E5B_-1.84%,#A91E83_28.61%,#FD9A34_65.03%,#F9EB44_100%)]'
 				aria-hidden='true'

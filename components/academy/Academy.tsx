@@ -39,6 +39,15 @@ const cardStyles = [
 	},
 ] as const
 
+const academyCardIds = [
+	'grant-selection',
+	'hybrid-learning',
+	'creative-disciplines',
+	'aspiring-specialists',
+	'project-portfolio',
+	'internship-role',
+]
+
 export function Academy({
 	title,
 	subtitle,
@@ -479,7 +488,7 @@ export function Academy({
 
 						return (
 							<div
-								key={card.title}
+								key={academyCardIds[index] ?? `academy-benefit-${index}`}
 								className='academy-card-shell absolute left-1/2 top-1/2 h-[280px] w-[280px] will-change-transform'
 								style={{
 									zIndex: style.zIndex,
@@ -507,7 +516,7 @@ export function Academy({
 					<div className='academy-programs-scale'>
 						<div className='programs-grid mx-auto grid max-w-[1436px] items-stretch gap-8 min-[720px]:grid-cols-2 min-[960px]:grid-cols-3 md:gap-10'>
 							{programCards.map(card => (
-								<ProgramCard key={card.title} card={card} />
+								<ProgramCard key={card.image} card={card} />
 							))}
 						</div>
 					</div>

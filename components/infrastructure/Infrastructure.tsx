@@ -102,7 +102,7 @@ export function Infrastructure({
 
 			<div className='infrastructure-cards mx-auto mt-12 grid max-w-[1436px] gap-8 px-5 md:mt-16 md:gap-10 md:px-8 min-[1200px]:grid-cols-3 xl:px-0'>
 				{cards.map(card => (
-					<InfrastructureCard key={card.title} card={card} />
+					<InfrastructureCard key={card.icon} card={card} />
 				))}
 			</div>
 

@@ -38,6 +38,11 @@ const SOLUTION_ANIMATION_START_OFFSET = 5
 const MUSEUM_VIDEO_SRC = '/videos/museum/museum.mp4'
 const TEMURIDS_VIDEO_SRC = '/videos/temurids/temurids.mp4'
 const LEARN_MORE_SEPARATOR = '\u00a0\u00a0•\u00a0\u00a0'
+const solutionCardIds = [
+	'immersive-solutions',
+	'ar-digital-experts',
+	'timurid-heritage',
+] as const
 
 type Rect = {
 	left: number
@@ -690,6 +695,7 @@ export function Solutions({
 				</p>
 
 				{cards.map((card, index) => {
+					const cardId = solutionCardIds[index] ?? card.image
 					const top = SOLUTION_CARD_TOP + index * SOLUTION_BLOCK_HEIGHT
 					const imageTop =
 						SOLUTION_CARD_IMAGE_TOP + index * SOLUTION_BLOCK_HEIGHT
@@ -708,7 +714,8 @@ export function Solutions({
 
 					return (
 						<div
-							key={card.title}
+							key={cardId}
+							data-solution-id={cardId}
 							className='solution-item relative min-[1370px]:contents'
 						>
 							<SolutionCard

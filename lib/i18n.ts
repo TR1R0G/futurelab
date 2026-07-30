@@ -18,16 +18,27 @@ const seoKeywords = [
 	'Узбекистан',
 ]
 
+const englishSeoKeywords =
+	'FutureLab, NazzAR, CreativeTech, AI, AR, VR, WebAR, 3D, GameDev, Holography, digital tourism, museum technologies, immersive products, Samarkand, Uzbekistan'
+
 export const seoCopy: Record<
 	Language,
 	{
 		title: string
 		description?: string
-		keywords: string[]
+		keywords: string | string[]
 		canonical?: string
 		openGraph?: {
 			title: string
 			description: string
+		}
+		structuredData?: {
+			description: string
+			address: {
+				streetAddress: string
+				addressLocality: string
+				addressCountry: string
+			}
 		}
 	}
 > = {
@@ -48,7 +59,25 @@ export const seoCopy: Record<
 	en: {
 		title:
 			'FutureLab by NazzAR — CreativeTech Hub for AI, AR/VR, 3D & Immersive Digital Products',
-		keywords: seoKeywords,
+		description:
+			'FutureLab by NazzAR — a CreativeTech hub in Samarkand: education, practice, and development of AI, AR/VR, WebAR, 3D, Holography, and digital products for museums, tourism, and business.',
+		keywords: englishSeoKeywords,
+		canonical: 'https://future-lab.uz/en',
+		openGraph: {
+			title:
+				'FutureLab by NazzAR — CreativeTech Hub for AI, AR/VR, 3D & Holography',
+			description:
+				'Education, project practice, and development of immersive digital products for museums, tourism, education, and business.',
+		},
+		structuredData: {
+			description:
+				'CreativeTech hub in Samarkand for education, practice, and development of AI, AR/VR, WebAR, 3D, Holography, and immersive digital products.',
+			address: {
+				streetAddress: 'Amir Temur Street, 162',
+				addressLocality: 'Samarkand',
+				addressCountry: 'UZ',
+			},
+		},
 	},
 }
 
@@ -72,6 +101,7 @@ export const uiCopy: Record<
 			}[]
 			outro: string[]
 			buttonText: string
+			aboutText?: string
 		}
 		contact: {
 			title: string
@@ -82,6 +112,7 @@ export const uiCopy: Record<
 		}
 		footer: {
 			address: string
+			copyright?: string
 		}
 	}
 > = {
@@ -135,49 +166,54 @@ export const uiCopy: Record<
 	},
 	en: {
 		projectCta: {
-			text: 'Let’s discuss your project and propose the right solution',
-			buttonText: 'Discuss a project',
+			text: 'Tell us about your task — we will suggest a digital solution format for your project',
+			buttonText: 'Discuss a solution',
 		},
 		directionsCta: {
-			text: 'Start your path in a digital profession through real projects',
-			buttonText: 'Start learning',
+			text: 'Start your path in CreativeTech through learning, workshops, and project practice',
+			buttonText: 'Apply for selection',
 		},
 		experience: {
-			title: 'Experience and trust confirmed by results',
+			title: 'Trust confirmed by implementations',
 			intro: [
-				'Future Lab is part of NazzAR Innovation Group, with many years of experience delivering AR projects.',
-				'We work with cultural, educational, and tourism projects, creating digital solutions for real spaces and large audiences.',
+				'FutureLab is developing within the NazzAR Innovation Group ecosystem — an environment where education, technology, digital products, and practical projects come together in CreativeTech, AI, AR/VR, 3D, Holography, and smart tourism.',
+				'We work with museums, educational organizations, tourist sites, and businesses, creating digital solutions for real spaces, visitors, and customers.',
 			],
 			stats: [
 				{
-					value: 'Over 250',
+					value: 'More than 250',
 					label:
-						'implemented AR solutions\nin museums, exhibitions,\nand tourist locations',
+						'AR/WebAR solutions for museums, exhibitions, tourist sites, and businesses',
 				},
 				{
-					value: 'Over 1,000,000',
-					label: 'users have interacted\nwith our solutions',
+					value: 'More than 1,000,000',
+					label: 'user interactions with NazzAR solutions',
 				},
 				{
-					value: '8+ years of experience',
-					label: 'winners of international\ncompetitions',
+					value: '8+ years of team experience',
+					label: 'winners of international competitions',
 				},
 			],
 			outro: [
-				'Our experience is built on AR solutions for projects with high attendance and complex interaction scenarios.',
-				'Explore projects where we have already successfully implemented AR and VR solutions.',
+				'Our experience has been shaped by projects with high visitor traffic, multilingual content, complex interaction scenarios, and real-world use in museum, tourism, and commercial spaces.',
+				'View NazzAR projects where technologies are already working for museums, tourism, education, and business.',
 			],
 			buttonText: 'View projects',
+			aboutText:
+				'FutureLab by NazzAR — a CreativeTech hub where education, practice, and development come together in one ecosystem. We create digital products for museums, tourism, education, and business: WebAR guides, virtual experts, 3D content, interactive exhibitions, AI services, holographic solutions, and web platforms.',
 		},
 		contact: {
-			title: 'Any questions?',
-			cardTitle: 'Contact us',
-			cardText: 'Reach out with questions\nand partnership proposals!',
-			emailTitle: 'Write to the futurelab team',
-			telegramTitle: 'Start a chat in Telegram',
+			title: 'Have questions?',
+			cardTitle: 'Contact the FutureLab team',
+			cardText:
+				'Tell us what you need from FutureLab’s directions, and we will suggest a suitable format.',
+			emailTitle: 'Email the FutureLab team',
+			telegramTitle: 'Message us on Telegram',
 		},
 		footer: {
-			address: 'Uzbekistan, Samarkand, Amir Temur St., 162',
+			address: 'Uzbekistan, Samarkand, Amir Temur Street, 162',
+			copyright:
+				'© 2026 FutureLab by NazzAR Innovation. All rights reserved.',
 		},
 	},
 }

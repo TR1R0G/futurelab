@@ -53,6 +53,20 @@ const TITLE_LINE_MAP: Record<
       "specialist development",
     ],
   },
+  "CreativeTech hub for education, practice, and development of immersive digital products":
+    {
+      desktop: [
+        "CreativeTech hub for education,",
+        "practice, and development of immersive",
+        "digital products",
+      ],
+      compact: [
+        "CreativeTech hub for",
+        "education, practice, and",
+        "development of immersive",
+        "digital products",
+      ],
+    },
 };
 
 export function HeroTitle({ title }: HeroTitleProps) {
