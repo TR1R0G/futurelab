@@ -13,7 +13,7 @@ export default async function MuseumPage({ searchParams }: MuseumPageProps) {
     language === "en"
       ? "/documents/museum/AR-eng.pdf"
       : "/documents/museum/AR-rus.pdf";
-  const backHref = `/?lang=${language}`;
+  const backHref = `/${language}`;
 
   return (
     <main className="min-h-screen bg-black text-white">

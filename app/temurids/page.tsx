@@ -13,7 +13,7 @@ export default async function TemuridsPage({
 }: TemuridsPageProps) {
 	const params = await searchParams
 	const language = normalizeLanguage(params?.lang)
-	const backHref = `/?lang=${language}`
+	const backHref = `/${language}`
 
 	return (
 		<main className='min-h-screen bg-black text-white'>

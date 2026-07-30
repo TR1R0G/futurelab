@@ -5,6 +5,7 @@ import { useGlobalVideoSound } from '@/components/providers/SoundProvider'
 import type { Language } from '@/lib/mdx'
 import { scrollToHashTarget } from '@/lib/smooth-scroll'
 import Image from 'next/image'
+import Link from 'next/link'
 import type { MouseEvent, RefObject } from 'react'
 import { useEffect, useRef } from 'react'
 import { GradientOrb } from './GradientOrb'
@@ -509,21 +510,21 @@ function HeroHeader({
 				</a>
 			</div>
 			<div className='hero-language' aria-label='Language'>
-				<a
-					href='?lang=en'
+				<Link
+					href='/en'
 					className={language === 'en' ? 'font-bold' : 'font-normal'}
 					aria-current={language === 'en' ? 'true' : undefined}
 				>
 					Eng
-				</a>
+				</Link>
 				<span className='hero-language-divider' aria-hidden='true' />
-				<a
-					href='?lang=ru'
+				<Link
+					href='/ru'
 					className={language === 'ru' ? 'font-bold' : 'font-normal'}
 					aria-current={language === 'ru' ? 'true' : undefined}
 				>
 					Рус
-				</a>
+				</Link>
 			</div>
 		</header>
 	)
