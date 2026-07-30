@@ -89,7 +89,7 @@ export function Infrastructure({
 	return (
 		<section
 			ref={sectionRef}
-			className='infrastructure-section w-full overflow-x-hidden bg-black pb-24 md:pb-32 lg:pb-40'
+			className='infrastructure-section w-full overflow-x-hidden bg-black'
 		>
 			<div className='infrastructure-heading mx-auto max-w-[1436px] px-5 md:px-8 xl:px-0'>
 				<h2 className='font-heading max-w-3xl text-[36px] font-bold leading-[1.08] text-white md:text-5xl lg:max-w-[800px] lg:text-[56px]'>
@@ -110,9 +110,9 @@ export function Infrastructure({
 
 			<CTACard text={ctaText} buttonText={ctaButton} href='#contacts' />
 
-			<div className='infrastructure-separator-wrap py-24 md:py-32'>
+			<div className='infrastructure-separator-wrap pt-24 md:pt-32'>
 				<div
-					className='infrastructure-separator mx-auto h-[5px] w-[calc(100%_-_40px)] max-w-[1436px] rounded-full bg-[linear-gradient(90deg,#4B0E5B_0%,#A91E83_29.9%,#FD9A34_65.67%,#F9EB44_100%)] shadow-[0_0_18px_rgba(253,154,52,0.28)] md:w-[calc(100%_-_64px)]'
+					className='infrastructure-separator mx-auto h-[5px] w-[calc(100%_-_40px)] max-w-[1436px] rounded-full bg-[linear-gradient(90deg,#4B0E5B_0%,#A91E83_29.9%,#FD9A34_65.67%,#F9EB44_100%)] md:w-[calc(100%_-_64px)]'
 					aria-hidden='true'
 				/>
 			</div>

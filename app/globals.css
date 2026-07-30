@@ -5471,6 +5471,20 @@ h3,
 	--academy-description-to-programs-gap: 36px;
 }
 
+/* Keep the Infrastructure divider close to Academy without changing its CTA gap. */
+.infrastructure-section {
+	--divider-to-academy-gap: clamp(56px, 6svh, 88px);
+}
+
+.infrastructure-separator-wrap {
+	padding-bottom: var(--divider-to-academy-gap);
+}
+
+.infrastructure-separator {
+	box-shadow: none;
+	filter: none;
+}
+
 @media (min-width: 720px) {
 	.academy-section {
 		--academy-description-to-programs-gap: 48px;
