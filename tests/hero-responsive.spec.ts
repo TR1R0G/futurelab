@@ -127,6 +127,7 @@ for (const language of ['en', 'ru'] as const) {
             descriptionActions: intersects(descriptionRect, actionsRect),
             actionsImage: intersects(actionsRect, imageRect),
           },
+          imageAspect: imageRect.width / imageRect.height,
           buttonHeights: buttons.map((button) =>
             button.getBoundingClientRect().height,
           ),
@@ -168,6 +169,7 @@ for (const language of ['en', 'ru'] as const) {
       expect(result.overlaps.titleDescription).toBe(false)
       expect(result.overlaps.descriptionActions).toBe(false)
       expect(result.overlaps.actionsImage).toBe(false)
+      expect(result.imageAspect).toBeCloseTo(530 / 928, 2)
       for (const height of result.buttonHeights) {
         expect(height).toBeGreaterThanOrEqual(44)
       }

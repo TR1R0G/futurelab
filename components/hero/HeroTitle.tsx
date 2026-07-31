@@ -125,7 +125,7 @@ export function HeroTitle({ title }: HeroTitleProps) {
           </span>
           <span className="hero-title-lines-compact">
             {compactTitleLines.map((line) => (
-              <span key={line} className="block whitespace-nowrap">
+              <span key={line} className="block whitespace-normal">
                 {line}
               </span>
             ))}

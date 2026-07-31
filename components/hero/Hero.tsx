@@ -402,49 +402,53 @@ export function Hero({
 
 	return (
 		<section ref={sectionRef} className='hero-section relative w-full bg-black'>
-			<div className='hero-stage sticky top-0 h-screen w-full overflow-hidden bg-black'>
+			<div className='hero-stage sticky top-0 w-full bg-black'>
 				<div className='absolute inset-0 z-0'>
 					<GradientOrb />
 				</div>
 
 				<HeroHeader cta={headerCta} headerRef={headerRef} language={language} />
 
-				<div ref={copyRef} className='hero-copy relative z-10'>
-					<HeroTitle title={title} />
-				</div>
-
-				<p ref={descRef} className='hero-description relative z-10'>
-					{description}
-				</p>
-
-				<div ref={imageRef} className='hero-image relative z-10'>
-					<div
-						ref={imageFrameRef}
-						className='hero-image-frame relative h-full w-full overflow-hidden rounded-[13px] shadow-2xl shadow-black/45'
-					>
-						<video
-							key={heroVideoSrc}
-							ref={videoRef}
-							className='h-full w-full object-cover'
-							aria-label={imageAlt}
-							autoPlay
-							loop
-							playsInline
-							preload='auto'
-							poster='/images/optimized/office.webp'
-							disablePictureInPicture
-						>
-							<source src={heroVideoSrc} type='video/mp4' />
-						</video>
+				<div className='hero-content'>
+					<div ref={copyRef} className='hero-copy relative z-10'>
+						<HeroTitle title={title} />
 					</div>
-				</div>
 
-				<div ref={actionsRef} className='hero-action-panel relative z-10'>
-					<HeroActions
-						primaryCta={primaryCta}
-						secondaryCta={secondaryCta}
-						projectsCta={projectsCta}
-					/>
+					<div className='hero-support'>
+						<p ref={descRef} className='hero-description relative z-10'>
+							{description}
+						</p>
+
+						<div ref={imageRef} className='hero-image relative z-10'>
+							<div
+								ref={imageFrameRef}
+								className='hero-image-frame relative h-full w-full overflow-hidden rounded-[13px] shadow-2xl shadow-black/45'
+							>
+								<video
+									key={heroVideoSrc}
+									ref={videoRef}
+									className='h-full w-full object-cover'
+									aria-label={imageAlt}
+									autoPlay
+									loop
+									playsInline
+									preload='auto'
+									poster='/images/optimized/office.webp'
+									disablePictureInPicture
+								>
+									<source src={heroVideoSrc} type='video/mp4' />
+								</video>
+							</div>
+						</div>
+
+						<div ref={actionsRef} className='hero-action-panel relative z-10'>
+							<HeroActions
+								primaryCta={primaryCta}
+								secondaryCta={secondaryCta}
+								projectsCta={projectsCta}
+							/>
+						</div>
+					</div>
 				</div>
 			</div>
 		</section>
