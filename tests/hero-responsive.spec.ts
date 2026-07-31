@@ -72,6 +72,18 @@ async function waitForHero(page: Page) {
     !document.documentElement.classList.contains('is-preloading'),
   )
   await page.evaluate(() => document.fonts.ready)
+  await page.locator('.hero-image video').evaluate(async (video) => {
+    if (video.readyState >= HTMLMediaElement.HAVE_METADATA) return
+    await new Promise<void>((resolve) => {
+      video.addEventListener('loadedmetadata', () => resolve(), { once: true })
+    })
+  })
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+      }),
+  )
 }
 
 async function readHeroLayoutState(page: Page) {
@@ -117,6 +129,25 @@ async function readHeroLayoutState(page: Page) {
         actionsImage: overlaps(rects.actions, rects.image),
       },
     }
+  })
+}
+
+async function readAnimatedHeroBoxes(page: Page) {
+  return page.evaluate(() => {
+    const selectors = [
+      '.hero-description',
+      '.hero-image',
+      '.hero-action-panel',
+    ] as const
+
+    return Object.fromEntries(
+      selectors.map((selector) => {
+        const { left, top, width, height } = document
+          .querySelector<HTMLElement>(selector)!
+          .getBoundingClientRect()
+        return [selector, { left, top, width, height }]
+      }),
+    ) as Record<(typeof selectors)[number], Geometry>
   })
 }
 
@@ -248,6 +279,139 @@ for (const language of ['en', 'ru'] as const) {
     })
   }
 }
+
+const scrollViewports = [
+  { width: 360, height: 800 },
+  { width: 720, height: 900 },
+  { width: 1024, height: 768 },
+  { width: 1600, height: 900 },
+  { width: 2560, height: 1440 },
+] as const
+
+for (const language of ['en', 'ru'] as const) {
+  for (const viewport of scrollViewports) {
+    test(`${language} Hero scroll geometry at ${viewport.width}x${viewport.height}`, async ({ page }) => {
+      await page.setViewportSize(viewport)
+      await page.goto(`/${language}`)
+      await waitForHero(page)
+
+      const sectionHeight = await page.locator('.hero-section').evaluate(
+        (section) => section.getBoundingClientRect().height,
+      )
+      const finalScroll = Math.max(0, sectionHeight - viewport.height - 2)
+      let initialImageBox: Geometry | undefined
+
+      for (const progress of [0, 0.5, 1, 0.5, 0]) {
+        await page.evaluate(
+          ({ y }) => window.scrollTo({ top: y, behavior: 'instant' }),
+          { y: finalScroll * progress },
+        )
+        await page.waitForTimeout(100)
+
+        const state = await page.evaluate(() => {
+          const image = document.querySelector<HTMLElement>('.hero-image')!
+          const stage = document.querySelector<HTMLElement>('.hero-stage')!
+          const content = document.querySelector<HTMLElement>('.hero-content')!
+          const rect = image.getBoundingClientRect()
+          const stageRect = stage.getBoundingClientRect()
+          const contentRect = content.getBoundingClientRect()
+          return {
+            left: rect.left,
+            right: rect.right,
+            top: rect.top,
+            bottom: rect.bottom,
+            width: rect.width,
+            height: rect.height,
+            viewportWidth: window.innerWidth,
+            viewportHeight: window.innerHeight,
+            stage: {
+              left: stageRect.left,
+              top: stageRect.top,
+              width: stageRect.width,
+              height: stageRect.height,
+            },
+            contentWidth: contentRect.width,
+            horizontalOverflow:
+              document.documentElement.scrollWidth >
+              document.documentElement.clientWidth,
+          }
+        })
+
+        expect(state.horizontalOverflow).toBe(false)
+        expect(state.left).toBeGreaterThanOrEqual(-0.5)
+        expect(state.right).toBeLessThanOrEqual(state.viewportWidth + 0.5)
+        expect(state.width).toBeGreaterThan(0)
+        expect(state.height).toBeGreaterThan(0)
+
+        if (progress === 1) {
+          const availableStageHeight = Math.min(
+            state.stage.height,
+            state.viewportHeight,
+          )
+          const expectedWidth = Math.min(
+            530,
+            state.contentWidth,
+            availableStageHeight * 0.92 * (530 / 928),
+          )
+          expect(Math.abs(state.width - expectedWidth)).toBeLessThanOrEqual(1)
+          expect(
+            Math.abs(
+              state.left + state.width / 2 -
+                (state.stage.left + state.stage.width / 2),
+            ),
+          ).toBeLessThanOrEqual(1)
+        }
+
+        if (!initialImageBox) {
+          initialImageBox = state
+        } else if (progress === 0) {
+          expect(Math.abs(state.left - initialImageBox.left)).toBeLessThanOrEqual(1)
+          expect(Math.abs(state.top - initialImageBox.top)).toBeLessThanOrEqual(1)
+          expect(Math.abs(state.width - initialImageBox.width)).toBeLessThanOrEqual(1)
+          expect(Math.abs(state.height - initialImageBox.height)).toBeLessThanOrEqual(1)
+        }
+      }
+    })
+  }
+}
+
+test('Hero scroll geometry refreshes after language changes', async ({ page }) => {
+  const viewport = { width: 720, height: 900 }
+  const baselinePage = await page.context().newPage()
+  await baselinePage.setViewportSize(viewport)
+  await baselinePage.goto('/ru')
+  await waitForHero(baselinePage)
+  const expected = await readAnimatedHeroBoxes(baselinePage)
+  await baselinePage.close()
+
+  await page.setViewportSize(viewport)
+  await page.goto('/en')
+  await waitForHero(page)
+  const sectionHeight = await page.locator('.hero-section').evaluate(
+    (section) => section.getBoundingClientRect().height,
+  )
+  await page.evaluate(
+    ({ y }) => window.scrollTo({ top: y, behavior: 'instant' }),
+    { y: (sectionHeight - viewport.height - 2) * 0.5 },
+  )
+  await page.waitForTimeout(100)
+
+  await page.locator('.hero-language a[href="/ru"]').click()
+  await page.waitForURL('**/ru')
+  await waitForHero(page)
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
+  await page.waitForTimeout(100)
+
+  const actual = await readAnimatedHeroBoxes(page)
+  for (const selector of Object.keys(expected) as (keyof typeof expected)[]) {
+    for (const dimension of ['left', 'top', 'width', 'height'] as const) {
+      expect(
+        Math.abs(actual[selector][dimension] - expected[selector][dimension]),
+        `${selector} ${dimension}`,
+      ).toBeLessThanOrEqual(1)
+    }
+  }
+})
 
 const shortHeightCases = [
   { width: 768, height: 650, expectedPosition: 'relative', expectedOverflow: 'visible', tracks: 1 },

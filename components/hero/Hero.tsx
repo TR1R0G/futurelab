@@ -1,6 +1,6 @@
 'use client'
 
-import { gsap, registerGsapPlugins } from '@/lib/gsap'
+import { gsap, registerGsapPlugins, ScrollTrigger } from '@/lib/gsap'
 import { useGlobalVideoSound } from '@/components/providers/SoundProvider'
 import type { Language } from '@/lib/mdx'
 import { scrollToHashTarget } from '@/lib/smooth-scroll'
@@ -58,347 +58,366 @@ export function Hero({
 	useEffect(() => {
 		registerGsapPlugins()
 
+		const section = sectionRef.current
+		const header = headerRef.current
+		const copy = copyRef.current
+		const desc = descRef.current
+		const image = imageRef.current
+		const imageFrame = imageFrameRef.current
+		const video = videoRef.current
+		const actions = actionsRef.current
+		const light = section?.querySelector<HTMLElement>('.hero-light')
+
+		if (
+			!section ||
+			!header ||
+			!copy ||
+			!desc ||
+			!image ||
+			!imageFrame ||
+			!video ||
+			!actions ||
+			!light
+		) {
+			return
+		}
+
+		const animationElements = [header, copy, desc, image, actions, light]
+		const clearAnimationStyles = () => {
+			gsap.set(animationElements, {
+				clearProps: 'opacity,transform,left,right,top,width,height',
+			})
+			gsap.set(imageFrame, { clearProps: 'borderRadius' })
+		}
+
+		const clamp = (value: number) => Math.min(1, Math.max(0, value))
+		const lerp = (start: number, end: number, progress: number) =>
+			start + (end - start) * progress
+		const ease = gsap.parseEase('power2.inOut')
+		const finalImageAt = 0.82
+		const videoAspect = 530 / 928
+
+		const toBox = (element: HTMLElement, stageBox: DOMRect) => {
+			const rect = element.getBoundingClientRect()
+			return {
+				left: rect.left - stageBox.left,
+				top: rect.top - stageBox.top,
+				width: rect.width,
+				height: rect.height,
+			}
+		}
+
+		const measureHeightAtWidth = (element: HTMLElement, width: number) => {
+			element.style.width = `${width}px`
+			const height = element.getBoundingClientRect().height
+			element.style.removeProperty('width')
+			return height
+		}
+
+		const media = gsap.matchMedia()
+		let refreshFrame = 0
+		let active = true
+
+		const refresh = () => {
+			if (!active) return
+			window.cancelAnimationFrame(refreshFrame)
+			refreshFrame = window.requestAnimationFrame(() => ScrollTrigger.refresh())
+		}
+
 		const ctx = gsap.context(() => {
-			const section = sectionRef.current
-			const header = headerRef.current
-			const copy = copyRef.current
-			const desc = descRef.current
-			const image = imageRef.current
-			const imageFrame = imageFrameRef.current
-			const actions = actionsRef.current
-			const light = section?.querySelector<HTMLElement>('.hero-light')
+			media.add(
+				{
+					mobile: '(max-width: 719px)',
+					short: '(max-width: 1199px) and (max-height: 600px)',
+					tablet:
+						'(min-width: 720px) and (max-width: 959px) and (min-height: 601px)',
+					laptop:
+						'(min-width: 960px) and (max-width: 1199px) and (min-height: 601px)',
+					desktop: '(min-width: 1200px) and (max-width: 1599px)',
+					largeDesktop: '(min-width: 1600px)',
+				},
+				(context) => {
+					const conditions = context.conditions!
+					const hideSupportingText = conditions.mobile || conditions.short
+					const expandedRadius =
+						conditions.desktop || conditions.largeDesktop ? 35 : 25
+					let frame = 0
 
-			if (
-				!section ||
-				!header ||
-				!copy ||
-				!desc ||
-				!image ||
-				!imageFrame ||
-				!actions ||
-				!light
-			) {
-				return
-			}
+					const measure = () => {
+						const stage = section.querySelector<HTMLElement>('.hero-stage')!
+						const content = section.querySelector<HTMLElement>('.hero-content')!
+						const stageBox = stage.getBoundingClientRect()
+						const contentBox = content.getBoundingClientRect()
+						const start = {
+							desc: toBox(desc, stageBox),
+							image: toBox(image, stageBox),
+							actions: toBox(actions, stageBox),
+							light: toBox(light, stageBox),
+						}
+						const availableStageHeight =
+							Math.min(stageBox.height, window.innerHeight) * 0.92
+						const imageWidth = Math.min(
+							530,
+							contentBox.width,
+							availableStageHeight * videoAspect,
+						)
+						const imageHeight = imageWidth / videoAspect
+						const columnGap = Math.max(
+							24,
+							Math.min(64, contentBox.width * 0.04),
+						)
+						const sideWidth = Math.max(
+							1,
+							(contentBox.width - imageWidth) / 2 - columnGap,
+						)
+						const descriptionWidth = Math.min(start.desc.width, sideWidth)
+						const actionsWidth = Math.min(start.actions.width, sideWidth)
+						const descriptionHeight = measureHeightAtWidth(
+							desc,
+							descriptionWidth,
+						)
+						const actionsHeight = measureHeightAtWidth(actions, actionsWidth)
 
-			const clamp = (value: number) => Math.min(1, Math.max(0, value))
-			const lerp = (start: number, end: number, progress: number) =>
-				start + (end - start) * progress
-			const finalImageAt = 0.82
-
-			const readRect = (element: HTMLElement) => {
-				const computed = getComputedStyle(element)
-				return {
-					left: parseFloat(computed.left) || 0,
-					right: parseFloat(computed.right) || 0,
-					top: parseFloat(computed.top) || 0,
-					width: parseFloat(computed.width) || 0,
-					height: parseFloat(computed.height) || 0,
-				}
-			}
-
-			const measureTargetHeight = (element: HTMLElement, width: number) => {
-				const clone = element.cloneNode(true) as HTMLElement
-				clone.removeAttribute('style')
-				clone.style.position = 'fixed'
-				clone.style.left = '-9999px'
-				clone.style.top = '0'
-				clone.style.width = `${width}px`
-				clone.style.height = 'auto'
-				clone.style.visibility = 'hidden'
-				clone.style.pointerEvents = 'none'
-				clone.style.transform = 'none'
-				clone.style.opacity = '1'
-				document.body.appendChild(clone)
-				const height = clone.getBoundingClientRect().height
-				clone.remove()
-
-				return height || element.getBoundingClientRect().height
-			}
-
-			const centeredTop = (element: HTMLElement, width: number, centerY: number) =>
-				Math.round(centerY - measureTargetHeight(element, width) / 2)
-
-			const getTarget = (vh: number): ScrollTarget => {
-				const width = window.innerWidth
-				const visualGroupWidth = 1013.91
-				const visualGroupHeight = 946.61
-				const visualScale = Math.min(
-					1,
-					(width * 0.9) / visualGroupWidth,
-					(vh * 0.92) / visualGroupHeight,
-				)
-				const imageWidth = Math.round(530 * visualScale)
-				const imageHeight = Math.round(928 * visualScale)
-				const imageTop = Math.max(32, Math.round((vh - imageHeight) / 2))
-				const centerY = vh / 2
-				const gradientTop = Math.round(
-					(vh - visualGroupHeight * visualScale) / 2 + 22 * visualScale,
-				)
-				const gradientScale = (visualGroupHeight * visualScale) / 508.64
-
-				if (width >= 1600) {
-					const frameOffset = (width - 1920) / 2
-					const desktopDescriptionLeft = Math.max(
-						40,
-						Math.round(frameOffset + 242),
-					)
-					const desktopActionsRight = Math.max(
-						40,
-						Math.round(width - (frameOffset + 1349 + 329)),
-					)
-					const desktopDescriptionWidth = 402
-					const desktopActionsWidth = 329
-
-					return {
-						image: { top: imageTop, width: imageWidth, height: imageHeight },
-						description: {
-							left: desktopDescriptionLeft,
-							top: centeredTop(desc, desktopDescriptionWidth, centerY),
-							width: desktopDescriptionWidth,
-						},
-						actions: {
-							right: desktopActionsRight,
-							top: centeredTop(actions, desktopActionsWidth, centerY),
-							width: desktopActionsWidth,
-						},
-						gradientScale,
-						gradientTop,
+						return {
+							stage,
+							start,
+							initialRadius: parseFloat(getComputedStyle(imageFrame).borderRadius),
+							target: {
+								image: {
+									left: (stageBox.width - imageWidth) / 2,
+									width: imageWidth,
+									height: imageHeight,
+								},
+								desc: {
+									left: contentBox.left - stageBox.left,
+									width: descriptionWidth,
+									height: descriptionHeight,
+								},
+								actions: {
+									left:
+										contentBox.right - stageBox.left - actionsWidth,
+									width: actionsWidth,
+									height: actionsHeight,
+								},
+							},
+						}
 					}
-				}
 
-				if (width >= 1200) {
-					const compactHeight = vh <= 820
-					const tabletImageWidth = compactHeight ? 340 : 373
-					const tabletImageHeight = compactHeight ? 596 : 653
-					const actionsWidth = 270
-					const frameWidth = Math.min(width, 1400)
-					const frameLeft = (width - frameWidth) / 2
-					const sideSpace = frameWidth * 0.0825
-					const contentLeft = frameLeft + sideSpace
-					const imageLeft = (width - tabletImageWidth) / 2
-					const descriptionWidth = Math.min(
-						compactHeight ? 310 : 370,
-						Math.max(240, Math.floor(imageLeft - contentLeft - 36)),
-					)
+					clearAnimationStyles()
+					let geometry = measure()
 
-					return {
-						image: {
-							top: Math.round((vh - tabletImageHeight) / 2),
-							width: tabletImageWidth,
-							height: tabletImageHeight,
-						},
-						description: {
-							left: Math.round(contentLeft),
-							top: centeredTop(desc, descriptionWidth, centerY),
-							width: descriptionWidth,
-						},
-						actions: {
-							right: Math.round(contentLeft),
-							top: centeredTop(actions, actionsWidth, centerY),
-							width: actionsWidth,
-						},
-						gradientScale,
-						gradientTop: Math.round((vh - 631.91) / 2 - 60),
+					const positionElement = (
+						element: HTMLElement,
+						width: number,
+						height: number | undefined,
+						left: number,
+						top: number,
+						centeredByCss = false,
+					) => {
+						element.style.width = `${width}px`
+						if (height !== undefined) element.style.height = `${height}px`
+						element.style.removeProperty('transform')
+						const baseBox = element.getBoundingClientRect()
+						const x = left - baseBox.left
+						const y = top - baseBox.top
+						element.style.transform = centeredByCss
+							? `translate(calc(-50% + ${x}px), ${y}px)`
+							: `translate(${x}px, ${y}px)`
 					}
-				}
 
-				if (width >= 900) {
-					const mediumImageWidth = 373
-					const mediumImageHeight = 653
+					const update = () => {
+						frame = 0
+						const sectionBox = section.getBoundingClientRect()
+						const sectionTop = sectionBox.top + window.scrollY
+						const scrollDistance = Math.max(
+							1,
+							sectionBox.height - window.innerHeight,
+						)
+						const progress = clamp(
+							(window.scrollY - sectionTop) / scrollDistance,
+						)
+						const imageProgress = clamp(progress / finalImageAt)
+						const eased = ease(imageProgress)
+						const stageBox = geometry.stage.getBoundingClientRect()
+						const viewportCenter = window.innerHeight / 2
 
-					return {
-						image: {
-							top: Math.round((vh - mediumImageHeight) / 2),
-							width: mediumImageWidth,
-							height: mediumImageHeight,
-						},
-						description: {
-							left: 35,
-							top: centeredTop(desc, 210, centerY),
-							width: 210,
-						},
-						actions: {
-							right: 35,
-							top: centeredTop(actions, 210, centerY),
-							width: 210,
-						},
-						gradientScale,
-						gradientTop: Math.round((vh - 631.91) / 2 - 60),
+						header.style.opacity = String(1 - clamp(progress * 3))
+						header.style.transform = `translateY(${-90 * eased}px)`
+						copy.style.opacity = String(1 - clamp(progress * 3))
+						copy.style.transform = `translateY(${-150 * eased}px)`
+
+						if (hideSupportingText) {
+							desc.style.opacity = String(1 - clamp(progress * 5))
+							actions.style.opacity = String(1 - clamp(progress * 5))
+						} else {
+							desc.style.opacity = '1'
+							actions.style.opacity = '1'
+
+							const descriptionWidth = lerp(
+								geometry.start.desc.width,
+								geometry.target.desc.width,
+								eased,
+							)
+							positionElement(
+								desc,
+								descriptionWidth,
+								undefined,
+								lerp(
+									stageBox.left + geometry.start.desc.left,
+									stageBox.left + geometry.target.desc.left,
+									eased,
+								),
+								lerp(
+									stageBox.top + geometry.start.desc.top,
+									viewportCenter - geometry.target.desc.height / 2,
+									eased,
+								),
+							)
+
+							const actionsWidth = lerp(
+								geometry.start.actions.width,
+								geometry.target.actions.width,
+								eased,
+							)
+							positionElement(
+								actions,
+								actionsWidth,
+								undefined,
+								lerp(
+									stageBox.left + geometry.start.actions.left,
+									stageBox.left + geometry.target.actions.left,
+									eased,
+								),
+								lerp(
+									stageBox.top + geometry.start.actions.top,
+									viewportCenter - geometry.target.actions.height / 2,
+									eased,
+								),
+							)
+						}
+
+						const imageWidth = lerp(
+							geometry.start.image.width,
+							geometry.target.image.width,
+							eased,
+						)
+						const imageHeight = lerp(
+							geometry.start.image.height,
+							geometry.target.image.height,
+							eased,
+						)
+						const imageLeft = lerp(
+							stageBox.left + geometry.start.image.left,
+							stageBox.left + geometry.target.image.left,
+							eased,
+						)
+						const imageTop = lerp(
+							stageBox.top + geometry.start.image.top,
+							viewportCenter - geometry.target.image.height / 2,
+							eased,
+						)
+						positionElement(
+							image,
+							imageWidth,
+							imageHeight,
+							imageLeft,
+							imageTop,
+							true,
+						)
+						imageFrame.style.borderRadius = `${lerp(
+							geometry.initialRadius,
+							expandedRadius,
+							eased,
+						)}px`
+
+						const imageCenterX = imageLeft + imageWidth / 2
+						const imageCenterY = imageTop + imageHeight / 2
+						const startLightCenterX =
+							stageBox.left +
+							geometry.start.light.left +
+							geometry.start.light.width / 2
+						const startLightCenterY =
+							stageBox.top +
+							geometry.start.light.top +
+							geometry.start.light.height / 2
+						const lightCenterX = lerp(startLightCenterX, imageCenterX, eased)
+						const lightCenterY = lerp(startLightCenterY, imageCenterY, eased)
+						const gradientScale = Math.max(
+							geometry.target.image.width / geometry.start.light.width,
+							geometry.target.image.height / geometry.start.light.height,
+						)
+
+						light.style.removeProperty('left')
+						light.style.removeProperty('top')
+						light.style.transform = `rotate(-12.33deg) scale(${lerp(
+							1,
+							gradientScale,
+							eased,
+						)})`
+						const lightBox = light.getBoundingClientRect()
+						light.style.left = `${
+							light.offsetLeft + lightCenterX - (lightBox.left + lightBox.width / 2)
+						}px`
+						light.style.top = `${
+							light.offsetTop + lightCenterY - (lightBox.top + lightBox.height / 2)
+						}px`
+						light.style.opacity = '1'
 					}
-				}
 
-				if (width >= 720) {
-					const smallTabletImageWidth = 373
-					const smallTabletImageHeight = 653
-					const descriptionLeft = 35
-					const imageLeft = (width - smallTabletImageWidth) / 2
-					const descriptionWidth = Math.min(
-						210,
-						Math.max(120, Math.floor(imageLeft - descriptionLeft - 32)),
-					)
-					const imageRight = imageLeft + smallTabletImageWidth
-					const actionsWidth = Math.min(
-						210,
-						Math.max(140, Math.floor(width - imageRight - 32)),
-					)
-					const actionsRight = Math.max(
-						0,
-						Math.round(width - imageRight - 32 - actionsWidth),
-					)
-
-					return {
-						image: {
-							top: Math.round((vh - smallTabletImageHeight) / 2),
-							width: smallTabletImageWidth,
-							height: smallTabletImageHeight,
-						},
-						description: {
-							left: descriptionLeft,
-							top: centeredTop(desc, descriptionWidth, centerY),
-							width: descriptionWidth,
-						},
-						actions: {
-							right: actionsRight,
-							top: centeredTop(actions, actionsWidth, centerY),
-							width: actionsWidth,
-						},
-						gradientScale,
-						gradientTop: Math.round((vh - 631.91) / 2 - 60),
+					const requestUpdate = () => {
+						if (frame) return
+						frame = window.requestAnimationFrame(update)
 					}
-				}
 
-				const mobileVideoAspect = 530 / 928
-				const mobileMaxHeight = Math.max(360, vh - 48)
-				const mobileMaxWidth = Math.max(280, width - 20)
-				const mobileImageWidth = Math.round(
-					Math.min(mobileMaxWidth, mobileMaxHeight * mobileVideoAspect),
-				)
-				const mobileImageHeight = Math.round(
-					mobileImageWidth / mobileVideoAspect,
-				)
+					const trigger = ScrollTrigger.create({
+						trigger: section,
+						start: () => {
+							const sectionBox = section.getBoundingClientRect()
+							return sectionBox.top + window.scrollY
+						},
+						end: () => {
+							const sectionBox = section.getBoundingClientRect()
+							const sectionTop = sectionBox.top + window.scrollY
+							return (
+								sectionTop + Math.max(1, sectionBox.height - window.innerHeight)
+							)
+						},
+						invalidateOnRefresh: true,
+						onRefreshInit: clearAnimationStyles,
+						onRefresh: () => {
+							geometry = measure()
+							requestUpdate()
+						},
+						onUpdate: requestUpdate,
+					})
 
-				return {
-					image: {
-						top: Math.max(20, Math.round((vh - mobileImageHeight) / 2)),
-						width: mobileImageWidth,
-						height: mobileImageHeight,
-					},
-					hideText: true,
-					gradientScale,
-					gradientTop: 120,
-				}
-			}
+					window.addEventListener('scroll', requestUpdate, { passive: true })
+					update()
 
-			let frame = 0
-			let start = {
-				desc: readRect(desc),
-				image: readRect(image),
-				actions: readRect(actions),
-				light: readRect(light),
-			}
-
-			const resetInlineStyles = () => {
-				for (const element of [
-					header,
-					copy,
-					desc,
-					image,
-					imageFrame,
-					actions,
-					light,
-				]) {
-					element.removeAttribute('style')
-				}
-
-				start = {
-					desc: readRect(desc),
-					image: readRect(image),
-					actions: readRect(actions),
-					light: readRect(light),
-				}
-			}
-
-			const update = () => {
-				frame = 0
-
-				const vh = window.innerHeight
-				const maxScroll = Math.max(1, section.offsetHeight - vh)
-				const sectionTop = section.getBoundingClientRect().top + window.scrollY
-				const progress = clamp((window.scrollY - sectionTop) / maxScroll)
-				const imageProgress = clamp(progress / finalImageAt)
-				const eased = gsap.parseEase('power2.inOut')(imageProgress)
-				const target = getTarget(vh)
-
-				header.style.opacity = String(1 - clamp(progress * 3))
-				header.style.transform = `translateY(${-90 * eased}px)`
-
-				copy.style.opacity = String(1 - clamp(progress * 3))
-				copy.style.transform = `translateY(${-150 * eased}px)`
-
-				light.style.opacity = '1'
-				light.style.top = `${lerp(start.light.top, target.gradientTop, eased)}px`
-				light.style.transform = `rotate(-12.33deg) scale(${lerp(1, target.gradientScale, eased)})`
-
-				image.style.left = '50%'
-				image.style.top = `${lerp(start.image.top, target.image.top, eased)}px`
-				image.style.width = `${lerp(start.image.width, target.image.width, eased)}px`
-				image.style.height = `${lerp(start.image.height, target.image.height, eased)}px`
-				image.style.transform = 'translateX(-50%)'
-				const initialRadius =
-					window.innerWidth >= 1200 && window.innerWidth < 1600 ? 15 : 13
-				const expandedRadius = window.innerWidth < 1200 ? 25 : 35
-				imageFrame.style.borderRadius = `${lerp(
-					initialRadius,
-					expandedRadius,
-					eased,
-				)}px`
-
-				if (target.hideText) {
-					desc.style.opacity = String(1 - clamp(progress * 5))
-					actions.style.opacity = String(1 - clamp(progress * 5))
-					return
-				}
-
-				const description = target.description
-				const actionTarget = target.actions
-
-				if (!description || !actionTarget) return
-
-				desc.style.opacity = '1'
-				desc.style.left = `${lerp(start.desc.left, description.left, eased)}px`
-				desc.style.top = `${lerp(start.desc.top, description.top, eased)}px`
-				desc.style.width = `${lerp(start.desc.width, description.width, eased)}px`
-
-				actions.style.opacity = '1'
-				actions.style.left = 'auto'
-				actions.style.right = `${lerp(start.actions.right, actionTarget.right, eased)}px`
-				actions.style.top = `${lerp(start.actions.top, actionTarget.top, eased)}px`
-				actions.style.width = `${lerp(start.actions.width, actionTarget.width, eased)}px`
-			}
-
-			const requestUpdate = () => {
-				if (frame) return
-				frame = window.requestAnimationFrame(update)
-			}
-
-			resetInlineStyles()
-			update()
-
-			window.addEventListener('scroll', requestUpdate, { passive: true })
-			window.addEventListener('resize', resetInlineStyles)
-			window.addEventListener('resize', requestUpdate)
-
-			return () => {
-				if (frame) window.cancelAnimationFrame(frame)
-				window.removeEventListener('scroll', requestUpdate)
-				window.removeEventListener('resize', resetInlineStyles)
-				window.removeEventListener('resize', requestUpdate)
-			}
+					return () => {
+						if (frame) window.cancelAnimationFrame(frame)
+						window.removeEventListener('scroll', requestUpdate)
+						trigger.kill()
+						clearAnimationStyles()
+					}
+				},
+			)
 		}, sectionRef)
 
-		return () => ctx.revert()
-	}, [])
+		void document.fonts.ready.then(refresh)
+		video.addEventListener('loadedmetadata', refresh, { once: true })
+		window.addEventListener('orientationchange', refresh)
+
+		return () => {
+			active = false
+			window.cancelAnimationFrame(refreshFrame)
+			video.removeEventListener('loadedmetadata', refresh)
+			window.removeEventListener('orientationchange', refresh)
+			media.revert()
+			ctx.revert()
+			clearAnimationStyles()
+		}
+	}, [language, heroVideoSrc])
 
 	return (
 		<section ref={sectionRef} className='hero-section relative w-full bg-black'>
@@ -453,27 +472,6 @@ export function Hero({
 			</div>
 		</section>
 	)
-}
-
-interface ScrollTarget {
-	image: {
-		top: number
-		width: number
-		height: number
-	}
-	gradientScale: number
-	gradientTop: number
-	hideText?: boolean
-	description?: {
-		left: number
-		top: number
-		width: number
-	}
-	actions?: {
-		right: number
-		top: number
-		width: number
-	}
 }
 
 function HeroHeader({
