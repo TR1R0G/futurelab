@@ -5104,10 +5104,30 @@ h3,
 	}
 }
 
-@media (min-width: 1200px) and (max-width: 1599px) {
+@media (min-width: 1200px) {
 	.hero-section {
-		--hero-frame-width: min(100vw, 1400px);
-		--hero-side-space: clamp(99px, 8.25vw, 115.5px);
+		--hero-frame-width: min(
+			100vw,
+			clamp(1400px, calc(20vw + 1120px), 1440px)
+		);
+		--hero-frame-left: calc((100vw - var(--hero-frame-width)) / 2);
+		--hero-edge: clamp(99px, 8.25vw, 115.5px);
+		--hero-inner-edge: calc(var(--hero-edge) - var(--hero-frame-left));
+		--hero-stage-extension: clamp(0px, calc(45vw - 540px), 20svh);
+		--hero-title-top-min: clamp(228px, calc(20.5vw - 59px), 269px);
+		--hero-title-top-max: clamp(257px, calc(6vw + 173px), 269px);
+		--hero-title-top: clamp(
+			var(--hero-title-top-min),
+			calc(100svh - 643px),
+			var(--hero-title-top-max)
+		);
+		--hero-description-top: clamp(540px, calc(50svh + 195px), 735px);
+		--hero-actions-top: clamp(560px, calc(50svh + 199px), 739px);
+		--hero-image-top: clamp(482px, calc(50svh + 107px), 647px);
+		--hero-light-top: clamp(318px, calc(50svh - 57px), 483px);
+		--hero-copy-width: clamp(1025px, calc(73.5vw - 4px), 1172px);
+		--hero-description-width: clamp(369px, calc(16.5vw + 138px), 402px);
+		--hero-actions-width: clamp(270px, calc(29.5vw - 143px), 329px);
 		height: auto;
 		min-height: calc(100svh + var(--hero-scroll-distance));
 	}
@@ -5115,7 +5135,7 @@ h3,
 	.hero-stage {
 		position: sticky;
 		top: 0;
-		height: 100svh;
+		height: calc(100svh + var(--hero-stage-extension));
 		min-height: 0;
 		overflow: hidden;
 	}
@@ -5131,7 +5151,7 @@ h3,
 	}
 
 	.hero-brand-shell {
-		width: 770px;
+		width: clamp(770px, calc(87vw - 448px), 944px);
 		height: 64px;
 		justify-content: space-between;
 		padding: 0 12px 0 24px;
@@ -5145,20 +5165,21 @@ h3,
 
 	.hero-header-button {
 		display: inline-flex;
-		height: auto;
+		height: clamp(40px, calc(72px - 2vw), 44px);
 		min-width: 0;
-		min-height: 44px;
 		padding-inline: 24px;
-		border-radius: 13px;
-		font-size: 15px;
-		line-height: 18px;
+		border-radius: clamp(13px, calc(0.5vw + 6px), 14px);
+		font-size: clamp(15px, calc(1vw + 1px), 17px);
+		line-height: clamp(18px, calc(1vw + 4px), 20px);
 		white-space: nowrap;
 	}
 
 	.hero-language {
 		position: absolute;
-		right: calc((100vw - var(--hero-frame-width)) / 2 + var(--hero-side-space));
+		top: 50%;
+		right: var(--hero-edge);
 		width: auto;
+		transform: translateY(-50%);
 		gap: 14px;
 		font-size: 15px;
 		line-height: 18px;
@@ -5180,14 +5201,14 @@ h3,
 	}
 
 	.hero-copy {
-		left: var(--hero-side-space);
-		top: 257px;
-		width: min(1025px, calc(100% - var(--hero-side-space) - 40px));
+		left: var(--hero-inner-edge);
+		top: var(--hero-title-top);
+		width: var(--hero-copy-width);
 	}
 
 	.hero-title {
-		font-size: 70px;
-		line-height: 72px;
+		font-size: clamp(64px, 5vw, 80px);
+		line-height: clamp(66px, calc(3vw + 30px), 76px);
 	}
 
 	.hero-title-lines-default {
@@ -5203,18 +5224,18 @@ h3,
 	}
 
 	.hero-description {
-		left: var(--hero-side-space);
-		top: 735px;
-		width: 369px;
-		font-size: 21px;
+		left: var(--hero-inner-edge);
+		top: var(--hero-description-top);
+		width: var(--hero-description-width);
+		font-size: clamp(21px, calc(1vw + 7px), 23px);
 		line-height: 1.7;
 	}
 
 	.hero-action-panel {
 		left: auto;
-		right: var(--hero-side-space);
-		top: 739px;
-		width: 270px;
+		right: var(--hero-inner-edge);
+		top: var(--hero-actions-top);
+		width: var(--hero-actions-width);
 	}
 
 	.hero-actions {
@@ -5226,231 +5247,47 @@ h3,
 		min-height: 44px;
 		padding-block: 0;
 		border-radius: 13px;
-		font-size: 20px;
-		line-height: 24px;
+		font-size: clamp(20px, calc(1vw + 6px), 22px);
+		line-height: clamp(24px, calc(1vw + 8px), 26px);
 	}
 
 	.hero-image {
 		left: 50%;
-		top: 647px;
-		width: 170px;
-		height: 298px;
-		aspect-ratio: auto;
+		top: var(--hero-image-top);
+		width: clamp(150px, calc(15.1515svh + 33.636px), 170px);
+		height: auto;
+		aspect-ratio: 530 / 928;
 		transform: translateX(-50%);
 	}
-}
-
-@media (min-width: 1200px) and (max-width: 1399px) {
-	.hero-title {
-		font-size: 64px;
-		line-height: 66px;
-	}
-}
-
-@media (min-width: 1200px) and (max-width: 1599px) and (max-height: 950px) {
-	.hero-description {
-		top: 645px;
-	}
-
-	.hero-action-panel {
-		top: 649px;
-	}
-
-	.hero-image {
-		top: 557px;
-	}
 
 	.hero-light {
-		top: 393px;
+		top: var(--hero-light-top);
 	}
 }
 
-@media (min-width: 1200px) and (max-width: 1399px) and (max-height: 820px) {
-	.hero-copy {
-		top: 228px;
-	}
-
-	.hero-description {
-		top: 540px;
-		width: 320px;
-		font-size: 18px;
-		line-height: 1.45;
-	}
-
-	.hero-action-panel {
-		top: 560px;
-	}
-
-	.hero-image {
-		top: 482px;
-		width: 150px;
-		height: 263px;
-	}
-
-	.hero-light {
-		top: 318px;
+@media (min-width: 1400px) {
+	.hero-section {
+		--hero-edge: clamp(82px, calc(350px - 16.75vw), 115.5px);
 	}
 }
 
 @media (min-width: 1600px) {
 	.hero-section {
-		height: auto;
-		min-height: calc(100svh + var(--hero-scroll-distance));
-	}
-
-	.hero-stage {
-		position: sticky;
-		top: 0;
-		height: 120svh;
-		min-height: 0;
-		overflow: hidden;
-	}
-
-	.hero-header {
-		left: 0;
-		top: 30px;
-		width: 100%;
-		transform: none;
-		flex-direction: row;
-		justify-content: center;
-		gap: 0;
+		--hero-edge: calc((100vw - 1440px) / 2 + 2px);
 	}
 
 	.hero-brand-shell {
-		width: 944px;
-		height: 64px;
-		justify-content: space-between;
-		padding: 0 12px 0 24px;
-		border: 1px solid rgba(255, 255, 255, 0.45);
-		border-radius: 24px;
-	}
-
-	.hero-brand img {
-		width: 144px;
-	}
-
-	.hero-header-button {
-		display: inline-flex;
-		height: 40px;
-		min-width: 194px;
-		padding-inline: 24px;
-		border-radius: 14px;
-		font-size: 17px;
-		line-height: 20px;
-		white-space: nowrap;
-	}
-
-	.hero-language {
-		position: absolute;
-		left: auto;
-		top: 50%;
-		right: calc((100vw - 1440px) / 2 + 2px);
-		width: auto;
-		transform: translateY(-50%);
-		gap: 14px;
-		font-size: 15px;
-		line-height: 18px;
-	}
-
-	.hero-content {
-		position: relative;
-		display: block;
-		width: 1440px;
-		height: 100%;
-		padding: 0;
-	}
-
-	.hero-copy,
-	.hero-description,
-	.hero-action-panel,
-	.hero-image {
-		position: absolute;
-	}
-
-	.hero-copy {
-		left: 2px;
-		top: 269px;
-		width: 1172px;
-	}
-
-	.hero-title {
-		font-size: 80px;
-		line-height: 76px;
-	}
-
-	.hero-title-lines-default {
-		display: block;
-	}
-
-	.hero-title-lines-compact {
-		display: none;
-	}
-
-	.hero-support {
-		display: contents;
-	}
-
-	.hero-description {
-		left: 2px;
-		top: 735px;
-		width: 402px;
-		font-size: 23px;
-		line-height: 1.7;
-	}
-
-	.hero-action-panel {
-		left: 1109px;
-		right: auto;
-		top: 739px;
-		width: 329px;
-	}
-
-	.hero-actions {
-		gap: 21px;
-	}
-
-	.hero-button {
-		height: 44px;
-		min-height: 44px;
-		padding-block: 0;
-		border-radius: 13px;
-		font-size: 22px;
-		line-height: 26px;
+		border-color: rgba(255, 255, 255, 0.45);
 	}
 
 	.hero-image {
-		left: 50%;
-		top: 647px;
 		width: 170px;
 		height: 298px;
 		aspect-ratio: auto;
-		transform: translateX(-50%);
-	}
-
-	.hero-light {
-		top: 483px;
 	}
 }
 
-@media (min-width: 1600px) and (max-height: 950px) {
-	.hero-description {
-		top: 645px;
-	}
-
-	.hero-action-panel {
-		top: 649px;
-	}
-
-	.hero-image {
-		top: 557px;
-	}
-
-	.hero-light {
-		top: 393px;
-	}
-}
-
-@media (max-width: 1199px) and (max-height: 600px) {
+@media (max-width: 1199px) and (max-height: 768px) {
 	.hero-stage {
 		position: relative;
 		top: auto;

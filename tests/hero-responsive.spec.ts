@@ -65,6 +65,52 @@ async function waitForHero(page: Page) {
   await page.evaluate(() => document.fonts.ready)
 }
 
+async function readHeroLayoutState(page: Page) {
+  return page.evaluate(() => {
+    const stage = document.querySelector<HTMLElement>('.hero-stage')!
+    const title = document.querySelector<HTMLElement>('.hero-title')!
+    const description = document.querySelector<HTMLElement>('.hero-description')!
+    const actions = document.querySelector<HTMLElement>('.hero-action-panel')!
+    const image = document.querySelector<HTMLElement>('.hero-image')!
+    const support = document.querySelector<HTMLElement>('.hero-support')!
+    const stageRect = stage.getBoundingClientRect()
+    const rects = {
+      title: title.getBoundingClientRect(),
+      description: description.getBoundingClientRect(),
+      actions: actions.getBoundingClientRect(),
+      image: image.getBoundingClientRect(),
+    }
+    const overlaps = (a: DOMRect, b: DOMRect) =>
+      !(a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top)
+    const toGeometry = ({ left, top, right, bottom, width, height }: DOMRect) => ({
+      left,
+      top,
+      right,
+      bottom,
+      width,
+      height,
+    })
+    const stageStyle = getComputedStyle(stage)
+    const supportStyle = getComputedStyle(support)
+
+    return {
+      stagePosition: stageStyle.position,
+      stageOverflow: stageStyle.overflow,
+      supportDisplay: supportStyle.display,
+      supportColumns: supportStyle.gridTemplateColumns,
+      stageRect: toGeometry(stageRect),
+      rects: Object.fromEntries(
+        Object.entries(rects).map(([name, rect]) => [name, toGeometry(rect)]),
+      ),
+      overlaps: {
+        titleDescription: overlaps(rects.title, rects.description),
+        descriptionActions: overlaps(rects.description, rects.actions),
+        actionsImage: overlaps(rects.actions, rects.image),
+      },
+    }
+  })
+}
+
 for (const language of ['en', 'ru'] as const) {
   for (const viewport of viewports) {
     test(`${language} Hero fits at ${viewport.width}x${viewport.height}`, async ({ page }) => {
@@ -193,3 +239,87 @@ for (const language of ['en', 'ru'] as const) {
     })
   }
 }
+
+const shortHeightCases = [
+  { width: 768, height: 650, expectedPosition: 'relative', expectedOverflow: 'visible', tracks: 1 },
+  { width: 1024, height: 650, expectedPosition: 'relative', expectedOverflow: 'visible', tracks: 1 },
+  { width: 1024, height: 768, expectedPosition: 'relative', expectedOverflow: 'visible', tracks: 1 },
+  { width: 1024, height: 769, expectedPosition: 'sticky', expectedOverflow: 'hidden', tracks: 3 },
+] as const
+
+for (const viewport of shortHeightCases) {
+  test(`ru Hero uses the content-fit state at ${viewport.width}x${viewport.height}`, async ({ page }) => {
+    await page.setViewportSize(viewport)
+    await page.goto('/ru')
+    await waitForHero(page)
+
+    const result = await readHeroLayoutState(page)
+
+    expect(result.stagePosition).toBe(viewport.expectedPosition)
+    expect(result.stageOverflow).toBe(viewport.expectedOverflow)
+    expect(result.supportDisplay).toBe('grid')
+    expect(result.supportColumns.trim().split(/\s+/)).toHaveLength(viewport.tracks)
+
+    for (const [name, rect] of Object.entries(result.rects)) {
+      expect(rect.left, `${name} left`).toBeGreaterThanOrEqual(
+        result.stageRect.left - 0.5,
+      )
+      expect(rect.right, `${name} right`).toBeLessThanOrEqual(
+        result.stageRect.right + 0.5,
+      )
+      expect(rect.top, `${name} top`).toBeGreaterThanOrEqual(
+        result.stageRect.top - 0.5,
+      )
+      expect(rect.bottom, `${name} bottom`).toBeLessThanOrEqual(
+        result.stageRect.bottom + 0.5,
+      )
+    }
+
+    expect(result.overlaps.titleDescription).toBe(false)
+    expect(result.overlaps.descriptionActions).toBe(false)
+    expect(result.overlaps.actionsImage).toBe(false)
+  })
+}
+
+test('ru Hero coordinates remain continuous across former height thresholds', async ({ page }) => {
+  for (const { width, heights } of [
+    { width: 1366, heights: [819, 820, 821] },
+    { width: 1400, heights: [949, 950, 951] },
+  ]) {
+    const samples = []
+
+    for (const height of heights) {
+      await page.setViewportSize({ width, height })
+      await page.goto('/ru')
+      await waitForHero(page)
+      samples.push(await readHeroLayoutState(page))
+    }
+
+    for (let index = 1; index < samples.length; index += 1) {
+      for (const name of ['title', 'description', 'actions', 'image'] as const) {
+        expect(
+          Math.abs(samples[index].rects[name].top - samples[index - 1].rects[name].top),
+          `${width}px ${name} top continuity`,
+        ).toBeLessThanOrEqual(2)
+      }
+    }
+  }
+})
+
+test('ru Hero stage height remains continuous across 1600px', async ({ page }) => {
+  const heights = []
+
+  for (const width of [1599, 1600, 1601]) {
+    await page.setViewportSize({ width, height: 900 })
+    await page.goto('/ru')
+    await waitForHero(page)
+    heights.push((await readHeroLayoutState(page)).stageRect.height)
+  }
+
+  for (let index = 1; index < heights.length; index += 1) {
+    expect(
+      Math.abs(heights[index] - heights[index - 1]),
+      'stage height continuity',
+    ).toBeLessThanOrEqual(2)
+  }
+})
