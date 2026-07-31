@@ -17,21 +17,52 @@ const viewports = [
   { width: 2560, height: 1440 },
 ] as const
 
+type Geometry = {
+  left: number
+  top: number
+  width: number
+  height: number
+}
+
+const desktopBaselines: Record<
+  number,
+  Record<
+    'stage' | 'header' | 'title' | 'description' | 'actions' | 'image',
+    Partial<Geometry>
+  >
+> = {
+  1600: {
+    stage: { left: 0, top: 0, width: 1600, height: 1080 },
+    header: { left: 0, top: 30, width: 1600, height: 64 },
+    title: { left: 82, top: 269, width: 1172 },
+    description: { left: 82, top: 645, width: 402, height: 234.56 },
+    actions: { left: 1189, top: 649, width: 329, height: 174 },
+    image: { left: 715, top: 557, width: 170, height: 298 },
+  },
+  1920: {
+    stage: { left: 0, top: 0, width: 1920, height: 1296 },
+    header: { left: 0, top: 30, width: 1920, height: 64 },
+    title: { left: 242, top: 269, width: 1172 },
+    description: { left: 242, top: 735, width: 402, height: 234.56 },
+    actions: { left: 1349, top: 739, width: 329, height: 174 },
+    image: { left: 875, top: 647, width: 170, height: 298 },
+  },
+  2560: {
+    stage: { left: 0, top: 0, width: 2560, height: 1728 },
+    header: { left: 0, top: 30, width: 2560, height: 64 },
+    title: { left: 562, top: 269, width: 1172 },
+    description: { left: 562, top: 735, width: 402, height: 234.56 },
+    actions: { left: 1669, top: 739, width: 329, height: 174 },
+    image: { left: 1195, top: 647, width: 170, height: 298 },
+  },
+}
+
 async function waitForHero(page: Page) {
   await page.locator('.hero-section').waitFor({ state: 'visible' })
   await page.waitForFunction(() =>
     !document.documentElement.classList.contains('is-preloading'),
   )
   await page.evaluate(() => document.fonts.ready)
-}
-
-function intersects(a: DOMRect, b: DOMRect) {
-  return !(
-    a.right <= b.left ||
-    b.right <= a.left ||
-    a.bottom <= b.top ||
-    b.bottom <= a.top
-  )
 }
 
 for (const language of ['en', 'ru'] as const) {
@@ -43,15 +74,42 @@ for (const language of ['en', 'ru'] as const) {
 
       const result = await page.evaluate(() => {
         const section = document.querySelector<HTMLElement>('.hero-section')!
+        const stage = document.querySelector<HTMLElement>('.hero-stage')!
+        const header = document.querySelector<HTMLElement>('.hero-header')!
         const title = document.querySelector<HTMLElement>('.hero-title')!
         const description = document.querySelector<HTMLElement>('.hero-description')!
         const actions = document.querySelector<HTMLElement>('.hero-action-panel')!
         const image = document.querySelector<HTMLElement>('.hero-image')!
         const buttons = [...document.querySelectorAll<HTMLElement>('.hero-button')]
         const sectionRect = section.getBoundingClientRect()
-        const rects = [title, description, actions, image].map((element) =>
-          element.getBoundingClientRect(),
-        )
+        const stageRect = stage.getBoundingClientRect()
+        const headerRect = header.getBoundingClientRect()
+        const titleRect = title.getBoundingClientRect()
+        const descriptionRect = description.getBoundingClientRect()
+        const actionsRect = actions.getBoundingClientRect()
+        const imageRect = image.getBoundingClientRect()
+        const rects = {
+          header: headerRect,
+          title: titleRect,
+          description: descriptionRect,
+          actions: actionsRect,
+          image: imageRect,
+        }
+        const intersects = (a: DOMRect, b: DOMRect) =>
+          !(
+            a.right <= b.left ||
+            b.right <= a.left ||
+            a.bottom <= b.top ||
+            b.bottom <= a.top
+          )
+        const toGeometry = ({ left, top, right, bottom, width, height }: DOMRect) => ({
+          left,
+          top,
+          right,
+          bottom,
+          width,
+          height,
+        })
 
         return {
           horizontalOverflow:
@@ -59,14 +117,16 @@ for (const language of ['en', 'ru'] as const) {
             document.documentElement.clientWidth,
           sectionWidth: sectionRect.width,
           viewportWidth: window.innerWidth,
-          rects: rects.map(({ left, right, top, bottom, width, height }) => ({
-            left,
-            right,
-            top,
-            bottom,
-            width,
-            height,
-          })),
+          sectionRect: toGeometry(sectionRect),
+          stageRect: toGeometry(stageRect),
+          rects: Object.fromEntries(
+            Object.entries(rects).map(([name, rect]) => [name, toGeometry(rect)]),
+          ),
+          overlaps: {
+            titleDescription: intersects(titleRect, descriptionRect),
+            descriptionActions: intersects(descriptionRect, actionsRect),
+            actionsImage: intersects(actionsRect, imageRect),
+          },
           buttonHeights: buttons.map((button) =>
             button.getBoundingClientRect().height,
           ),
@@ -75,14 +135,58 @@ for (const language of ['en', 'ru'] as const) {
 
       expect(result.horizontalOverflow).toBe(false)
       expect(result.sectionWidth).toBeLessThanOrEqual(result.viewportWidth + 0.5)
-      for (const rect of result.rects) {
+      expect(result.stageRect.left).toBeGreaterThanOrEqual(
+        result.sectionRect.left - 0.5,
+      )
+      expect(result.stageRect.right).toBeLessThanOrEqual(
+        result.sectionRect.right + 0.5,
+      )
+      expect(result.stageRect.top).toBeGreaterThanOrEqual(
+        result.sectionRect.top - 0.5,
+      )
+      expect(result.stageRect.bottom).toBeLessThanOrEqual(
+        result.sectionRect.bottom + 0.5,
+      )
+      for (const [name, rect] of Object.entries(result.rects)) {
         expect(rect.left).toBeGreaterThanOrEqual(-0.5)
         expect(rect.right).toBeLessThanOrEqual(result.viewportWidth + 0.5)
         expect(rect.width).toBeGreaterThan(0)
         expect(rect.height).toBeGreaterThan(0)
+        expect(rect.left, `${name} left`).toBeGreaterThanOrEqual(
+          result.stageRect.left - 0.5,
+        )
+        expect(rect.right, `${name} right`).toBeLessThanOrEqual(
+          result.stageRect.right + 0.5,
+        )
+        expect(rect.top, `${name} top`).toBeGreaterThanOrEqual(
+          result.stageRect.top - 0.5,
+        )
+        expect(rect.bottom, `${name} bottom`).toBeLessThanOrEqual(
+          result.stageRect.bottom + 0.5,
+        )
       }
+      expect(result.overlaps.titleDescription).toBe(false)
+      expect(result.overlaps.descriptionActions).toBe(false)
+      expect(result.overlaps.actionsImage).toBe(false)
       for (const height of result.buttonHeights) {
         expect(height).toBeGreaterThanOrEqual(44)
+      }
+
+      const baseline = desktopBaselines[viewport.width]
+      if (baseline) {
+        for (const [name, expected] of Object.entries(baseline)) {
+          const actual =
+            name === 'stage'
+              ? result.stageRect
+              : result.rects[name as keyof typeof result.rects]
+
+          for (const [dimension, expectedValue] of Object.entries(expected)) {
+            expect(
+              Math.abs(actual[dimension as keyof Geometry] - expectedValue),
+              `${language} ${viewport.width} ${name} ${dimension}`,
+            ).toBeLessThanOrEqual(1)
+          }
+        }
       }
     })
   }
