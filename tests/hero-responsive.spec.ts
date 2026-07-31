@@ -13,6 +13,7 @@ const viewports = [
   { width: 1366, height: 768 },
   { width: 1400, height: 900 },
   { width: 1600, height: 900 },
+  { width: 1600, height: 1080 },
   { width: 1920, height: 1080 },
   { width: 2560, height: 1440 },
 ] as const
@@ -25,13 +26,13 @@ type Geometry = {
 }
 
 const desktopBaselines: Record<
-  number,
+  string,
   Record<
     'stage' | 'header' | 'title' | 'description' | 'actions' | 'image',
     Partial<Geometry>
   >
 > = {
-  1600: {
+  '1600x900': {
     stage: { left: 0, top: 0, width: 1600, height: 1080 },
     header: { left: 0, top: 30, width: 1600, height: 64 },
     title: { left: 82, top: 269, width: 1172 },
@@ -39,7 +40,15 @@ const desktopBaselines: Record<
     actions: { left: 1189, top: 649, width: 329, height: 174 },
     image: { left: 715, top: 557, width: 170, height: 298 },
   },
-  1920: {
+  '1600x1080': {
+    stage: { left: 0, top: 0, width: 1600, height: 1296 },
+    header: {},
+    title: {},
+    description: {},
+    actions: {},
+    image: {},
+  },
+  '1920x1080': {
     stage: { left: 0, top: 0, width: 1920, height: 1296 },
     header: { left: 0, top: 30, width: 1920, height: 64 },
     title: { left: 242, top: 269, width: 1172 },
@@ -47,7 +56,7 @@ const desktopBaselines: Record<
     actions: { left: 1349, top: 739, width: 329, height: 174 },
     image: { left: 875, top: 647, width: 170, height: 298 },
   },
-  2560: {
+  '2560x1440': {
     stage: { left: 0, top: 0, width: 2560, height: 1728 },
     header: { left: 0, top: 30, width: 2560, height: 64 },
     title: { left: 562, top: 269, width: 1172 },
@@ -220,7 +229,7 @@ for (const language of ['en', 'ru'] as const) {
         expect(height).toBeGreaterThanOrEqual(44)
       }
 
-      const baseline = desktopBaselines[viewport.width]
+      const baseline = desktopBaselines[`${viewport.width}x${viewport.height}`]
       if (baseline) {
         for (const [name, expected] of Object.entries(baseline)) {
           const actual =

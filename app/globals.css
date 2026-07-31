@@ -5113,7 +5113,14 @@ h3,
 		--hero-frame-left: calc((100vw - var(--hero-frame-width)) / 2);
 		--hero-edge: clamp(99px, 8.25vw, 115.5px);
 		--hero-inner-edge: calc(var(--hero-edge) - var(--hero-frame-left));
-		--hero-stage-extension: clamp(0px, calc(45vw - 540px), 20svh);
+		--hero-stage-extension: clamp(
+			0svh,
+			max(
+				calc(45vw - 540px),
+				calc(20svh + 100vw - 1600px)
+			),
+			20svh
+		);
 		--hero-title-top-min: clamp(228px, calc(20.5vw - 59px), 269px);
 		--hero-title-top-max: clamp(257px, calc(6vw + 173px), 269px);
 		--hero-title-top: clamp(
