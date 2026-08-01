@@ -230,6 +230,11 @@ export function Hero({
 								left: light.offsetLeft,
 								top: light.offsetTop,
 							},
+							clearance: {
+								descLeft: contentBox.left - stageBox.left,
+								actionsLeft:
+									contentBox.right - stageBox.left - start.actions.width,
+							},
 							requiresColumnTransition:
 								!hideSupportingText &&
 								(!startsInColumns || !actionsStartInColumns),
@@ -312,8 +317,19 @@ export function Hero({
 						const supportProgress = geometry.requiresColumnTransition
 							? clamp(progress / columnTransitionAt)
 							: imageProgress
+						const supportClearanceProgress = geometry.requiresColumnTransition
+							? clamp(progress / (columnTransitionAt / 2))
+							: supportProgress
+						const supportSettleProgress = geometry.requiresColumnTransition
+							? clamp(
+									(progress - columnTransitionAt / 2) /
+										(columnTransitionAt / 2),
+								)
+							: supportProgress
 						const eased = ease(imageProgress)
 						const supportEased = ease(supportProgress)
+						const supportClearanceEased = ease(supportClearanceProgress)
+						const supportSettleEased = ease(supportSettleProgress)
 						const stageBox = geometry.stage.getBoundingClientRect()
 						const viewportCenter = window.innerHeight / 2 - stageBox.top
 
@@ -375,53 +391,82 @@ export function Hero({
 							desc.style.opacity = String(1 - clamp(progress * 5))
 							actions.style.opacity = String(1 - clamp(progress * 5))
 						} else {
-							desc.style.opacity = '1'
-							actions.style.opacity = '1'
+							const supportOpacity = geometry.requiresColumnTransition
+								? progress < 0.04
+									? 1 - clamp(progress / 0.04)
+									: progress <= columnTransitionAt
+										? 0
+										: clamp((progress - columnTransitionAt) / 0.05)
+								: 1
+							desc.style.opacity = String(supportOpacity)
+							actions.style.opacity = String(supportOpacity)
 
 							const descriptionWidth = lerp(
 								geometry.start.desc.width,
 								geometry.target.desc.width,
-								supportEased,
+								supportSettleEased,
 							)
+							const descriptionLeft = geometry.requiresColumnTransition
+								? lerp(
+										lerp(
+											geometry.start.desc.left,
+											geometry.clearance.descLeft,
+											supportClearanceEased,
+										),
+										geometry.target.desc.left,
+										supportSettleEased,
+									)
+								: lerp(
+										geometry.start.desc.left,
+										geometry.target.desc.left,
+										supportEased,
+									)
 							positionElement(
 								desc,
 								descriptionWidth,
 								undefined,
-								lerp(
-									geometry.start.desc.left,
-									geometry.target.desc.left,
-									supportEased,
-								),
+								descriptionLeft,
 								lerp(
 									geometry.start.desc.top,
 									viewportCenter - geometry.target.desc.height / 2,
-									supportEased,
+									supportSettleEased,
 								),
 								geometry.base.desc,
-								supportEased,
+								supportSettleEased,
 							)
 
 							const actionsWidth = lerp(
 								geometry.start.actions.width,
 								geometry.target.actions.width,
-								supportEased,
+								supportSettleEased,
 							)
+							const actionsLeft = geometry.requiresColumnTransition
+								? lerp(
+										lerp(
+											geometry.start.actions.left,
+											geometry.clearance.actionsLeft,
+											supportClearanceEased,
+										),
+										geometry.target.actions.left,
+										supportSettleEased,
+									)
+								: lerp(
+										geometry.start.actions.left,
+										geometry.target.actions.left,
+										supportEased,
+									)
 							positionElement(
 								actions,
 								actionsWidth,
 								undefined,
-								lerp(
-									geometry.start.actions.left,
-									geometry.target.actions.left,
-									supportEased,
-								),
+								actionsLeft,
 								lerp(
 									geometry.start.actions.top,
 									viewportCenter - geometry.target.actions.height / 2,
-									supportEased,
+									supportSettleEased,
 								),
 								geometry.base.actions,
-								supportEased,
+								supportSettleEased,
 							)
 						}
 

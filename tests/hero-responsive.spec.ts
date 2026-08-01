@@ -372,9 +372,25 @@ for (const language of ['en', 'ru'] as const) {
         (section) => section.getBoundingClientRect().height,
       )
       const finalScroll = Math.max(0, sectionHeight - viewport.height - 2)
+      const denseEarlyProgress = [
+        0.01, 0.02, 0.03, 0.04, 0.05, 0.075, 0.1, 0.125, 0.15, 0.2, 0.25,
+      ]
+      const progressPoints =
+        viewport.width === 1024 && viewport.height === 768
+          ? [
+              0,
+              ...denseEarlyProgress,
+              0.5,
+              1,
+              0.5,
+              ...denseEarlyProgress.toReversed(),
+              0,
+            ]
+          : [0, 0.5, 1, 0.5, 0]
       let initialImageBox: Geometry | undefined
+      let initialActionBox: Geometry | undefined
 
-      for (const progress of [0, 0.5, 1, 0.5, 0]) {
+      for (const progress of progressPoints) {
         await page.evaluate(
           ({ y }) => window.scrollTo({ top: y, behavior: 'instant' }),
           { y: finalScroll * progress },
@@ -472,6 +488,12 @@ for (const language of ['en', 'ru'] as const) {
 
         const supportingTextVisible =
           state.description.opacity > 0.01 || state.actions.opacity > 0.01
+        if (state.overlaps.imageActions) {
+          expect(
+            state.actions.opacity,
+            `overlapping actions must be fully hidden at ${progress}`,
+          ).toBe(0)
+        }
         if (supportingTextVisible) {
           expect(
             state.overlaps.descriptionImage,
@@ -479,12 +501,37 @@ for (const language of ['en', 'ru'] as const) {
           ).toBe(false)
           expect(
             state.overlaps.imageActions,
-            `image/actions overlap at ${progress}`,
+            `image/actions overlap at ${progress}: ${JSON.stringify({
+              image: {
+                left: state.left,
+                top: state.top,
+                right: state.right,
+                bottom: state.bottom,
+              },
+              actions: state.actions,
+              initialActions: initialActionBox,
+            })}`,
           ).toBe(false)
           expect(
             state.overlaps.descriptionActions,
             `description/actions overlap at ${progress}`,
           ).toBe(false)
+        }
+
+        if (
+          viewport.width === 1024 &&
+          viewport.height === 768 &&
+          progress <= 0.25 &&
+          state.actions.opacity > 0
+        ) {
+          expect(
+            state.overlaps.imageActions,
+            `visible image/actions overlap at ${progress}`,
+          ).toBe(false)
+          expect(state.actions.top).toBeGreaterThanOrEqual(state.stage.top - 0.5)
+          expect(state.actions.bottom).toBeLessThanOrEqual(
+            state.stage.top + state.stage.height + 0.5,
+          )
         }
 
         const supportingColumnsRemainVisible =
@@ -549,6 +596,7 @@ for (const language of ['en', 'ru'] as const) {
 
         if (!initialImageBox) {
           initialImageBox = state
+          initialActionBox = state.actions
         } else if (progress === 0) {
           expect(Math.abs(state.left - initialImageBox.left)).toBeLessThanOrEqual(1)
           expect(Math.abs(state.top - initialImageBox.top)).toBeLessThanOrEqual(1)
