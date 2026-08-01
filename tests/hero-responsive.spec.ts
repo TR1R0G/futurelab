@@ -1,6 +1,8 @@
 import { expect, test, type Page } from '@playwright/test'
 
 const viewports = [
+  { width: 279, height: 844 },
+  { width: 297, height: 905 },
   { width: 360, height: 800 },
   { width: 390, height: 844 },
   { width: 430, height: 932 },
@@ -239,6 +241,13 @@ async function expectInitialHeroGeometry(
       width,
       height,
     })
+    const titleWordRects = [
+      ...title.querySelectorAll<HTMLElement>(
+        '.hero-title-lines-compact .hero-word',
+      ),
+    ]
+      .filter((word) => word.getBoundingClientRect().width > 0)
+      .map((word) => toGeometry(word.getBoundingClientRect()))
 
     return {
       horizontalOverflow:
@@ -257,6 +266,7 @@ async function expectInitialHeroGeometry(
         actionsImage: intersects(actionsRect, imageRect),
       },
       imageAspect: imageRect.width / imageRect.height,
+      titleWordRects,
       ctaHeights: visibleCtas.map((button) =>
         button.getBoundingClientRect().height,
       ),
@@ -298,6 +308,10 @@ async function expectInitialHeroGeometry(
   expect(result.overlaps.titleDescription).toBe(false)
   expect(result.overlaps.descriptionActions).toBe(false)
   expect(result.overlaps.actionsImage).toBe(false)
+  for (const wordRect of result.titleWordRects) {
+    expect(wordRect.left).toBeGreaterThanOrEqual(result.stageRect.left - 0.5)
+    expect(wordRect.right).toBeLessThanOrEqual(result.stageRect.right + 0.5)
+  }
   expect(result.imageAspect).toBeCloseTo(530 / 928, 2)
   for (const height of result.ctaHeights) {
     expect(height).toBeGreaterThanOrEqual(44)
