@@ -107,13 +107,6 @@ export function Hero({
 			}
 		}
 
-		const measureHeightAtWidth = (element: HTMLElement, width: number) => {
-			element.style.width = `${width}px`
-			const height = element.getBoundingClientRect().height
-			element.style.removeProperty('width')
-			return height
-		}
-
 		const media = gsap.matchMedia()
 		let refreshFrame = 0
 		let active = true
@@ -154,8 +147,10 @@ export function Hero({
 					const measure = () => {
 						const stage = section.querySelector<HTMLElement>('.hero-stage')!
 						const content = section.querySelector<HTMLElement>('.hero-content')!
+						const sectionBox = section.getBoundingClientRect()
 						const stageBox = stage.getBoundingClientRect()
 						const contentBox = content.getBoundingClientRect()
+						const sectionTop = sectionBox.top + window.scrollY
 						const start = {
 							desc: toBox(desc, stageBox),
 							image: toBox(image, stageBox),
@@ -189,11 +184,6 @@ export function Hero({
 						)
 						const descriptionWidth = Math.min(start.desc.width, sideWidth)
 						const actionsWidth = Math.min(start.actions.width, sideWidth)
-						const descriptionHeight = measureHeightAtWidth(
-							desc,
-							descriptionWidth,
-						)
-						const actionsHeight = measureHeightAtWidth(actions, actionsWidth)
 						const startsInColumns =
 							start.desc.left + start.desc.width <= start.image.left ||
 							start.image.left + start.image.width <= start.desc.left
@@ -201,9 +191,45 @@ export function Hero({
 							start.image.left + start.image.width <= start.actions.left ||
 							start.actions.left + start.actions.width <= start.image.left
 
+						desc.style.width = `${descriptionWidth}px`
+						actions.style.width = `${actionsWidth}px`
+						image.style.width = `${imageWidth}px`
+						image.style.height = `${imageHeight}px`
+						const targetBase = {
+							desc: toBox(desc, stageBox),
+							image: toBox(image, stageBox),
+							actions: toBox(actions, stageBox),
+						}
+						desc.style.removeProperty('width')
+						actions.style.removeProperty('width')
+						image.style.removeProperty('width')
+						image.style.removeProperty('height')
+
 						return {
 							stage,
+							sectionTop,
+							scrollDistance: Math.max(
+								1,
+								sectionBox.height - window.innerHeight,
+							),
+							flowTransitionStart: Math.max(
+								0,
+								stageBox.top +
+									window.scrollY +
+									start.actions.top +
+									start.actions.height -
+									sectionTop,
+							),
 							start,
+							base: {
+								desc: { start: start.desc, target: targetBase.desc },
+								image: { start: start.image, target: targetBase.image },
+								actions: { start: start.actions, target: targetBase.actions },
+							},
+							lightOffset: {
+								left: light.offsetLeft,
+								top: light.offsetTop,
+							},
 							requiresColumnTransition:
 								!hideSupportingText &&
 								(!startsInColumns || !actionsStartInColumns),
@@ -217,13 +243,13 @@ export function Hero({
 								desc: {
 									left: contentBox.left - stageBox.left,
 									width: descriptionWidth,
-									height: descriptionHeight,
+									height: targetBase.desc.height,
 								},
 								actions: {
 									left:
 										contentBox.right - stageBox.left - actionsWidth,
 									width: actionsWidth,
-									height: actionsHeight,
+									height: targetBase.actions.height,
 								},
 							},
 						}
@@ -238,14 +264,19 @@ export function Hero({
 						height: number | undefined,
 						left: number,
 						top: number,
+						base: {
+							start: { left: number; top: number }
+							target: { left: number; top: number }
+						},
+						baseProgress: number,
 						centeredByCss = false,
 					) => {
+						const baseLeft = lerp(base.start.left, base.target.left, baseProgress)
+						const baseTop = lerp(base.start.top, base.target.top, baseProgress)
 						element.style.width = `${width}px`
 						if (height !== undefined) element.style.height = `${height}px`
-						element.style.removeProperty('transform')
-						const baseBox = element.getBoundingClientRect()
-						const x = left - baseBox.left
-						const y = top - baseBox.top
+						const x = left - baseLeft
+						const y = top - baseTop
 						element.style.transform = centeredByCss
 							? `translate(calc(-50% + ${x}px), ${y}px)`
 							: `translate(${x}px, ${y}px)`
@@ -253,14 +284,19 @@ export function Hero({
 
 					const update = () => {
 						frame = 0
-						const sectionBox = section.getBoundingClientRect()
-						const sectionTop = sectionBox.top + window.scrollY
-						const scrollDistance = Math.max(
+						const transitionStart = hideSupportingText
+							? Math.min(
+								geometry.flowTransitionStart,
+								geometry.scrollDistance - 1,
+							)
+							: 0
+						const transitionDistance = Math.max(
 							1,
-							sectionBox.height - window.innerHeight,
+							geometry.scrollDistance - transitionStart,
 						)
 						const progress = clamp(
-							(window.scrollY - sectionTop) / scrollDistance,
+							(window.scrollY - geometry.sectionTop - transitionStart) /
+								transitionDistance,
 						)
 						if (progress === 0) {
 							clearAnimationStyles()
@@ -279,12 +315,7 @@ export function Hero({
 						const eased = ease(imageProgress)
 						const supportEased = ease(supportProgress)
 						const stageBox = geometry.stage.getBoundingClientRect()
-						const viewportCenter = window.innerHeight / 2
-
-						header.style.opacity = String(1 - clamp(progress * 3))
-						header.style.transform = `translateY(${-90 * eased}px)`
-						copy.style.opacity = String(1 - clamp(progress * 3))
-						copy.style.transform = `translateY(${-150 * eased}px)`
+						const viewportCenter = window.innerHeight / 2 - stageBox.top
 
 						const imageWidth = lerp(
 							geometry.start.image.width,
@@ -297,21 +328,41 @@ export function Hero({
 							eased,
 						)
 						const imageLeft = lerp(
-							stageBox.left + geometry.start.image.left,
-							stageBox.left + geometry.target.image.left,
+							geometry.start.image.left,
+							geometry.target.image.left,
 							eased,
 						)
 						const imageTop = lerp(
-							stageBox.top + geometry.start.image.top,
+							geometry.start.image.top,
 							viewportCenter - geometry.target.image.height / 2,
 							eased,
 						)
+						const imageCenterX = imageLeft + imageWidth / 2
+						const imageCenterY = imageTop + imageHeight / 2
+						const startLightCenterX =
+							geometry.start.light.left + geometry.start.light.width / 2
+						const startLightCenterY =
+							geometry.start.light.top + geometry.start.light.height / 2
+						const lightCenterX = lerp(startLightCenterX, imageCenterX, eased)
+						const lightCenterY = lerp(startLightCenterY, imageCenterY, eased)
+						const gradientScale = Math.max(
+							geometry.target.image.width / geometry.start.light.width,
+							geometry.target.image.height / geometry.start.light.height,
+						)
+
+						header.style.opacity = String(1 - clamp(progress * 3))
+						header.style.transform = `translateY(${-90 * eased}px)`
+						copy.style.opacity = String(1 - clamp(progress * 3))
+						copy.style.transform = `translateY(${-150 * eased}px)`
+
 						positionElement(
 							image,
 							imageWidth,
 							imageHeight,
 							imageLeft,
 							imageTop,
+							geometry.base.image,
+							eased,
 							true,
 						)
 						imageFrame.style.borderRadius = `${lerp(
@@ -337,15 +388,17 @@ export function Hero({
 								descriptionWidth,
 								undefined,
 								lerp(
-									stageBox.left + geometry.start.desc.left,
-									stageBox.left + geometry.target.desc.left,
+									geometry.start.desc.left,
+									geometry.target.desc.left,
 									supportEased,
 								),
 								lerp(
-									stageBox.top + geometry.start.desc.top,
+									geometry.start.desc.top,
 									viewportCenter - geometry.target.desc.height / 2,
 									supportEased,
 								),
+								geometry.base.desc,
+								supportEased,
 							)
 
 							const actionsWidth = lerp(
@@ -358,48 +411,30 @@ export function Hero({
 								actionsWidth,
 								undefined,
 								lerp(
-									stageBox.left + geometry.start.actions.left,
-									stageBox.left + geometry.target.actions.left,
+									geometry.start.actions.left,
+									geometry.target.actions.left,
 									supportEased,
 								),
 								lerp(
-									stageBox.top + geometry.start.actions.top,
+									geometry.start.actions.top,
 									viewportCenter - geometry.target.actions.height / 2,
 									supportEased,
 								),
+								geometry.base.actions,
+								supportEased,
 							)
 						}
 
-						const imageCenterX = imageLeft + imageWidth / 2
-						const imageCenterY = imageTop + imageHeight / 2
-						const startLightCenterX =
-							stageBox.left +
-							geometry.start.light.left +
-							geometry.start.light.width / 2
-						const startLightCenterY =
-							stageBox.top +
-							geometry.start.light.top +
-							geometry.start.light.height / 2
-						const lightCenterX = lerp(startLightCenterX, imageCenterX, eased)
-						const lightCenterY = lerp(startLightCenterY, imageCenterY, eased)
-						const gradientScale = Math.max(
-							geometry.target.image.width / geometry.start.light.width,
-							geometry.target.image.height / geometry.start.light.height,
-						)
-
-						light.style.removeProperty('left')
-						light.style.removeProperty('top')
 						light.style.transform = `rotate(-12.33deg) scale(${lerp(
 							1,
 							gradientScale,
 							eased,
 						)})`
-						const lightBox = light.getBoundingClientRect()
 						light.style.left = `${
-							light.offsetLeft + lightCenterX - (lightBox.left + lightBox.width / 2)
+							geometry.lightOffset.left + lightCenterX - startLightCenterX
 						}px`
 						light.style.top = `${
-							light.offsetTop + lightCenterY - (lightBox.top + lightBox.height / 2)
+							geometry.lightOffset.top + lightCenterY - startLightCenterY
 						}px`
 						light.style.opacity = '1'
 					}

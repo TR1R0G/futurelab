@@ -202,7 +202,14 @@ async function expectInitialHeroGeometry(
     const description = document.querySelector<HTMLElement>('.hero-description')!
     const actions = document.querySelector<HTMLElement>('.hero-action-panel')!
     const image = document.querySelector<HTMLElement>('.hero-image')!
-    const buttons = [...document.querySelectorAll<HTMLElement>('.hero-button')]
+    const visibleCtas = [
+      ...document.querySelectorAll<HTMLElement>(
+        '.hero-button, .hero-header-button',
+      ),
+    ].filter((button) => {
+      const style = getComputedStyle(button)
+      return style.display !== 'none' && style.visibility !== 'hidden'
+    })
     const sectionRect = section.getBoundingClientRect()
     const stageRect = stage.getBoundingClientRect()
     const headerRect = header.getBoundingClientRect()
@@ -250,7 +257,9 @@ async function expectInitialHeroGeometry(
         actionsImage: intersects(actionsRect, imageRect),
       },
       imageAspect: imageRect.width / imageRect.height,
-      buttonHeights: buttons.map((button) => button.getBoundingClientRect().height),
+      ctaHeights: visibleCtas.map((button) =>
+        button.getBoundingClientRect().height,
+      ),
     }
   })
 
@@ -290,7 +299,7 @@ async function expectInitialHeroGeometry(
   expect(result.overlaps.descriptionActions).toBe(false)
   expect(result.overlaps.actionsImage).toBe(false)
   expect(result.imageAspect).toBeCloseTo(530 / 928, 2)
-  for (const height of result.buttonHeights) {
+  for (const height of result.ctaHeights) {
     expect(height).toBeGreaterThanOrEqual(44)
   }
 
@@ -696,6 +705,84 @@ test('Hero scroll geometry refreshes after language changes', async ({ page }) =
       ).toBeLessThanOrEqual(1)
     }
   }
+})
+
+test('ru Hero keeps short-flow actions readable until they pass through normal flow', async ({ page }) => {
+  const viewport = { width: 667, height: 375 }
+  await page.setViewportSize(viewport)
+  await page.goto('/ru')
+  await waitForHero(page)
+
+  const result = await page.evaluate(async ({ viewportHeight }) => {
+    const actions = document.querySelector<HTMLElement>('.hero-action-panel')!
+    const buttons = [...actions.querySelectorAll<HTMLElement>('.hero-button')]
+    const actionRect = actions.getBoundingClientRect()
+    const transitionThreshold = actionRect.bottom + window.scrollY
+    const buttonCenters = buttons.map((button) => {
+      const rect = button.getBoundingClientRect()
+      return rect.top + window.scrollY + rect.height / 2
+    })
+    const samplePoints = new Set<number>([0, transitionThreshold - 1])
+
+    for (let y = 0; y < transitionThreshold; y += 32) {
+      samplePoints.add(y)
+    }
+    for (const center of buttonCenters) {
+      samplePoints.add(Math.max(0, center - viewportHeight / 2))
+    }
+
+    const observations = []
+    for (const y of [...samplePoints].sort((a, b) => a - b)) {
+      window.scrollTo({ top: y, behavior: 'instant' })
+      await new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      )
+      observations.push({
+        y: window.scrollY,
+        opacity: Number(getComputedStyle(actions).opacity),
+        buttonVisibility: buttons.map((button) => {
+          const buttonRect = button.getBoundingClientRect()
+          return buttonRect.bottom > 0 && buttonRect.top < viewportHeight
+        }),
+      })
+    }
+
+    const section = document.querySelector<HTMLElement>('.hero-section')!
+    const remainingDistance =
+      section.getBoundingClientRect().height -
+      viewportHeight -
+      transitionThreshold
+    window.scrollTo({
+      top: transitionThreshold + Math.max(1, remainingDistance * 0.2),
+      behavior: 'instant',
+    })
+    await new Promise<void>((resolve) =>
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+    )
+
+    return {
+      observations,
+      transitionThreshold,
+      opacityAfterThreshold: Number(getComputedStyle(actions).opacity),
+    }
+  }, { viewportHeight: viewport.height })
+
+  for (const observation of result.observations) {
+    expect(
+      observation.opacity,
+      `actions opacity at scrollY=${observation.y}`,
+    ).toBeGreaterThanOrEqual(0.99)
+  }
+  for (let index = 0; index < 3; index += 1) {
+    expect(
+      result.observations.some(
+        (observation) =>
+          observation.buttonVisibility[index] && observation.opacity >= 0.99,
+      ),
+      `button ${index + 1} reachable before ${result.transitionThreshold}`,
+    ).toBe(true)
+  }
+  expect(result.opacityAfterThreshold).toBeLessThan(0.1)
 })
 
 const shortHeightCases = [

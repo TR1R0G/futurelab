@@ -263,6 +263,7 @@ h3,
 
 .hero-header-button {
 	display: none;
+	min-height: 44px;
 	align-items: center;
 	justify-content: center;
 	text-align: center;
