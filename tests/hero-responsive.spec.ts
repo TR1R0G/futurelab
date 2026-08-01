@@ -23,6 +23,8 @@ const boundaryWidths = [
   1199, 1200, 1279, 1280, 1399, 1400, 1599, 1600,
 ] as const
 
+const zoomEquivalentViewport = { width: 1280, height: 720 } as const
+
 type Geometry = {
   left: number
   top: number
@@ -331,6 +333,15 @@ for (const language of ['en', 'ru'] as const) {
       await expectInitialHeroGeometry(page, language, viewport)
     })
   }
+}
+
+for (const language of ['en', 'ru'] as const) {
+  test(`${language} Hero contains initial geometry at the 125% desktop zoom equivalent`, async ({ page }) => {
+    await page.setViewportSize(zoomEquivalentViewport)
+    await page.goto(`/${language}`)
+    await waitForHero(page)
+    await expectInitialHeroGeometry(page, language, zoomEquivalentViewport)
+  })
 }
 
 const scrollViewports = [

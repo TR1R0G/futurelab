@@ -5116,7 +5116,7 @@ h3,
 		--hero-stage-extension: clamp(
 			0svh,
 			max(
-				calc(45vw - 540px),
+				clamp(50px, calc(40.625vw - 470px), 180px),
 				calc(20svh + 100vw - 1600px)
 			),
 			20svh
