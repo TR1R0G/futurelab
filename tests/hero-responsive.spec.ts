@@ -18,6 +18,11 @@ const viewports = [
   { width: 2560, height: 1440 },
 ] as const
 
+const boundaryWidths = [
+  359, 360, 719, 720, 767, 768, 959, 960, 1023, 1024,
+  1199, 1200, 1279, 1280, 1399, 1400, 1599, 1600,
+] as const
+
 type Geometry = {
   left: number
   top: number
@@ -182,131 +187,148 @@ async function readHeroTriggerCount(page: Page) {
   )
 }
 
+async function expectInitialHeroGeometry(
+  page: Page,
+  language: 'en' | 'ru',
+  viewport: { width: number; height: number },
+) {
+  const result = await page.evaluate(() => {
+    const section = document.querySelector<HTMLElement>('.hero-section')!
+    const stage = document.querySelector<HTMLElement>('.hero-stage')!
+    const header = document.querySelector<HTMLElement>('.hero-header')!
+    const title = document.querySelector<HTMLElement>('.hero-title')!
+    const description = document.querySelector<HTMLElement>('.hero-description')!
+    const actions = document.querySelector<HTMLElement>('.hero-action-panel')!
+    const image = document.querySelector<HTMLElement>('.hero-image')!
+    const buttons = [...document.querySelectorAll<HTMLElement>('.hero-button')]
+    const sectionRect = section.getBoundingClientRect()
+    const stageRect = stage.getBoundingClientRect()
+    const headerRect = header.getBoundingClientRect()
+    const titleRect = title.getBoundingClientRect()
+    const descriptionRect = description.getBoundingClientRect()
+    const actionsRect = actions.getBoundingClientRect()
+    const imageRect = image.getBoundingClientRect()
+    const rects = {
+      header: headerRect,
+      title: titleRect,
+      description: descriptionRect,
+      actions: actionsRect,
+      image: imageRect,
+    }
+    const intersects = (a: DOMRect, b: DOMRect) =>
+      !(
+        a.right <= b.left ||
+        b.right <= a.left ||
+        a.bottom <= b.top ||
+        b.bottom <= a.top
+      )
+    const toGeometry = ({ left, top, right, bottom, width, height }: DOMRect) => ({
+      left,
+      top,
+      right,
+      bottom,
+      width,
+      height,
+    })
+
+    return {
+      horizontalOverflow:
+        document.documentElement.scrollWidth >
+        document.documentElement.clientWidth,
+      sectionWidth: sectionRect.width,
+      viewportWidth: window.innerWidth,
+      sectionRect: toGeometry(sectionRect),
+      stageRect: toGeometry(stageRect),
+      rects: Object.fromEntries(
+        Object.entries(rects).map(([name, rect]) => [name, toGeometry(rect)]),
+      ),
+      overlaps: {
+        titleDescription: intersects(titleRect, descriptionRect),
+        descriptionActions: intersects(descriptionRect, actionsRect),
+        actionsImage: intersects(actionsRect, imageRect),
+      },
+      imageAspect: imageRect.width / imageRect.height,
+      buttonHeights: buttons.map((button) => button.getBoundingClientRect().height),
+    }
+  })
+
+  expect(result.horizontalOverflow).toBe(false)
+  expect(result.sectionWidth).toBeLessThanOrEqual(result.viewportWidth + 0.5)
+  expect(result.stageRect.left).toBeGreaterThanOrEqual(
+    result.sectionRect.left - 0.5,
+  )
+  expect(result.stageRect.right).toBeLessThanOrEqual(
+    result.sectionRect.right + 0.5,
+  )
+  expect(result.stageRect.top).toBeGreaterThanOrEqual(
+    result.sectionRect.top - 0.5,
+  )
+  expect(result.stageRect.bottom).toBeLessThanOrEqual(
+    result.sectionRect.bottom + 0.5,
+  )
+  for (const [name, rect] of Object.entries(result.rects)) {
+    expect(rect.left).toBeGreaterThanOrEqual(-0.5)
+    expect(rect.right).toBeLessThanOrEqual(result.viewportWidth + 0.5)
+    expect(rect.width).toBeGreaterThan(0)
+    expect(rect.height).toBeGreaterThan(0)
+    expect(rect.left, `${name} left`).toBeGreaterThanOrEqual(
+      result.stageRect.left - 0.5,
+    )
+    expect(rect.right, `${name} right`).toBeLessThanOrEqual(
+      result.stageRect.right + 0.5,
+    )
+    expect(rect.top, `${name} top`).toBeGreaterThanOrEqual(
+      result.stageRect.top - 0.5,
+    )
+    expect(rect.bottom, `${name} bottom`).toBeLessThanOrEqual(
+      result.stageRect.bottom + 0.5,
+    )
+  }
+  expect(result.overlaps.titleDescription).toBe(false)
+  expect(result.overlaps.descriptionActions).toBe(false)
+  expect(result.overlaps.actionsImage).toBe(false)
+  expect(result.imageAspect).toBeCloseTo(530 / 928, 2)
+  for (const height of result.buttonHeights) {
+    expect(height).toBeGreaterThanOrEqual(44)
+  }
+
+  const baseline = desktopBaselines[`${viewport.width}x${viewport.height}`]
+  if (baseline) {
+    for (const [name, expected] of Object.entries(baseline)) {
+      const actual =
+        name === 'stage'
+          ? result.stageRect
+          : result.rects[name as keyof typeof result.rects]
+
+      for (const [dimension, expectedValue] of Object.entries(expected)) {
+        expect(
+          Math.abs(actual[dimension as keyof Geometry] - expectedValue),
+          `${language} ${viewport.width} ${name} ${dimension}`,
+        ).toBeLessThanOrEqual(1)
+      }
+    }
+  }
+}
+
 for (const language of ['en', 'ru'] as const) {
   for (const viewport of viewports) {
     test(`${language} Hero fits at ${viewport.width}x${viewport.height}`, async ({ page }) => {
       await page.setViewportSize(viewport)
       await page.goto(`/${language}`)
       await waitForHero(page)
+      await expectInitialHeroGeometry(page, language, viewport)
+    })
+  }
+}
 
-      const result = await page.evaluate(() => {
-        const section = document.querySelector<HTMLElement>('.hero-section')!
-        const stage = document.querySelector<HTMLElement>('.hero-stage')!
-        const header = document.querySelector<HTMLElement>('.hero-header')!
-        const title = document.querySelector<HTMLElement>('.hero-title')!
-        const description = document.querySelector<HTMLElement>('.hero-description')!
-        const actions = document.querySelector<HTMLElement>('.hero-action-panel')!
-        const image = document.querySelector<HTMLElement>('.hero-image')!
-        const buttons = [...document.querySelectorAll<HTMLElement>('.hero-button')]
-        const sectionRect = section.getBoundingClientRect()
-        const stageRect = stage.getBoundingClientRect()
-        const headerRect = header.getBoundingClientRect()
-        const titleRect = title.getBoundingClientRect()
-        const descriptionRect = description.getBoundingClientRect()
-        const actionsRect = actions.getBoundingClientRect()
-        const imageRect = image.getBoundingClientRect()
-        const rects = {
-          header: headerRect,
-          title: titleRect,
-          description: descriptionRect,
-          actions: actionsRect,
-          image: imageRect,
-        }
-        const intersects = (a: DOMRect, b: DOMRect) =>
-          !(
-            a.right <= b.left ||
-            b.right <= a.left ||
-            a.bottom <= b.top ||
-            b.bottom <= a.top
-          )
-        const toGeometry = ({ left, top, right, bottom, width, height }: DOMRect) => ({
-          left,
-          top,
-          right,
-          bottom,
-          width,
-          height,
-        })
-
-        return {
-          horizontalOverflow:
-            document.documentElement.scrollWidth >
-            document.documentElement.clientWidth,
-          sectionWidth: sectionRect.width,
-          viewportWidth: window.innerWidth,
-          sectionRect: toGeometry(sectionRect),
-          stageRect: toGeometry(stageRect),
-          rects: Object.fromEntries(
-            Object.entries(rects).map(([name, rect]) => [name, toGeometry(rect)]),
-          ),
-          overlaps: {
-            titleDescription: intersects(titleRect, descriptionRect),
-            descriptionActions: intersects(descriptionRect, actionsRect),
-            actionsImage: intersects(actionsRect, imageRect),
-          },
-          imageAspect: imageRect.width / imageRect.height,
-          buttonHeights: buttons.map((button) =>
-            button.getBoundingClientRect().height,
-          ),
-        }
-      })
-
-      expect(result.horizontalOverflow).toBe(false)
-      expect(result.sectionWidth).toBeLessThanOrEqual(result.viewportWidth + 0.5)
-      expect(result.stageRect.left).toBeGreaterThanOrEqual(
-        result.sectionRect.left - 0.5,
-      )
-      expect(result.stageRect.right).toBeLessThanOrEqual(
-        result.sectionRect.right + 0.5,
-      )
-      expect(result.stageRect.top).toBeGreaterThanOrEqual(
-        result.sectionRect.top - 0.5,
-      )
-      expect(result.stageRect.bottom).toBeLessThanOrEqual(
-        result.sectionRect.bottom + 0.5,
-      )
-      for (const [name, rect] of Object.entries(result.rects)) {
-        expect(rect.left).toBeGreaterThanOrEqual(-0.5)
-        expect(rect.right).toBeLessThanOrEqual(result.viewportWidth + 0.5)
-        expect(rect.width).toBeGreaterThan(0)
-        expect(rect.height).toBeGreaterThan(0)
-        expect(rect.left, `${name} left`).toBeGreaterThanOrEqual(
-          result.stageRect.left - 0.5,
-        )
-        expect(rect.right, `${name} right`).toBeLessThanOrEqual(
-          result.stageRect.right + 0.5,
-        )
-        expect(rect.top, `${name} top`).toBeGreaterThanOrEqual(
-          result.stageRect.top - 0.5,
-        )
-        expect(rect.bottom, `${name} bottom`).toBeLessThanOrEqual(
-          result.stageRect.bottom + 0.5,
-        )
-      }
-      expect(result.overlaps.titleDescription).toBe(false)
-      expect(result.overlaps.descriptionActions).toBe(false)
-      expect(result.overlaps.actionsImage).toBe(false)
-      expect(result.imageAspect).toBeCloseTo(530 / 928, 2)
-      for (const height of result.buttonHeights) {
-        expect(height).toBeGreaterThanOrEqual(44)
-      }
-
-      const baseline = desktopBaselines[`${viewport.width}x${viewport.height}`]
-      if (baseline) {
-        for (const [name, expected] of Object.entries(baseline)) {
-          const actual =
-            name === 'stage'
-              ? result.stageRect
-              : result.rects[name as keyof typeof result.rects]
-
-          for (const [dimension, expectedValue] of Object.entries(expected)) {
-            expect(
-              Math.abs(actual[dimension as keyof Geometry] - expectedValue),
-              `${language} ${viewport.width} ${name} ${dimension}`,
-            ).toBeLessThanOrEqual(1)
-          }
-        }
-      }
+for (const language of ['en', 'ru'] as const) {
+  for (const width of boundaryWidths) {
+    test(`${language} Hero boundary initial geometry at ${width}x900`, async ({ page }) => {
+      const viewport = { width, height: 900 }
+      await page.setViewportSize(viewport)
+      await page.goto(`/${language}`)
+      await waitForHero(page)
+      await expectInitialHeroGeometry(page, language, viewport)
     })
   }
 }
