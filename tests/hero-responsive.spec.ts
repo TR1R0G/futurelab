@@ -151,6 +151,37 @@ async function readAnimatedHeroBoxes(page: Page) {
   })
 }
 
+async function readAnimatedHeroBoxesOnNextFrame(page: Page) {
+  return page.evaluate(
+    () =>
+      new Promise<Record<string, Geometry>>((resolve) => {
+        window.dispatchEvent(new Event('orientationchange'))
+        requestAnimationFrame(() => {
+          resolve(
+            Object.fromEntries(
+              [
+                '.hero-description',
+                '.hero-image',
+                '.hero-action-panel',
+              ].map((selector) => {
+                const { left, top, width, height } = document
+                  .querySelector<HTMLElement>(selector)!
+                  .getBoundingClientRect()
+                return [selector, { left, top, width, height }]
+              }),
+            ),
+          )
+        })
+      }),
+  )
+}
+
+async function readHeroTriggerCount(page: Page) {
+  return page.locator('.hero-section').evaluate((section) =>
+    Number((section as HTMLElement).dataset.heroScrollTriggerCount),
+  )
+}
+
 for (const language of ['en', 'ru'] as const) {
   for (const viewport of viewports) {
     test(`${language} Hero fits at ${viewport.width}x${viewport.height}`, async ({ page }) => {
@@ -312,9 +343,33 @@ for (const language of ['en', 'ru'] as const) {
           const image = document.querySelector<HTMLElement>('.hero-image')!
           const stage = document.querySelector<HTMLElement>('.hero-stage')!
           const content = document.querySelector<HTMLElement>('.hero-content')!
+          const description = document.querySelector<HTMLElement>(
+            '.hero-description',
+          )!
+          const actions = document.querySelector<HTMLElement>(
+            '.hero-action-panel',
+          )!
+          const buttons = [...actions.querySelectorAll<HTMLElement>('.hero-button')]
           const rect = image.getBoundingClientRect()
           const stageRect = stage.getBoundingClientRect()
           const contentRect = content.getBoundingClientRect()
+          const descriptionRect = description.getBoundingClientRect()
+          const actionsRect = actions.getBoundingClientRect()
+          const overlaps = (a: DOMRect, b: DOMRect) =>
+            !(
+              a.right <= b.left ||
+              b.right <= a.left ||
+              a.bottom <= b.top ||
+              b.bottom <= a.top
+            )
+          const toGeometry = ({
+            left,
+            top,
+            right,
+            bottom,
+            width,
+            height,
+          }: DOMRect) => ({ left, top, right, bottom, width, height })
           return {
             left: rect.left,
             right: rect.right,
@@ -331,6 +386,23 @@ for (const language of ['en', 'ru'] as const) {
               height: stageRect.height,
             },
             contentWidth: contentRect.width,
+            stagePosition: getComputedStyle(stage).position,
+            description: {
+              ...toGeometry(descriptionRect),
+              opacity: Number(getComputedStyle(description).opacity),
+            },
+            actions: {
+              ...toGeometry(actionsRect),
+              opacity: Number(getComputedStyle(actions).opacity),
+            },
+            buttons: buttons.map((button) =>
+              toGeometry(button.getBoundingClientRect()),
+            ),
+            overlaps: {
+              descriptionImage: overlaps(descriptionRect, rect),
+              imageActions: overlaps(rect, actionsRect),
+              descriptionActions: overlaps(descriptionRect, actionsRect),
+            },
             horizontalOverflow:
               document.documentElement.scrollWidth >
               document.documentElement.clientWidth,
@@ -343,14 +415,85 @@ for (const language of ['en', 'ru'] as const) {
         expect(state.width).toBeGreaterThan(0)
         expect(state.height).toBeGreaterThan(0)
 
+        for (const [name, box] of Object.entries({
+          description: state.description,
+          image: state,
+          actions: state.actions,
+        })) {
+          expect(box.left, `${name} left at ${progress}`).toBeGreaterThanOrEqual(
+            state.stage.left - 0.5,
+          )
+          expect(box.right, `${name} right at ${progress}`).toBeLessThanOrEqual(
+            state.stage.left + state.stage.width + 0.5,
+          )
+        }
+
+        const supportingTextVisible =
+          state.description.opacity > 0.01 || state.actions.opacity > 0.01
+        if (supportingTextVisible) {
+          expect(
+            state.overlaps.descriptionImage,
+            `description/image overlap at ${progress}`,
+          ).toBe(false)
+          expect(
+            state.overlaps.imageActions,
+            `image/actions overlap at ${progress}`,
+          ).toBe(false)
+          expect(
+            state.overlaps.descriptionActions,
+            `description/actions overlap at ${progress}`,
+          ).toBe(false)
+        }
+
+        const supportingColumnsRemainVisible =
+          viewport.width >= 720 &&
+          !(
+            viewport.width <= 1199 &&
+            viewport.height <= 600
+          )
+        if (supportingColumnsRemainVisible) {
+          expect(state.description.width).toBeGreaterThanOrEqual(159.5)
+          expect(state.actions.width).toBeGreaterThanOrEqual(159.5)
+
+          if (state.stagePosition === 'sticky') {
+            for (const [name, box] of Object.entries({
+              description: state.description,
+              image: state,
+              actions: state.actions,
+            })) {
+              expect(box.top, `${name} top at ${progress}`).toBeGreaterThanOrEqual(
+                state.stage.top - 0.5,
+              )
+              expect(
+                box.bottom,
+                `${name} bottom at ${progress}`,
+              ).toBeLessThanOrEqual(state.stage.top + state.stage.height + 0.5)
+            }
+          }
+
+          for (const button of state.buttons) {
+            expect(button.left).toBeGreaterThanOrEqual(state.stage.left - 0.5)
+            expect(button.right).toBeLessThanOrEqual(
+              state.stage.left + state.stage.width + 0.5,
+            )
+          }
+        }
+
         if (progress === 1) {
           const availableStageHeight = Math.min(
             state.stage.height,
             state.viewportHeight,
           )
+          const columnGap = Math.max(
+            24,
+            Math.min(64, state.contentWidth * 0.04),
+          )
+          const availableContentWidth = supportingColumnsRemainVisible
+            ? state.contentWidth - 2 * 160 - 2 * columnGap
+            : state.contentWidth
           const expectedWidth = Math.min(
             530,
-            state.contentWidth,
+            availableContentWidth,
             availableStageHeight * 0.92 * (530 / 928),
           )
           expect(Math.abs(state.width - expectedWidth)).toBeLessThanOrEqual(1)
@@ -374,6 +517,115 @@ for (const language of ['en', 'ru'] as const) {
     })
   }
 }
+
+test('Hero preserves scroll geometry during a synchronous refresh', async ({ page }) => {
+  await page.setViewportSize({ width: 720, height: 900 })
+  await page.goto('/ru')
+  await waitForHero(page)
+
+  const sectionHeight = await page.locator('.hero-section').evaluate(
+    (section) => section.getBoundingClientRect().height,
+  )
+  await page.evaluate(
+    ({ y }) => window.scrollTo({ top: y, behavior: 'instant' }),
+    { y: (sectionHeight - 900 - 2) * 0.5 },
+  )
+  await page.waitForTimeout(100)
+
+  const beforeRefresh = await readAnimatedHeroBoxes(page)
+  const firstRefreshFrame = await readAnimatedHeroBoxesOnNextFrame(page)
+
+  for (const selector of Object.keys(
+    beforeRefresh,
+  ) as (keyof typeof beforeRefresh)[]) {
+    for (const dimension of ['left', 'top', 'width', 'height'] as const) {
+      expect(
+        Math.abs(
+          beforeRefresh[selector][dimension] -
+            firstRefreshFrame[selector][dimension],
+        ),
+        `${selector} ${dimension}`,
+      ).toBeLessThanOrEqual(1)
+    }
+  }
+})
+
+test('Hero keeps one ScrollTrigger through resize and language changes', async ({ page }) => {
+  await page.setViewportSize({ width: 720, height: 900 })
+  await page.goto('/en')
+  await waitForHero(page)
+  expect(await readHeroTriggerCount(page)).toBe(1)
+
+  const tabletSectionHeight = await page.locator('.hero-section').evaluate(
+    (section) => section.getBoundingClientRect().height,
+  )
+  await page.evaluate(
+    ({ y }) => window.scrollTo({ top: y, behavior: 'instant' }),
+    { y: tabletSectionHeight - 900 - 2 },
+  )
+  await page.waitForTimeout(100)
+  const tabletImage = await readAnimatedHeroBoxes(page)
+
+  await page.setViewportSize({ width: 1024, height: 900 })
+  await page.waitForTimeout(150)
+  expect(await readHeroTriggerCount(page)).toBe(1)
+
+  const laptopSectionHeight = await page.locator('.hero-section').evaluate(
+    (section) => section.getBoundingClientRect().height,
+  )
+  await page.evaluate(
+    ({ y }) => window.scrollTo({ top: y, behavior: 'instant' }),
+    { y: laptopSectionHeight - 900 - 2 },
+  )
+  await page.waitForTimeout(100)
+  const laptopImage = await readAnimatedHeroBoxes(page)
+  expect(laptopImage['.hero-image'].width).toBeGreaterThan(
+    tabletImage['.hero-image'].width + 100,
+  )
+
+  await page.locator('.hero-language a[href="/ru"]').click()
+  await page.waitForURL('**/ru')
+  await waitForHero(page)
+  expect(await readHeroTriggerCount(page)).toBe(1)
+})
+
+test('Hero refreshes immediately when video metadata is already available', async ({ page }) => {
+  await page.addInitScript(() => {
+    const metadataListenerKey = '__heroMetadataListenerCount'
+    const testWindow = window as Window & Record<string, number>
+    const nativeAddEventListener = EventTarget.prototype.addEventListener
+
+    Object.defineProperty(HTMLMediaElement.prototype, 'readyState', {
+      configurable: true,
+      get: () => HTMLMediaElement.HAVE_METADATA,
+    })
+    EventTarget.prototype.addEventListener = function (...args) {
+      const [type] = args
+      if (
+        type === 'loadedmetadata' &&
+        this instanceof HTMLVideoElement &&
+        this.closest('.hero-image')
+      ) {
+        testWindow[metadataListenerKey] =
+          (testWindow[metadataListenerKey] ?? 0) + 1
+      }
+      return nativeAddEventListener.apply(this, args)
+    }
+  })
+
+  await page.setViewportSize({ width: 720, height: 900 })
+  await page.goto('/en')
+  await page.locator('.hero-section').waitFor({ state: 'visible' })
+  await page.waitForTimeout(100)
+
+  const metadataListenerCount = await page.evaluate(
+    () =>
+      (window as Window & Record<string, number>)[
+        '__heroMetadataListenerCount'
+      ] ?? 0,
+  )
+  expect(metadataListenerCount).toBe(1)
+})
 
 test('Hero scroll geometry refreshes after language changes', async ({ page }) => {
   const viewport = { width: 720, height: 900 }

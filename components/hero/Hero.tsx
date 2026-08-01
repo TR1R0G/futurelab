@@ -117,6 +117,14 @@ export function Hero({
 		const media = gsap.matchMedia()
 		let refreshFrame = 0
 		let active = true
+		const syncHeroTriggerCount = () => {
+			section.dataset.heroScrollTriggerCount = String(
+				ScrollTrigger.getAll().filter(
+					(trigger) =>
+						trigger.vars.id === 'hero-scroll' && trigger.trigger === section,
+				).length,
+			)
+		}
 
 		const refresh = () => {
 			if (!active) return
@@ -154,20 +162,29 @@ export function Hero({
 							actions: toBox(actions, stageBox),
 							light: toBox(light, stageBox),
 						}
-						const availableStageHeight =
-							Math.min(stageBox.height, window.innerHeight) * 0.92
-						const imageWidth = Math.min(
-							530,
-							contentBox.width,
-							availableStageHeight * videoAspect,
-						)
-						const imageHeight = imageWidth / videoAspect
 						const columnGap = Math.max(
 							24,
 							Math.min(64, contentBox.width * 0.04),
 						)
+						const minimumSupportingWidth = 160
+						const availableStageHeight =
+							Math.min(stageBox.height, window.innerHeight) * 0.92
+						const availableContentWidth = hideSupportingText
+							? contentBox.width
+							: Math.max(
+								1,
+								contentBox.width -
+									2 * minimumSupportingWidth -
+									2 * columnGap,
+							)
+						const imageWidth = Math.min(
+							530,
+							availableContentWidth,
+							availableStageHeight * videoAspect,
+						)
+						const imageHeight = imageWidth / videoAspect
 						const sideWidth = Math.max(
-							1,
+							hideSupportingText ? 1 : minimumSupportingWidth,
 							(contentBox.width - imageWidth) / 2 - columnGap,
 						)
 						const descriptionWidth = Math.min(start.desc.width, sideWidth)
@@ -177,10 +194,19 @@ export function Hero({
 							descriptionWidth,
 						)
 						const actionsHeight = measureHeightAtWidth(actions, actionsWidth)
+						const startsInColumns =
+							start.desc.left + start.desc.width <= start.image.left ||
+							start.image.left + start.image.width <= start.desc.left
+						const actionsStartInColumns =
+							start.image.left + start.image.width <= start.actions.left ||
+							start.actions.left + start.actions.width <= start.image.left
 
 						return {
 							stage,
 							start,
+							requiresColumnTransition:
+								!hideSupportingText &&
+								(!startsInColumns || !actionsStartInColumns),
 							initialRadius: parseFloat(getComputedStyle(imageFrame).borderRadius),
 							target: {
 								image: {
@@ -236,8 +262,22 @@ export function Hero({
 						const progress = clamp(
 							(window.scrollY - sectionTop) / scrollDistance,
 						)
-						const imageProgress = clamp(progress / finalImageAt)
+						if (progress === 0) {
+							clearAnimationStyles()
+							return
+						}
+						const columnTransitionAt = 0.25
+						const imageProgress = geometry.requiresColumnTransition
+							? clamp(
+									(progress - columnTransitionAt) /
+										(finalImageAt - columnTransitionAt),
+								)
+							: clamp(progress / finalImageAt)
+						const supportProgress = geometry.requiresColumnTransition
+							? clamp(progress / columnTransitionAt)
+							: imageProgress
 						const eased = ease(imageProgress)
+						const supportEased = ease(supportProgress)
 						const stageBox = geometry.stage.getBoundingClientRect()
 						const viewportCenter = window.innerHeight / 2
 
@@ -245,56 +285,6 @@ export function Hero({
 						header.style.transform = `translateY(${-90 * eased}px)`
 						copy.style.opacity = String(1 - clamp(progress * 3))
 						copy.style.transform = `translateY(${-150 * eased}px)`
-
-						if (hideSupportingText) {
-							desc.style.opacity = String(1 - clamp(progress * 5))
-							actions.style.opacity = String(1 - clamp(progress * 5))
-						} else {
-							desc.style.opacity = '1'
-							actions.style.opacity = '1'
-
-							const descriptionWidth = lerp(
-								geometry.start.desc.width,
-								geometry.target.desc.width,
-								eased,
-							)
-							positionElement(
-								desc,
-								descriptionWidth,
-								undefined,
-								lerp(
-									stageBox.left + geometry.start.desc.left,
-									stageBox.left + geometry.target.desc.left,
-									eased,
-								),
-								lerp(
-									stageBox.top + geometry.start.desc.top,
-									viewportCenter - geometry.target.desc.height / 2,
-									eased,
-								),
-							)
-
-							const actionsWidth = lerp(
-								geometry.start.actions.width,
-								geometry.target.actions.width,
-								eased,
-							)
-							positionElement(
-								actions,
-								actionsWidth,
-								undefined,
-								lerp(
-									stageBox.left + geometry.start.actions.left,
-									stageBox.left + geometry.target.actions.left,
-									eased,
-								),
-								lerp(
-									stageBox.top + geometry.start.actions.top,
-									viewportCenter - geometry.target.actions.height / 2,
-									eased,
-								),
-							)
-						}
 
 						const imageWidth = lerp(
 							geometry.start.image.width,
@@ -329,6 +319,56 @@ export function Hero({
 							expandedRadius,
 							eased,
 						)}px`
+
+						if (hideSupportingText) {
+							desc.style.opacity = String(1 - clamp(progress * 5))
+							actions.style.opacity = String(1 - clamp(progress * 5))
+						} else {
+							desc.style.opacity = '1'
+							actions.style.opacity = '1'
+
+							const descriptionWidth = lerp(
+								geometry.start.desc.width,
+								geometry.target.desc.width,
+								supportEased,
+							)
+							positionElement(
+								desc,
+								descriptionWidth,
+								undefined,
+								lerp(
+									stageBox.left + geometry.start.desc.left,
+									stageBox.left + geometry.target.desc.left,
+									supportEased,
+								),
+								lerp(
+									stageBox.top + geometry.start.desc.top,
+									viewportCenter - geometry.target.desc.height / 2,
+									supportEased,
+								),
+							)
+
+							const actionsWidth = lerp(
+								geometry.start.actions.width,
+								geometry.target.actions.width,
+								supportEased,
+							)
+							positionElement(
+								actions,
+								actionsWidth,
+								undefined,
+								lerp(
+									stageBox.left + geometry.start.actions.left,
+									stageBox.left + geometry.target.actions.left,
+									supportEased,
+								),
+								lerp(
+									stageBox.top + geometry.start.actions.top,
+									viewportCenter - geometry.target.actions.height / 2,
+									supportEased,
+								),
+							)
+						}
 
 						const imageCenterX = imageLeft + imageWidth / 2
 						const imageCenterY = imageTop + imageHeight / 2
@@ -368,8 +408,16 @@ export function Hero({
 						if (frame) return
 						frame = window.requestAnimationFrame(update)
 					}
+					const remeasureAndUpdate = () => {
+						if (frame) window.cancelAnimationFrame(frame)
+						frame = 0
+						clearAnimationStyles()
+						geometry = measure()
+						update()
+					}
 
 					const trigger = ScrollTrigger.create({
+						id: 'hero-scroll',
 						trigger: section,
 						start: () => {
 							const sectionBox = section.getBoundingClientRect()
@@ -383,14 +431,11 @@ export function Hero({
 							)
 						},
 						invalidateOnRefresh: true,
-						onRefreshInit: clearAnimationStyles,
-						onRefresh: () => {
-							geometry = measure()
-							requestUpdate()
-						},
+						onRefreshInit: remeasureAndUpdate,
 						onUpdate: requestUpdate,
 					})
 
+					syncHeroTriggerCount()
 					window.addEventListener('scroll', requestUpdate, { passive: true })
 					update()
 
@@ -398,6 +443,7 @@ export function Hero({
 						if (frame) window.cancelAnimationFrame(frame)
 						window.removeEventListener('scroll', requestUpdate)
 						trigger.kill()
+						syncHeroTriggerCount()
 						clearAnimationStyles()
 					}
 				},
@@ -405,17 +451,26 @@ export function Hero({
 		}, sectionRef)
 
 		void document.fonts.ready.then(refresh)
-		video.addEventListener('loadedmetadata', refresh, { once: true })
+		const metadataIsReady =
+			video.readyState >= HTMLMediaElement.HAVE_METADATA
+		if (metadataIsReady) {
+			refresh()
+		} else {
+			video.addEventListener('loadedmetadata', refresh, { once: true })
+		}
 		window.addEventListener('orientationchange', refresh)
 
 		return () => {
 			active = false
 			window.cancelAnimationFrame(refreshFrame)
-			video.removeEventListener('loadedmetadata', refresh)
+			if (!metadataIsReady) {
+				video.removeEventListener('loadedmetadata', refresh)
+			}
 			window.removeEventListener('orientationchange', refresh)
 			media.revert()
 			ctx.revert()
 			clearAnimationStyles()
+			delete section.dataset.heroScrollTriggerCount
 		}
 	}, [language, heroVideoSrc])
 
