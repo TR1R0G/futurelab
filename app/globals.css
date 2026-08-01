@@ -404,12 +404,23 @@ h3,
 	margin-right: 0.18em;
 }
 
-.hero-title-lines-compact {
+.hero-title-lines-mobile {
 	display: block;
 }
 
+.hero-title-lines-compact,
 .hero-title-lines-default {
 	display: none;
+}
+
+@media (min-width: 720px) {
+	.hero-title-lines-mobile {
+		display: none;
+	}
+
+	.hero-title-lines-compact {
+		display: block;
+	}
 }
 
 .hero-char {

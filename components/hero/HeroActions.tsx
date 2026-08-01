@@ -21,9 +21,11 @@ export function HeroActions({
     if (!containerRef.current) return;
 
     const ctx = gsap.context(() => {
+      const isMobile = window.matchMedia("(max-width: 719px)").matches;
+
       gsap.fromTo(
         containerRef.current,
-        { y: 40, opacity: 0 },
+        { y: isMobile ? 0 : 40, opacity: 0 },
         {
           y: 0,
           opacity: 1,

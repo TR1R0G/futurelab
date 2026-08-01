@@ -847,6 +847,76 @@ test('ru Hero keeps short-flow actions readable until they pass through normal f
   expect(result.opacityAfterThreshold).toBeLessThan(0.1)
 })
 
+test.describe('Hero narrow mobile composition', () => {
+  test('en Hero uses the available title width at 719px', async ({ page }) => {
+    await page.setViewportSize({ width: 719, height: 905 })
+    await page.goto('/en')
+    await waitForHero(page)
+    await page.waitForTimeout(3_500)
+
+    const titleRows = await page.locator('.hero-title').evaluate((title) => {
+      const visibleWords = [
+        ...title.querySelectorAll<HTMLElement>('.hero-word'),
+      ].filter((word) => word.getBoundingClientRect().width > 0)
+
+      return new Set(
+        visibleWords.map((word) =>
+          Math.round(word.getBoundingClientRect().top),
+        ),
+      ).size
+    })
+
+    expect(titleRows).toBeLessThanOrEqual(3)
+  })
+
+  for (const width of [297, 389, 719]) {
+    test(`en Hero CTA entrance remains in normal flow at ${width}px`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width, height: 905 })
+      await page.goto('/en')
+      await page.locator('.hero-section').waitFor({ state: 'visible' })
+      await page.waitForFunction(() => {
+        const opacity = Number(
+          getComputedStyle(
+            document.querySelector<HTMLElement>('.hero-actions')!,
+          ).opacity,
+        )
+        return opacity > 0.01 && opacity < 0.99
+      })
+
+      const overlaps = await page.evaluate(() => {
+        const description = document
+          .querySelector<HTMLElement>('.hero-description')!
+          .getBoundingClientRect()
+        const actions = document
+          .querySelector<HTMLElement>('.hero-actions')!
+          .getBoundingClientRect()
+        const image = document
+          .querySelector<HTMLElement>('.hero-image')!
+          .getBoundingClientRect()
+        const intersects = (a: DOMRect, b: DOMRect) =>
+          !(
+            a.right <= b.left ||
+            b.right <= a.left ||
+            a.bottom <= b.top ||
+            b.bottom <= a.top
+          )
+
+        return {
+          descriptionOverlap: intersects(description, actions),
+          imageOverlap: intersects(actions, image),
+        }
+      })
+
+      expect(overlaps).toEqual({
+        descriptionOverlap: false,
+        imageOverlap: false,
+      })
+    })
+  }
+})
+
 const shortHeightCases = [
   { width: 768, height: 650, expectedPosition: 'relative', expectedOverflow: 'visible', tracks: 1 },
   { width: 1024, height: 650, expectedPosition: 'relative', expectedOverflow: 'visible', tracks: 1 },

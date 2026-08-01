@@ -113,6 +113,7 @@ export function HeroTitle({ title }: HeroTitleProps) {
     >
       {compactTitleLines ? (
         <>
+          <span className="hero-title-lines-mobile">{title}</span>
           <span className="hero-title-lines-default">
             {titleLines.map((line) => (
               <span
