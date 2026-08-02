@@ -178,6 +178,40 @@ async function readAnimatedHeroBoxes(page: Page) {
   })
 }
 
+async function readHeroExpansionState(page: Page) {
+  return page.evaluate(() => {
+    const read = (selector: string) => {
+      const element = document.querySelector<HTMLElement>(selector)!
+      const rect = element.getBoundingClientRect()
+      return {
+        left: rect.left,
+        top: rect.top,
+        right: rect.right,
+        bottom: rect.bottom,
+        width: rect.width,
+        height: rect.height,
+        centerY: rect.top + rect.height / 2,
+        opacity: Number(getComputedStyle(element).opacity),
+      }
+    }
+
+    const section = document.querySelector<HTMLElement>('.hero-section')!
+    const sectionRect = section.getBoundingClientRect()
+
+    return {
+      image: read('.hero-image'),
+      description: read('.hero-description'),
+      actions: read('.hero-action-panel'),
+      ecosystem: read('.ecosystem-wrapper'),
+      viewportWidth: window.innerWidth,
+      viewportHeight: window.innerHeight,
+      heroEnd:
+        sectionRect.top + window.scrollY +
+        Math.max(1, sectionRect.height - window.innerHeight),
+    }
+  })
+}
+
 async function readAnimatedHeroBoxesOnNextFrame(page: Page) {
   return page.evaluate(
     () =>
@@ -576,14 +610,14 @@ for (const language of ['en', 'ru'] as const) {
             state.overlaps.imageActions,
             `visible image/actions overlap at ${progress}`,
           ).toBe(false)
-          expect(state.actions.top).toBeGreaterThanOrEqual(state.stage.top - 0.5)
+          expect(state.actions.top).toBeGreaterThanOrEqual(-0.5)
           expect(state.actions.bottom).toBeLessThanOrEqual(
-            state.stage.top + state.stage.height + 0.5,
+            state.viewportHeight + 0.5,
           )
         }
 
         const supportingColumnsRemainVisible =
-          viewport.width >= 720 &&
+          viewport.width >= 960 &&
           !(
             viewport.width <= 1199 &&
             viewport.height <= 600
@@ -656,6 +690,522 @@ for (const language of ['en', 'ru'] as const) {
   }
 }
 
+test.describe('Hero video expansion below desktop', () => {
+  for (const viewport of [
+    { width: 360, height: 800 },
+    { width: 720, height: 900 },
+    { width: 959, height: 900 },
+    { width: 960, height: 900 },
+    { width: 1024, height: 768 },
+    { width: 1199, height: 900 },
+  ]) {
+    test(`en Hero video expands within the viewport at ${viewport.width}x${viewport.height}`, async ({
+      page,
+    }) => {
+      await page.setViewportSize(viewport)
+      await page.goto('/en')
+      await waitForHero(page)
+
+      const initial = await readHeroExpansionState(page)
+      const progressPoints = [0, 0.2, 0.4, 0.6, 0.82, 1]
+      let previousDistance: number | undefined
+
+      for (const progress of progressPoints) {
+        await page.evaluate(
+          ({ y }) => window.scrollTo({ top: y, behavior: 'instant' }),
+          { y: initial.heroEnd * progress },
+        )
+        await page.waitForTimeout(100)
+
+        const state = await readHeroExpansionState(page)
+        const viewportCenterY = state.viewportHeight / 2
+        const imageDistance = Math.abs(state.image.centerY - viewportCenterY)
+
+        expect(state.image.left, `image left at ${progress}`).toBeGreaterThanOrEqual(0)
+        expect(state.image.right, `image right at ${progress}`).toBeLessThanOrEqual(
+          state.viewportWidth,
+        )
+        if (previousDistance !== undefined) {
+          expect(
+            imageDistance,
+            `image center distance at ${progress}`,
+          ).toBeLessThanOrEqual(previousDistance + 1)
+        }
+        previousDistance = imageDistance
+
+        if (progress === 1) {
+          expect(state.image.top).toBeGreaterThanOrEqual(0)
+          expect(state.image.bottom).toBeLessThanOrEqual(state.viewportHeight)
+          expect(Math.abs(state.image.centerY - viewportCenterY)).toBeLessThanOrEqual(1)
+          if (viewport.width >= 960) {
+            expect(state.description.opacity).toBeGreaterThan(0.99)
+            expect(state.actions.opacity).toBeGreaterThan(0.99)
+            if (viewport.width === 960 || viewport.width === 1199) {
+              for (const [name, box] of Object.entries({
+                description: state.description,
+                actions: state.actions,
+              })) {
+                expect(box.left, `${name} left on-screen`).toBeGreaterThanOrEqual(0)
+                expect(box.right, `${name} right on-screen`).toBeLessThanOrEqual(
+                  state.viewportWidth,
+                )
+                expect(box.top, `${name} top on-screen`).toBeGreaterThanOrEqual(0)
+                expect(box.bottom, `${name} bottom on-screen`).toBeLessThanOrEqual(
+                  state.viewportHeight,
+                )
+              }
+
+              const intersects = (
+                a: { left: number; right: number; top: number; bottom: number },
+                b: { left: number; right: number; top: number; bottom: number },
+              ) =>
+                !(
+                  a.right <= b.left ||
+                  b.right <= a.left ||
+                  a.bottom <= b.top ||
+                  b.bottom <= a.top
+                )
+
+              expect(state.description.right).toBeLessThanOrEqual(state.image.left)
+              expect(state.actions.left).toBeGreaterThanOrEqual(state.image.right)
+              expect(intersects(state.description, state.image)).toBe(false)
+              expect(intersects(state.actions, state.image)).toBe(false)
+              expect(intersects(state.description, state.actions)).toBe(false)
+            }
+          } else {
+            expect(state.description.opacity).toBeLessThanOrEqual(0.01)
+            expect(state.actions.opacity).toBeLessThanOrEqual(0.01)
+          }
+        }
+      }
+    })
+  }
+
+  for (const viewport of [
+    { width: 720, height: 900 },
+    { width: 959, height: 900 },
+    { width: 1024, height: 768 },
+    { width: 1199, height: 900 },
+  ]) {
+    test(`Hero releases before Ecosystem at ${viewport.width}x${viewport.height}`, async ({
+      page,
+    }) => {
+      await page.setViewportSize(viewport)
+      await page.goto('/en')
+      await waitForHero(page)
+
+      const original = await readHeroExpansionState(page)
+      await page.evaluate(
+        ({ y }) => window.scrollTo({ top: y, behavior: 'instant' }),
+        { y: original.heroEnd },
+      )
+      await page.waitForTimeout(100)
+      const expanded = await readHeroExpansionState(page)
+
+      await page.evaluate(
+        ({ y }) => window.scrollTo({ top: y, behavior: 'instant' }),
+        { y: original.heroEnd + 0.6 * viewport.height },
+      )
+      await page.waitForTimeout(100)
+      const released = await readHeroExpansionState(page)
+
+      expect(expanded.image.centerY - released.image.centerY).toBeGreaterThanOrEqual(
+        0.5 * viewport.height,
+      )
+
+      const intersects = (
+        a: { left: number; right: number; top: number; bottom: number },
+        b: { left: number; right: number; top: number; bottom: number },
+      ) =>
+        !(a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top)
+
+      if (released.ecosystem.opacity > 0.01) {
+        expect(intersects(released.image, released.ecosystem)).toBe(false)
+        expect(intersects(released.description, released.ecosystem)).toBe(false)
+        expect(intersects(released.actions, released.ecosystem)).toBe(false)
+      }
+
+      await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
+      await page.waitForTimeout(100)
+      const restored = await readHeroExpansionState(page)
+
+      for (const dimension of ['left', 'top', 'width', 'height'] as const) {
+        expect(
+          Math.abs(restored.image[dimension] - original.image[dimension]),
+          `restored image ${dimension}`,
+        ).toBeLessThanOrEqual(1)
+      }
+    })
+  }
+})
+
+test.describe('Hero short-height video expansion', () => {
+  for (const viewport of [
+    { width: 667, height: 375 },
+    { width: 1024, height: 600 },
+    { width: 1199, height: 600 },
+  ]) {
+    test(`Hero video stays monotonic at ${viewport.width}x${viewport.height}`, async ({
+      page,
+    }) => {
+      await page.setViewportSize(viewport)
+      await page.goto('/en')
+      await waitForHero(page)
+
+      const initial = await readHeroExpansionState(page)
+      const progressPoints = [
+        0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5,
+        0.55, 0.6, 0.65, 0.7, 0.75, 0.82, 0.9, 1,
+      ]
+      let previousCenterY: number | undefined
+      let previousDistance: number | undefined
+
+      for (const progress of progressPoints) {
+        await page.evaluate(
+          ({ y }) => window.scrollTo({ top: y, behavior: 'instant' }),
+          { y: initial.heroEnd * progress },
+        )
+        await page.waitForTimeout(75)
+
+        const state = await readHeroExpansionState(page)
+        const viewportCenterY = state.viewportHeight / 2
+        const imageDistance = Math.abs(state.image.centerY - viewportCenterY)
+
+        expect(state.image.left, `image left at ${progress}`).toBeGreaterThanOrEqual(0)
+        expect(state.image.right, `image right at ${progress}`).toBeLessThanOrEqual(
+          state.viewportWidth,
+        )
+        if (previousCenterY !== undefined && previousDistance !== undefined) {
+          expect(
+            state.image.centerY,
+            `image center must not reverse downward at ${progress}`,
+          ).toBeLessThanOrEqual(previousCenterY + 1)
+          expect(
+            imageDistance,
+            `image center distance at ${progress}`,
+          ).toBeLessThanOrEqual(previousDistance + 1)
+        }
+        previousCenterY = state.image.centerY
+        previousDistance = imageDistance
+
+        if (progress === 1) {
+          expect(state.image.top).toBeGreaterThanOrEqual(0)
+          expect(state.image.bottom).toBeLessThanOrEqual(state.viewportHeight)
+          expect(imageDistance).toBeLessThanOrEqual(1)
+          expect(state.description.opacity).toBeLessThanOrEqual(0.01)
+          expect(state.actions.opacity).toBeLessThanOrEqual(0.01)
+        }
+      }
+    })
+  }
+})
+
+test.describe('Hero visible support continuity', () => {
+  for (const viewport of [
+    { width: 960, height: 900 },
+    { width: 1199, height: 900 },
+  ]) {
+    test(`Hero support columns avoid a first-frame jump at ${viewport.width}x${viewport.height}`, async ({
+      page,
+    }) => {
+      await page.setViewportSize(viewport)
+      await page.goto('/en')
+      await waitForHero(page)
+
+      const initial = await readHeroExpansionState(page)
+      await page.evaluate(
+        ({ y }) => window.scrollTo({ top: y, behavior: 'instant' }),
+        { y: initial.heroEnd * 0.001 },
+      )
+      await page.waitForTimeout(100)
+      const firstFrame = await readHeroExpansionState(page)
+
+      for (const [name, box] of Object.entries({
+        description: firstFrame.description,
+        actions: firstFrame.actions,
+      })) {
+        const initialBox = initial[name as 'description' | 'actions']
+        expect(
+          Math.abs(box.top - initialBox.top),
+          `${name} first-frame vertical displacement`,
+        ).toBeLessThanOrEqual(4)
+        expect(box.opacity, `${name} remains visible`).toBeGreaterThan(0.99)
+      }
+    })
+
+    test(`Hero support columns move continuously at ${viewport.width}x${viewport.height}`, async ({
+      page,
+    }) => {
+      await page.setViewportSize(viewport)
+      await page.goto('/en')
+      await waitForHero(page)
+
+      const initial = await readHeroExpansionState(page)
+      const progressPoints = Array.from({ length: 83 }, (_, index) => index * 0.01)
+      const previousCenters: Partial<Record<'description' | 'actions', number>> = {}
+      const previousDistances: Partial<Record<'description' | 'actions', number>> = {}
+
+      for (const progress of progressPoints) {
+        await page.evaluate(
+          ({ y }) => window.scrollTo({ top: y, behavior: 'instant' }),
+          { y: initial.heroEnd * progress },
+        )
+        await page.waitForTimeout(35)
+        const state = await readHeroExpansionState(page)
+
+        for (const name of ['description', 'actions'] as const) {
+          const center = state[name].centerY
+          const distance = Math.abs(center - state.viewportHeight / 2)
+          const previousCenter = previousCenters[name]
+          const previousDistance = previousDistances[name]
+
+          if (previousCenter !== undefined && previousDistance !== undefined) {
+            expect(
+              Math.abs(center - previousCenter),
+              `${name} center displacement at ${progress}`,
+            ).toBeLessThanOrEqual(12)
+            expect(
+              distance,
+              `${name} center distance at ${progress}`,
+            ).toBeLessThanOrEqual(previousDistance + 1)
+          }
+
+          previousCenters[name] = center
+          previousDistances[name] = distance
+        }
+      }
+    })
+  }
+})
+
+test('Hero applies final expansion before releasing after a direct scroll jump', async ({
+  page,
+}) => {
+  const viewport = { width: 720, height: 900 }
+  await page.setViewportSize(viewport)
+  await page.goto('/en')
+  await waitForHero(page)
+
+  const initial = await readHeroExpansionState(page)
+  await page.evaluate(
+    ({ y }) => window.scrollTo({ top: y, behavior: 'instant' }),
+    { y: initial.heroEnd * 0.5 },
+  )
+  await page.waitForTimeout(100)
+
+  await page.evaluate(
+    ({ y }) => window.scrollTo({ top: y, behavior: 'instant' }),
+    { y: initial.heroEnd + 0.6 * viewport.height },
+  )
+  await page.waitForTimeout(100)
+  const released = await readHeroExpansionState(page)
+  const expectedImageWidth = await page.evaluate(() => {
+    const stage = document.querySelector<HTMLElement>('.hero-stage')!
+    const content = document.querySelector<HTMLElement>('.hero-content')!
+    const stageBox = stage.getBoundingClientRect()
+    const contentBox = content.getBoundingClientRect()
+    return Math.min(
+      530,
+      contentBox.width,
+      Math.min(stageBox.height, window.innerHeight) * 0.92 * (530 / 928),
+    )
+  })
+
+  expect(Math.abs(released.image.width - expectedImageWidth)).toBeLessThanOrEqual(1)
+
+  const intersects = (
+    a: { left: number; right: number; top: number; bottom: number },
+    b: { left: number; right: number; top: number; bottom: number },
+  ) =>
+    !(a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top)
+
+  if (released.ecosystem.opacity > 0.01) {
+    expect(intersects(released.image, released.ecosystem)).toBe(false)
+    expect(intersects(released.description, released.ecosystem)).toBe(false)
+    expect(intersects(released.actions, released.ecosystem)).toBe(false)
+  }
+})
+
+test('Hero remains released after refresh beyond its end', async ({ page }) => {
+  const viewport = { width: 720, height: 900 }
+  await page.setViewportSize(viewport)
+  await page.goto('/en')
+  await waitForHero(page)
+
+  const initial = await readHeroExpansionState(page)
+  await page.evaluate(
+    ({ y }) => window.scrollTo({ top: y, behavior: 'instant' }),
+    { y: initial.heroEnd },
+  )
+  await page.waitForTimeout(100)
+  const expanded = await readHeroExpansionState(page)
+
+  await page.evaluate(
+    ({ y }) => window.scrollTo({ top: y, behavior: 'instant' }),
+    { y: initial.heroEnd + 0.6 * viewport.height },
+  )
+  await page.waitForTimeout(100)
+  const released = await readHeroExpansionState(page)
+
+  await page.evaluate(() => window.dispatchEvent(new Event('orientationchange')))
+  await page.waitForTimeout(150)
+  const refreshed = await readHeroExpansionState(page)
+
+  expect(expanded.image.centerY - refreshed.image.centerY).toBeGreaterThanOrEqual(
+    0.5 * viewport.height,
+  )
+
+  const intersects = (
+    a: { left: number; right: number; top: number; bottom: number },
+    b: { left: number; right: number; top: number; bottom: number },
+  ) =>
+    !(a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top)
+
+  if (refreshed.ecosystem.opacity > 0.01) {
+    expect(intersects(refreshed.image, refreshed.ecosystem)).toBe(false)
+    expect(intersects(refreshed.description, refreshed.ecosystem)).toBe(false)
+    expect(intersects(refreshed.actions, refreshed.ecosystem)).toBe(false)
+  }
+
+  expect(Math.abs(refreshed.image.top - released.image.top)).toBeLessThanOrEqual(1)
+
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
+  await page.waitForTimeout(100)
+  const restored = await readHeroExpansionState(page)
+
+  for (const dimension of ['left', 'top', 'width', 'height'] as const) {
+    expect(
+      Math.abs(restored.image[dimension] - initial.image[dimension]),
+      `restored image ${dimension}`,
+    ).toBeLessThanOrEqual(1)
+  }
+})
+
+test('Hero initializes released when hydration starts past its end', async ({ page }) => {
+  const viewport = { width: 720, height: 900 }
+  let releaseScripts = () => undefined
+  const scriptsReleased = new Promise<void>((resolve) => {
+    releaseScripts = resolve
+  })
+  await page.route(/\/_next\/static\/.*\.js(?:\?.*)?$/, async (route) => {
+    await scriptsReleased
+    await route.continue()
+  })
+  await page.setViewportSize(viewport)
+  await page.goto('/en', { waitUntil: 'commit' })
+  await page.locator('.hero-section').waitFor({ state: 'attached' })
+  await page.locator('.ecosystem-wrapper').waitFor({ state: 'attached' })
+  const initial = await readHeroExpansionState(page)
+  await page.evaluate(
+    ({ y }) => window.scrollTo({ top: y, behavior: 'instant' }),
+    { y: initial.heroEnd + 0.6 * viewport.height },
+  )
+
+  await page.evaluate(() => {
+    const testWindow = window as Window & {
+      __heroNativeScrollTo?: typeof window.scrollTo
+      __heroRemountSamples?: Array<{
+        beyondEnd: boolean
+        intersects: boolean
+        triggerCount: number
+      }>
+    }
+    testWindow.__heroRemountSamples = []
+    const nativeScrollTo = window.scrollTo.bind(window)
+    testWindow.__heroNativeScrollTo = nativeScrollTo
+    window.scrollTo = ((optionsOrX: ScrollToOptions | number, y?: number) => {
+      const top = typeof optionsOrX === 'number' ? y : optionsOrX.top
+      if (top === 0) return
+      if (typeof optionsOrX === 'number') nativeScrollTo(optionsOrX, y ?? 0)
+      else nativeScrollTo(optionsOrX)
+    }) as typeof window.scrollTo
+
+    let frameCount = 0
+    const sample = () => {
+      const section = document.querySelector<HTMLElement>('.hero-section')
+      const image = document.querySelector<HTMLElement>('.hero-image')
+      const description = document.querySelector<HTMLElement>('.hero-description')
+      const actions = document.querySelector<HTMLElement>('.hero-action-panel')
+      const ecosystem = document.querySelector<HTMLElement>('.ecosystem-wrapper')
+      if (section && image && description && actions && ecosystem) {
+        const sectionRect = section.getBoundingClientRect()
+        const heroEnd =
+          sectionRect.top + window.scrollY +
+          Math.max(1, sectionRect.height - window.innerHeight)
+        const ecosystemRect = ecosystem.getBoundingClientRect()
+        const intersects = (element: HTMLElement) => {
+          const rect = element.getBoundingClientRect()
+          return !(
+            rect.right <= ecosystemRect.left ||
+            ecosystemRect.right <= rect.left ||
+            rect.bottom <= ecosystemRect.top ||
+            ecosystemRect.bottom <= rect.top
+          )
+        }
+        testWindow.__heroRemountSamples!.push({
+          beyondEnd: window.scrollY > heroEnd,
+          intersects:
+            Number(getComputedStyle(ecosystem).opacity) > 0.01 &&
+            [image, description, actions].some(intersects),
+          triggerCount: Number(section.dataset.heroScrollTriggerCount ?? 0),
+        })
+      }
+      frameCount += 1
+      if (frameCount < 300) requestAnimationFrame(sample)
+    }
+    requestAnimationFrame(sample)
+  })
+
+  releaseScripts()
+  await waitForHero(page)
+  await page.waitForTimeout(300)
+  const samples = await page.evaluate(
+    () =>
+      (window as Window & {
+        __heroRemountSamples?: Array<{
+          beyondEnd: boolean
+          intersects: boolean
+          triggerCount: number
+        }>
+      }).__heroRemountSamples ?? [],
+  )
+  const initializedSamples = samples.filter(
+    (sample) => sample.beyondEnd && sample.triggerCount === 1,
+  )
+  expect(initializedSamples.length).toBeGreaterThan(1)
+  expect(initializedSamples.at(-1)?.intersects).toBe(false)
+
+  const released = await readHeroExpansionState(page)
+  const intersects = (
+    a: { left: number; right: number; top: number; bottom: number },
+    b: { left: number; right: number; top: number; bottom: number },
+  ) =>
+    !(a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top)
+
+  if (released.ecosystem.opacity > 0.01) {
+    expect(intersects(released.image, released.ecosystem)).toBe(false)
+    expect(intersects(released.description, released.ecosystem)).toBe(false)
+    expect(intersects(released.actions, released.ecosystem)).toBe(false)
+  }
+
+  await page.evaluate(() => {
+    const testWindow = window as Window & {
+      __heroNativeScrollTo?: typeof window.scrollTo
+    }
+    window.scrollTo = testWindow.__heroNativeScrollTo!
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  })
+  await page.waitForTimeout(100)
+  const restored = await readHeroExpansionState(page)
+
+  for (const dimension of ['left', 'top', 'width', 'height'] as const) {
+    expect(
+      Math.abs(restored.image[dimension] - initial.image[dimension]),
+      `restored image ${dimension}`,
+    ).toBeLessThanOrEqual(1)
+  }
+})
+
 test('Hero preserves scroll geometry during a synchronous refresh', async ({ page }) => {
   await page.setViewportSize({ width: 720, height: 900 })
   await page.goto('/ru')
@@ -702,7 +1252,19 @@ test('Hero keeps one ScrollTrigger through resize and language changes', async (
     { y: tabletSectionHeight - 900 - 2 },
   )
   await page.waitForTimeout(100)
-  const tabletImage = await readAnimatedHeroBoxes(page)
+  const tabletHero = await readHeroExpansionState(page)
+  const tabletTarget = await page.evaluate(() => {
+    const stage = document.querySelector<HTMLElement>('.hero-stage')!
+    const content = document.querySelector<HTMLElement>('.hero-content')!
+    const stageBox = stage.getBoundingClientRect()
+    const contentBox = content.getBoundingClientRect()
+    const width = Math.min(
+      530,
+      contentBox.width,
+      Math.min(stageBox.height, window.innerHeight) * 0.92 * (530 / 928),
+    )
+    return { width, height: width / (530 / 928) }
+  })
 
   await page.setViewportSize({ width: 1024, height: 900 })
   await page.waitForTimeout(150)
@@ -716,10 +1278,35 @@ test('Hero keeps one ScrollTrigger through resize and language changes', async (
     { y: laptopSectionHeight - 900 - 2 },
   )
   await page.waitForTimeout(100)
-  const laptopImage = await readAnimatedHeroBoxes(page)
-  expect(laptopImage['.hero-image'].width).toBeGreaterThan(
-    tabletImage['.hero-image'].width + 100,
-  )
+  const laptopHero = await readHeroExpansionState(page)
+  const laptopTarget = await page.evaluate(() => {
+    const stage = document.querySelector<HTMLElement>('.hero-stage')!
+    const content = document.querySelector<HTMLElement>('.hero-content')!
+    const stageBox = stage.getBoundingClientRect()
+    const contentBox = content.getBoundingClientRect()
+    const columnGap = Math.max(24, Math.min(64, contentBox.width * 0.04))
+    const width = Math.min(
+      530,
+      Math.max(1, contentBox.width - 2 * 160 - 2 * columnGap),
+      Math.min(stageBox.height, window.innerHeight) * 0.92 * (530 / 928),
+    )
+    return { width, height: width / (530 / 928) }
+  })
+  expect(Math.abs(tabletHero.image.width - tabletTarget.width)).toBeLessThanOrEqual(1)
+  expect(Math.abs(tabletHero.image.height - tabletTarget.height)).toBeLessThanOrEqual(1)
+  expect(Math.abs(laptopHero.image.width - laptopTarget.width)).toBeLessThanOrEqual(1)
+  expect(Math.abs(laptopHero.image.height - laptopTarget.height)).toBeLessThanOrEqual(1)
+  expect(
+    Math.abs(tabletHero.image.centerY - tabletHero.viewportHeight / 2),
+  ).toBeLessThanOrEqual(1)
+  expect(
+    Math.abs(laptopHero.image.centerY - laptopHero.viewportHeight / 2),
+  ).toBeLessThanOrEqual(1)
+  expect(Math.abs(laptopHero.image.left - tabletHero.image.left)).toBeGreaterThan(100)
+  expect(tabletHero.description.opacity).toBeLessThanOrEqual(0.01)
+  expect(tabletHero.actions.opacity).toBeLessThanOrEqual(0.01)
+  expect(laptopHero.description.opacity).toBeGreaterThan(0.99)
+  expect(laptopHero.actions.opacity).toBeGreaterThan(0.99)
 
   await page.locator('.hero-language a[href="/ru"]').click()
   await page.waitForURL('**/ru')

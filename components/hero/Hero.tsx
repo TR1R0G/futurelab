@@ -1,7 +1,7 @@
 'use client'
 
-import { gsap, registerGsapPlugins, ScrollTrigger } from '@/lib/gsap'
 import { useGlobalVideoSound } from '@/components/providers/SoundProvider'
+import { gsap, registerGsapPlugins, ScrollTrigger } from '@/lib/gsap'
 import type { Language } from '@/lib/mdx'
 import { scrollToHashTarget } from '@/lib/smooth-scroll'
 import Image from 'next/image'
@@ -113,7 +113,7 @@ export function Hero({
 		const syncHeroTriggerCount = () => {
 			section.dataset.heroScrollTriggerCount = String(
 				ScrollTrigger.getAll().filter(
-					(trigger) =>
+					trigger =>
 						trigger.vars.id === 'hero-scroll' && trigger.trigger === section,
 				).length,
 			)
@@ -137,12 +137,15 @@ export function Hero({
 					desktop: '(min-width: 1200px) and (max-width: 1599px)',
 					largeDesktop: '(min-width: 1600px)',
 				},
-				(context) => {
+				context => {
 					const conditions = context.conditions!
-					const hideSupportingText = conditions.mobile || conditions.short
+					const hideSupportingText =
+						conditions.mobile || conditions.tablet || conditions.short
 					const expandedRadius =
 						conditions.desktop || conditions.largeDesktop ? 35 : 25
 					let frame = 0
+					let finalStageOffset = 0
+					let finalStateApplied = false
 
 					const measure = () => {
 						const stage = section.querySelector<HTMLElement>('.hero-stage')!
@@ -150,7 +153,9 @@ export function Hero({
 						const sectionBox = section.getBoundingClientRect()
 						const stageBox = stage.getBoundingClientRect()
 						const contentBox = content.getBoundingClientRect()
-						const sectionTop = sectionBox.top + window.scrollY
+						const sectionTop = section.offsetTop
+						const stagePosition = getComputedStyle(stage).position
+						const stageIsSticky = stagePosition === 'sticky'
 						const start = {
 							desc: toBox(desc, stageBox),
 							image: toBox(image, stageBox),
@@ -167,11 +172,9 @@ export function Hero({
 						const availableContentWidth = hideSupportingText
 							? contentBox.width
 							: Math.max(
-								1,
-								contentBox.width -
-									2 * minimumSupportingWidth -
-									2 * columnGap,
-							)
+									1,
+									contentBox.width - 2 * minimumSupportingWidth - 2 * columnGap,
+								)
 						const imageWidth = Math.min(
 							530,
 							availableContentWidth,
@@ -204,6 +207,36 @@ export function Hero({
 						actions.style.removeProperty('width')
 						image.style.removeProperty('width')
 						image.style.removeProperty('height')
+						const flowTransitionStart = Math.max(
+							0,
+							stageBox.top +
+								window.scrollY +
+								start.actions.top +
+								start.actions.height -
+								sectionTop,
+						)
+						const videoTransitionStart = hideSupportingText
+							? Math.min(
+									flowTransitionStart,
+									Math.max(
+										0,
+										start.image.top +
+											start.image.height / 2 -
+											window.innerHeight / 2,
+									),
+								)
+							: 0
+						const supportFadeStart = conditions.short
+							? flowTransitionStart
+							: videoTransitionStart
+						const transitionStageTop = stageIsSticky ? 0 : -videoTransitionStart
+						const startViewportCenter = {
+							desc: transitionStageTop + start.desc.top + start.desc.height / 2,
+							image:
+								transitionStageTop + start.image.top + start.image.height / 2,
+							actions:
+								transitionStageTop + start.actions.top + start.actions.height / 2,
+						}
 
 						return {
 							stage,
@@ -212,20 +245,10 @@ export function Hero({
 								1,
 								sectionBox.height - window.innerHeight,
 							),
-							flowTransitionStart: Math.max(
-								0,
-								stageBox.top +
-									window.scrollY +
-									start.actions.top +
-									start.actions.height -
-									sectionTop,
-							),
+							videoTransitionStart,
+							supportFadeStart,
+							startViewportCenter,
 							start,
-							base: {
-								desc: { start: start.desc, target: targetBase.desc },
-								image: { start: start.image, target: targetBase.image },
-								actions: { start: start.actions, target: targetBase.actions },
-							},
 							lightOffset: {
 								left: light.offsetLeft,
 								top: light.offsetTop,
@@ -238,7 +261,9 @@ export function Hero({
 							requiresColumnTransition:
 								!hideSupportingText &&
 								(!startsInColumns || !actionsStartInColumns),
-							initialRadius: parseFloat(getComputedStyle(imageFrame).borderRadius),
+							initialRadius: parseFloat(
+								getComputedStyle(imageFrame).borderRadius,
+							),
 							target: {
 								image: {
 									left: (stageBox.width - imageWidth) / 2,
@@ -251,8 +276,7 @@ export function Hero({
 									height: targetBase.desc.height,
 								},
 								actions: {
-									left:
-										contentBox.right - stageBox.left - actionsWidth,
+									left: contentBox.right - stageBox.left - actionsWidth,
 									width: actionsWidth,
 									height: targetBase.actions.height,
 								},
@@ -269,19 +293,15 @@ export function Hero({
 						height: number | undefined,
 						left: number,
 						top: number,
-						base: {
-							start: { left: number; top: number }
-							target: { left: number; top: number }
-						},
-						baseProgress: number,
+						stageBox: DOMRect,
 						centeredByCss = false,
 					) => {
-						const baseLeft = lerp(base.start.left, base.target.left, baseProgress)
-						const baseTop = lerp(base.start.top, base.target.top, baseProgress)
 						element.style.width = `${width}px`
 						if (height !== undefined) element.style.height = `${height}px`
-						const x = left - baseLeft
-						const y = top - baseTop
+						element.style.transform = centeredByCss ? 'translateX(-50%)' : ''
+						const baseBox = toBox(element, stageBox)
+						const x = left - baseBox.left
+						const y = top - baseBox.top
 						element.style.transform = centeredByCss
 							? `translate(calc(-50% + ${x}px), ${y}px)`
 							: `translate(${x}px, ${y}px)`
@@ -289,19 +309,19 @@ export function Hero({
 
 					const update = () => {
 						frame = 0
-						const transitionStart = hideSupportingText
+						const videoTransitionStart = hideSupportingText
 							? Math.min(
-								geometry.flowTransitionStart,
+								geometry.videoTransitionStart,
 								geometry.scrollDistance - 1,
 							)
 							: 0
-						const transitionDistance = Math.max(
+						const videoTransitionDistance = Math.max(
 							1,
-							geometry.scrollDistance - transitionStart,
+							geometry.scrollDistance - videoTransitionStart,
 						)
 						const progress = clamp(
-							(window.scrollY - geometry.sectionTop - transitionStart) /
-								transitionDistance,
+							(window.scrollY - geometry.sectionTop - videoTransitionStart) /
+								videoTransitionDistance,
 						)
 						if (progress === 0) {
 							clearAnimationStyles()
@@ -330,9 +350,6 @@ export function Hero({
 						const supportEased = ease(supportProgress)
 						const supportClearanceEased = ease(supportClearanceProgress)
 						const supportSettleEased = ease(supportSettleProgress)
-						const stageBox = geometry.stage.getBoundingClientRect()
-						const viewportCenter = window.innerHeight / 2 - stageBox.top
-
 						const imageWidth = lerp(
 							geometry.start.image.width,
 							geometry.target.image.width,
@@ -343,16 +360,23 @@ export function Hero({
 							geometry.target.image.height,
 							eased,
 						)
+						image.style.width = `${imageWidth}px`
+						image.style.height = `${imageHeight}px`
+						const stageBox = geometry.stage.getBoundingClientRect()
+						const targetStageTop = stageBox.top + finalStageOffset
+						const viewportCenterY = window.innerHeight / 2
 						const imageLeft = lerp(
 							geometry.start.image.left,
 							geometry.target.image.left,
 							eased,
 						)
-						const imageTop = lerp(
-							geometry.start.image.top,
-							viewportCenter - geometry.target.image.height / 2,
+						const imageViewportCenterY = lerp(
+							geometry.startViewportCenter.image,
+							viewportCenterY,
 							eased,
 						)
+						const imageTop =
+							imageViewportCenterY - imageHeight / 2 - targetStageTop
 						const imageCenterX = imageLeft + imageWidth / 2
 						const imageCenterY = imageTop + imageHeight / 2
 						const startLightCenterX =
@@ -377,8 +401,7 @@ export function Hero({
 							imageHeight,
 							imageLeft,
 							imageTop,
-							geometry.base.image,
-							eased,
+							stageBox,
 							true,
 						)
 						imageFrame.style.borderRadius = `${lerp(
@@ -388,8 +411,16 @@ export function Hero({
 						)}px`
 
 						if (hideSupportingText) {
-							desc.style.opacity = String(1 - clamp(progress * 5))
-							actions.style.opacity = String(1 - clamp(progress * 5))
+							const supportFadeStart = Math.min(
+								geometry.supportFadeStart,
+								geometry.scrollDistance - 1,
+							)
+							const supportFadeProgress = clamp(
+								(window.scrollY - geometry.sectionTop - supportFadeStart) /
+									Math.max(1, geometry.scrollDistance - supportFadeStart),
+							)
+							desc.style.opacity = String(1 - clamp(supportFadeProgress * 5))
+							actions.style.opacity = String(1 - clamp(supportFadeProgress * 5))
 						} else {
 							const supportOpacity = geometry.requiresColumnTransition
 								? progress < 0.04
@@ -421,18 +452,23 @@ export function Hero({
 										geometry.target.desc.left,
 										supportEased,
 									)
+							const descriptionViewportCenterY = lerp(
+								geometry.startViewportCenter.desc,
+								viewportCenterY,
+								supportSettleEased,
+							)
+							desc.style.width = `${descriptionWidth}px`
+							const descriptionHeight = desc.getBoundingClientRect().height
 							positionElement(
 								desc,
 								descriptionWidth,
 								undefined,
 								descriptionLeft,
-								lerp(
-									geometry.start.desc.top,
-									viewportCenter - geometry.target.desc.height / 2,
-									supportSettleEased,
-								),
-								geometry.base.desc,
-								supportSettleEased,
+								descriptionViewportCenterY -
+									descriptionHeight / 2 -
+									targetStageTop,
+								stageBox,
+								false,
 							)
 
 							const actionsWidth = lerp(
@@ -455,18 +491,23 @@ export function Hero({
 										geometry.target.actions.left,
 										supportEased,
 									)
+							const actionsViewportCenterY = lerp(
+								geometry.startViewportCenter.actions,
+								viewportCenterY,
+								supportSettleEased,
+							)
+							actions.style.width = `${actionsWidth}px`
+							const actionsHeight = actions.getBoundingClientRect().height
 							positionElement(
 								actions,
 								actionsWidth,
 								undefined,
 								actionsLeft,
-								lerp(
-									geometry.start.actions.top,
-									viewportCenter - geometry.target.actions.height / 2,
-									supportSettleEased,
-								),
-								geometry.base.actions,
-								supportSettleEased,
+								actionsViewportCenterY -
+									actionsHeight / 2 -
+									targetStageTop,
+								stageBox,
+								false,
 							)
 						}
 
@@ -482,46 +523,78 @@ export function Hero({
 							geometry.lightOffset.top + lightCenterY - startLightCenterY
 						}px`
 						light.style.opacity = '1'
+						if (!finalStateApplied) finalStageOffset = 0
 					}
 
 					const requestUpdate = () => {
 						if (frame) return
 						frame = window.requestAnimationFrame(update)
 					}
+					const applyUpdate = () => {
+						if (frame) window.cancelAnimationFrame(frame)
+						frame = 0
+						update()
+					}
 					const remeasureAndUpdate = () => {
 						if (frame) window.cancelAnimationFrame(frame)
 						frame = 0
 						clearAnimationStyles()
 						geometry = measure()
+						const triggerEnd = geometry.sectionTop + geometry.scrollDistance
+						finalStateApplied = window.scrollY >= triggerEnd
+						finalStageOffset = finalStateApplied
+							? window.scrollY - triggerEnd
+							: 0
 						update()
 					}
 
 					const trigger = ScrollTrigger.create({
 						id: 'hero-scroll',
 						trigger: section,
-						start: () => {
-							const sectionBox = section.getBoundingClientRect()
-							return sectionBox.top + window.scrollY
-						},
+						start: () => section.offsetTop,
 						end: () => {
 							const sectionBox = section.getBoundingClientRect()
-							const sectionTop = sectionBox.top + window.scrollY
 							return (
-								sectionTop + Math.max(1, sectionBox.height - window.innerHeight)
+								section.offsetTop +
+								Math.max(1, sectionBox.height - window.innerHeight)
 							)
 						},
 						invalidateOnRefresh: true,
 						onRefreshInit: remeasureAndUpdate,
-						onUpdate: requestUpdate,
+						onRefresh: (self) => {
+							finalStateApplied = window.scrollY >= self.end
+							finalStageOffset = finalStateApplied
+								? window.scrollY - self.end
+								: 0
+							applyUpdate()
+							requestUpdate()
+						},
+						onUpdate: (self) => {
+							if (self.progress < 1) {
+								finalStateApplied = false
+								finalStageOffset = 0
+								requestUpdate()
+								return
+							}
+							if (!finalStateApplied) {
+								finalStateApplied = true
+								finalStageOffset = Math.max(0, window.scrollY - self.end)
+								requestUpdate()
+							}
+						},
 					})
 
+					const initializedPastEnd = window.scrollY >= trigger.end
+					finalStateApplied = initializedPastEnd
+					finalStageOffset = initializedPastEnd
+						? window.scrollY - trigger.end
+						: 0
+					applyUpdate()
+					requestUpdate()
 					syncHeroTriggerCount()
-					window.addEventListener('scroll', requestUpdate, { passive: true })
-					update()
 
 					return () => {
 						if (frame) window.cancelAnimationFrame(frame)
-						window.removeEventListener('scroll', requestUpdate)
 						trigger.kill()
 						syncHeroTriggerCount()
 						clearAnimationStyles()
@@ -531,8 +604,7 @@ export function Hero({
 		}, sectionRef)
 
 		void document.fonts.ready.then(refresh)
-		const metadataIsReady =
-			video.readyState >= HTMLMediaElement.HAVE_METADATA
+		const metadataIsReady = video.readyState >= HTMLMediaElement.HAVE_METADATA
 		if (metadataIsReady) {
 			refresh()
 		} else {
