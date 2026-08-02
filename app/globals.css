@@ -9,7 +9,7 @@
 	--directions-end-gap: 80px;
 	--font-project-mini-heading: var(--font-golos-text), system-ui, sans-serif;
 	--page-content-max: 1436px;
-	--page-inline-gutter: clamp(20px, 5vw, 82px);
+	--page-inline-gutter: clamp(20px, 5.75vw, 80px);
 }
 
 html,
@@ -5565,6 +5565,11 @@ h3,
 }
 
 @media (min-width: 1370px) {
+	.solutions-inner.section-shell .solutions-heading,
+	.solutions-inner.section-shell .solutions-description {
+		left: 0 !important;
+	}
+
 	.solutions-inner.section-shell .solutions-card-outline {
 		left: 50% !important;
 		width: min(1170px, 100%) !important;

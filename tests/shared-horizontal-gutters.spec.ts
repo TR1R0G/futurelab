@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test'
 
-const viewports = [360, 720, 960, 1200, 1440, 1600] as const
+const viewports = [360, 720, 960, 1200, 1400, 1440, 1600] as const
 
 const alignedSelectors = [
 	'.infrastructure-heading',
@@ -32,6 +32,11 @@ const containedSelectors = [
 	'.footer-contact-list',
 ] as const
 
+const leftAlignedSelectors = [
+	'.solutions-heading',
+	'.solutions-description',
+] as const
+
 type Box = {
 	selector: string
 	left: number
@@ -52,7 +57,7 @@ async function waitForLayout(page: Page) {
 }
 
 async function readLayout(page: Page) {
-	return page.evaluate(({ selectors, containedSelectors }) => {
+	return page.evaluate(({ selectors, containedSelectors, leftAlignedSelectors }) => {
 		const boxes: Box[] = selectors.map(selector => {
 			const element = document.querySelector<HTMLElement>(selector)
 			if (!element) {
@@ -84,15 +89,30 @@ async function readLayout(page: Page) {
 			}
 		})
 
+		const leftAligned = leftAlignedSelectors.map(selector => {
+			const element = document.querySelector<HTMLElement>(selector)
+			if (!element) {
+				throw new Error(`Missing left-aligned gutter target: ${selector}`)
+			}
+
+			const rect = element.getBoundingClientRect()
+			return {
+				selector,
+				left: rect.left,
+				width: rect.width,
+			}
+		})
+
 		return {
 			boxes,
 			contained,
+			leftAligned,
 			shellCount: document.querySelectorAll('.section-shell').length,
 			hasHorizontalOverflow:
 				document.documentElement.scrollWidth >
 				document.documentElement.clientWidth,
 		}
-	}, { selectors: alignedSelectors, containedSelectors })
+	}, { selectors: alignedSelectors, containedSelectors, leftAlignedSelectors })
 }
 
 for (const width of viewports) {
@@ -104,7 +124,7 @@ for (const width of viewports) {
 		await waitForLayout(page)
 
 		const layout = await readLayout(page)
-		const gutter = Math.min(82, Math.max(20, width * 0.05))
+		const gutter = Math.min(80, Math.max(20, width * 0.0575))
 		const shellWidth = Math.min(1436, width - gutter * 2)
 		const shellLeft = (width - shellWidth) / 2
 		const shellRight = shellLeft + shellWidth
@@ -124,6 +144,11 @@ for (const width of viewports) {
 			expect(box.left, box.selector).toBeGreaterThanOrEqual(shellLeft - 1)
 			expect(box.right, box.selector).toBeLessThanOrEqual(shellRight + 1)
 		}
+
+		for (const box of layout.leftAligned) {
+			expect(box.width, box.selector).toBeGreaterThan(0)
+			expect(box.left, box.selector).toBeCloseTo(shellLeft, 0)
+		}
 	})
 }
 
@@ -142,6 +167,9 @@ test('English route keeps shared shells renderable without page overflow', async
 		expect(box.width, box.selector).toBeGreaterThan(0)
 	}
 	for (const box of layout.contained) {
+		expect(box.width, box.selector).toBeGreaterThan(0)
+	}
+	for (const box of layout.leftAligned) {
 		expect(box.width, box.selector).toBeGreaterThan(0)
 	}
 })
