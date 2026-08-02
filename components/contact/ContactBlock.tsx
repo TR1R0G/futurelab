@@ -18,11 +18,11 @@ export function ContactBlock({
 	return (
 		<section
 			id='contacts'
-			className='contact-section relative overflow-hidden bg-white px-5 py-24 text-black md:px-8 md:py-28 min-[1440px]:px-0 min-[1440px]:py-0'
+			className='contact-section relative overflow-hidden bg-white py-24 text-black md:py-28 min-[1440px]:py-0'
 		>
 			<ContactGlow />
 
-			<div className='contact-content relative z-10 mx-auto w-full max-w-[1436px]'>
+			<div className='contact-content section-shell relative z-10'>
 				<h2 className='font-heading text-[42px] font-bold leading-[1.08] tracking-normal text-black md:text-[50px] min-[1440px]:w-[698px] min-[1440px]:text-[55px] min-[1440px]:leading-[62px]'>
 					{title}
 				</h2>

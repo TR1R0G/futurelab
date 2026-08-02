@@ -215,8 +215,8 @@ export function Directions({
 	}, [])
 
 	return (
-		<section className='directions-section relative z-[80] isolate overflow-visible bg-black px-5 pb-28 pt-6 md:px-8 md:pb-36 md:pt-8 min-[960px]:pt-40 lg:pb-44 lg:pt-52 xl:pt-36 min-[1600px]:pt-[380px]'>
-			<div className='directions-board relative mx-auto h-auto max-w-[1436px] overflow-visible'>
+		<section className='directions-section relative z-[80] isolate overflow-visible bg-black pb-28 pt-6 md:pb-36 md:pt-8 min-[960px]:pt-40 lg:pb-44 lg:pt-52 xl:pt-36 min-[1600px]:pt-[380px]'>
+			<div className='directions-board section-shell relative h-auto overflow-visible'>
 				<div
 					className='directions-board-gradient pointer-events-none absolute left-0 top-[7px] h-[391px] w-full rounded-[35px]'
 					style={{
@@ -253,7 +253,7 @@ export function Directions({
 				</div>
 			</div>
 
-			<div className='directions-statement sticky top-[12svh] isolate mx-auto mt-12 max-w-[1436px] text-center md:mt-16 min-[960px]:mt-44 lg:mt-52'>
+			<div className='directions-statement section-shell sticky top-[12svh] isolate mt-12 text-center md:mt-16 min-[960px]:mt-44 lg:mt-52'>
 				<DirectionsLight className='left-1/2 top-[calc(38svh_-_377.84px)] z-0 block max-[719px]:left-[calc(50%_-_32px)] max-[719px]:top-[33px] max-[719px]:[--directions-light-blur:75px] max-[719px]:[--directions-light-scale:.447] min-[720px]:max-[959px]:[--directions-light-blur:100px] min-[720px]:max-[959px]:[--directions-light-scale:.72] min-[960px]:[--directions-light-scale:1]' />
 
 				<div className='directions-statement-copy relative isolate z-10 text-[32px] font-semibold leading-[1.18] tracking-normal text-white md:text-[37px] md:leading-[1.24] min-[960px]:max-[1369px]:text-[clamp(31px,3.3vw,44px)] min-[960px]:max-[1369px]:leading-[1.42] min-[1370px]:text-[55px] min-[1370px]:leading-[78px]'>
@@ -320,7 +320,7 @@ export function Directions({
 				</div>
 
 				<div
-					className='directions-post-image-divider relative z-10 mx-auto h-1 w-[calc(100%_-_40px)] max-w-[1436px] rounded-sm bg-[linear-gradient(90deg,#4B0E5B_0%,#A91E83_29.9%,#FD9A34_65.67%,#F9EB44_100%)] md:w-[calc(100%_-_64px)]'
+					className='directions-post-image-divider section-shell relative z-10 h-1 rounded-sm bg-[linear-gradient(90deg,#4B0E5B_0%,#A91E83_29.9%,#FD9A34_65.67%,#F9EB44_100%)]'
 					aria-hidden='true'
 				/>
 			</div>

@@ -45,10 +45,10 @@ export function Experience({
 	aboutText,
 }: ExperienceProps) {
 	return (
-		<section className='experience-section trust-section relative overflow-hidden bg-black px-5 py-24 md:px-8 md:py-28 min-[1440px]:h-[1384px] min-[1440px]:px-0 min-[1440px]:py-0'>
+		<section className='experience-section trust-section relative overflow-hidden bg-black py-24 md:py-28 min-[1440px]:h-[1384px] min-[1440px]:py-0'>
 			<MosaicBackground />
 
-			<div className='experience-content relative z-10 mx-auto max-w-[1438px]'>
+			<div className='experience-content section-shell relative z-10'>
 				<div className='experience-flow flex flex-col'>
 					<h2 className='font-heading max-w-[944px] text-[32px] font-bold leading-[1.1] tracking-normal text-white min-[360px]:text-[36px] min-[380px]:text-[42px] md:text-[50px] md:leading-[1.08] min-[1440px]:text-[55px] min-[1440px]:leading-[62px]'>
 						{title}

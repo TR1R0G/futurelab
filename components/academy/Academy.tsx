@@ -470,7 +470,7 @@ export function Academy({
 				ref={pinRef}
 				className='academy-pin sticky top-0 z-[210] box-border flex h-[100svh] flex-col justify-start overflow-visible bg-black pb-16 pt-0 md:pb-20 lg:pb-24'
 			>
-				<div className='academy-heading relative z-[600] mx-auto w-full max-w-[1436px] px-5 md:px-8 xl:px-0'>
+				<div className='academy-heading section-shell relative z-[600]'>
 					<h2 className='font-heading max-w-[805px] text-[42px] font-bold leading-none tracking-normal text-white md:text-6xl lg:text-[65px]'>
 						{title}
 					</h2>
@@ -480,7 +480,7 @@ export function Academy({
 				</div>
 
 				<div
-					className='academy-card-stage relative z-[700] mx-auto mt-[var(--academy-cards-gap)] h-[440px] w-full max-w-[980px] scale-[0.52] sm:scale-75 md:h-[520px] md:scale-90 lg:scale-100'
+					className='academy-card-stage section-shell section-shell--academy-cards relative z-[700] mt-[var(--academy-cards-gap)] h-[440px] scale-[0.52] sm:scale-75 md:h-[520px] md:scale-90 lg:scale-100'
 					aria-label='Преимущества академии и акселерации'
 				>
 					{cards.map((card, index) => {
@@ -510,7 +510,7 @@ export function Academy({
 				</div>
 
 				<div
-					className='academy-programs-stage pointer-events-auto absolute left-1/2 z-[800] w-full max-w-[1436px] -translate-x-1/2 px-5 md:px-8 xl:px-0'
+					className='academy-programs-stage section-shell pointer-events-auto absolute left-1/2 z-[800] -translate-x-1/2'
 					style={{ visibility: 'hidden' }}
 				>
 					<div className='academy-programs-scale'>

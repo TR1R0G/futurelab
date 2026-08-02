@@ -221,8 +221,13 @@ test('Ecosystem horizontal scroll reveals the last feature and returns to the in
 
 	await page.evaluate(() => {
 		document.documentElement.style.scrollBehavior = 'auto'
-		window.scrollTo(0, 0)
+		window.dispatchEvent(
+			new CustomEvent('futurelab:smooth-scroll-to', {
+				detail: { target: document.documentElement },
+			}),
+		)
 	})
+	await page.waitForFunction(() => window.scrollY < 4)
 	await page.waitForFunction(() => {
 		const wrapper =
 			document.querySelector<HTMLElement>('.ecosystem-wrapper')?.getBoundingClientRect()

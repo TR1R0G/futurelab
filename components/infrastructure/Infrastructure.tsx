@@ -91,7 +91,7 @@ export function Infrastructure({
 			ref={sectionRef}
 			className='infrastructure-section w-full overflow-x-hidden bg-black'
 		>
-			<div className='infrastructure-heading mx-auto max-w-[1436px] px-5 md:px-8 xl:px-0'>
+			<div className='infrastructure-heading section-shell'>
 				<h2 className='font-heading max-w-3xl text-[36px] font-bold leading-[1.08] text-white md:text-5xl lg:max-w-[800px] lg:text-[56px]'>
 					{title}
 				</h2>
@@ -100,7 +100,7 @@ export function Infrastructure({
 				</p>
 			</div>
 
-			<div className='infrastructure-cards mx-auto mt-12 grid max-w-[1436px] gap-8 px-5 md:mt-16 md:gap-10 md:px-8 min-[1200px]:grid-cols-3 xl:px-0'>
+			<div className='infrastructure-cards section-shell mt-12 grid gap-8 md:mt-16 md:gap-10 min-[1200px]:grid-cols-3'>
 				{cards.map(card => (
 					<InfrastructureCard key={card.icon} card={card} />
 				))}
@@ -112,7 +112,7 @@ export function Infrastructure({
 
 			<div className='infrastructure-separator-wrap'>
 				<div
-					className='infrastructure-separator mx-auto h-[5px] w-[calc(100%_-_40px)] max-w-[1436px] rounded-full bg-[linear-gradient(90deg,#4B0E5B_0%,#A91E83_29.9%,#FD9A34_65.67%,#F9EB44_100%)] md:w-[calc(100%_-_64px)]'
+					className='infrastructure-separator section-shell h-[5px] rounded-full bg-[linear-gradient(90deg,#4B0E5B_0%,#A91E83_29.9%,#FD9A34_65.67%,#F9EB44_100%)]'
 					aria-hidden='true'
 				/>
 			</div>

@@ -145,7 +145,7 @@ export function RealizedProjects({ id, title, projects }: RealizedProjectsProps)
       id={id}
       className="realized-projects-section overflow-hidden bg-black pb-[var(--realized-bottom-padding,112px)] pt-[var(--realized-top-padding,80px)]"
     >
-      <div className="realized-title-frame mx-auto max-w-[1436px]">
+      <div className="realized-title-frame section-shell">
         <h2 className="font-heading text-[42px] font-bold leading-tight tracking-normal text-white md:text-[55px] md:leading-[62px]">
           {title}
         </h2>
@@ -153,11 +153,11 @@ export function RealizedProjects({ id, title, projects }: RealizedProjectsProps)
 
       <div
         ref={wrapperRef}
-        className="mt-20 overflow-x-auto overflow-y-visible pb-4 [scrollbar-width:none] md:mt-[70px] lg:mt-[var(--realized-card-gap,70px)] lg:overflow-hidden [&::-webkit-scrollbar]:hidden"
+        className="realized-projects-viewport section-shell mt-20 overflow-x-auto overflow-y-visible pb-4 [scrollbar-width:none] md:mt-[70px] lg:mt-[var(--realized-card-gap,70px)] lg:overflow-hidden [&::-webkit-scrollbar]:hidden"
       >
         <div
           ref={trackRef}
-          className="realized-projects-track flex w-max gap-10 px-5 will-change-transform md:px-8 lg:ml-[max(32px,calc((100vw-1436px)/2))] lg:px-0"
+          className="realized-projects-track flex w-max gap-10 will-change-transform"
         >
           {projects.map((project) => (
             <ProjectCard

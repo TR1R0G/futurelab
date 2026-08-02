@@ -8,6 +8,8 @@
 	--text-secondary-light: #c4c4c4;
 	--directions-end-gap: 80px;
 	--font-project-mini-heading: var(--font-golos-text), system-ui, sans-serif;
+	--page-content-max: 1436px;
+	--page-inline-gutter: clamp(20px, 5vw, 82px);
 }
 
 html,
@@ -5539,5 +5541,33 @@ h3,
 		font-weight: 800;
 		line-height: 19px;
 		color: rgba(255, 255, 255, 0.62);
+	}
+}
+
+/* Shared landing-page safe area. Keep this after legacy section overrides. */
+.section-shell {
+	width: min(
+		calc(100% - (2 * var(--page-inline-gutter))),
+		var(--page-content-max)
+	) !important;
+	max-width: var(--page-content-max) !important;
+	min-width: 0;
+	margin-inline: auto !important;
+	box-sizing: border-box;
+}
+
+.section-shell.section-shell--academy-cards {
+	max-width: 980px !important;
+}
+
+.contact-section {
+	padding-inline: 0 !important;
+}
+
+@media (min-width: 1370px) {
+	.solutions-inner.section-shell .solutions-card-outline {
+		left: 50% !important;
+		width: min(1170px, 100%) !important;
+		transform: translateX(-50%);
 	}
 }

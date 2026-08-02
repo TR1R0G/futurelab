@@ -672,7 +672,7 @@ export function Solutions({
 		<section
 			ref={sectionRef}
 			id={id}
-			className='solutions-section relative z-[120] isolate -mt-20 overflow-hidden bg-black px-5 py-10 md:px-8 md:py-14 min-[1370px]:mt-[-142px] min-[1370px]:px-0 min-[1370px]:py-0 min-[1600px]:mt-[-46px]'
+			className='solutions-section relative z-[120] isolate -mt-20 overflow-hidden bg-black py-10 md:py-14 min-[1370px]:mt-[-142px] min-[1370px]:py-0 min-[1600px]:mt-[-46px]'
 			style={
 				{
 					'--solutions-section-height': `${sectionHeight}px`,
@@ -681,7 +681,7 @@ export function Solutions({
 			}
 		>
 			<div
-				className='solutions-inner relative mx-auto flex max-w-[1436px] flex-col min-[1370px]:block'
+				className='solutions-inner section-shell relative flex flex-col min-[1370px]:block'
 				style={{ height: `${sectionHeight}px` }}
 			>
 				<div className='solutions-heading min-[1370px]:absolute min-[1370px]:left-0 min-[1370px]:top-[40px] min-[1370px]:w-[857px]'>
