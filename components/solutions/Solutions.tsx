@@ -128,13 +128,15 @@ export function Solutions({
 		}
 
 		const getResponsiveTargetRect = (source: Rect): Rect => {
+			const mobileActionSpace = window.innerWidth < 720 ? 60 : 0
 			const horizontalInset =
 				window.innerWidth < 720 ? 16 : window.innerWidth < 960 ? 24 : 32
 			const verticalInset =
 				window.innerWidth < 720 ? 20 : window.innerWidth < 960 ? 28 : 36
 			const aspectRatio = source.width / Math.max(1, source.height)
 			const maxWidth = window.innerWidth - horizontalInset * 2
-			const maxHeight = window.innerHeight - verticalInset * 2
+			const maxHeight =
+				window.innerHeight - verticalInset * 2 - mobileActionSpace
 			let width = maxWidth
 			let height = width / aspectRatio
 
@@ -145,7 +147,9 @@ export function Solutions({
 
 			return {
 				left: Math.round((window.innerWidth - width) / 2),
-				top: Math.round((window.innerHeight - height) / 2),
+				top: Math.round(
+					(window.innerHeight - height - mobileActionSpace) / 2,
+				),
 				width: Math.round(width),
 				height: Math.round(height),
 			}
@@ -163,9 +167,7 @@ export function Solutions({
 		const readSourceRect = (media: HTMLDivElement, index: number): Rect => {
 			if (!isLargeDesktopLayout()) {
 				const source =
-					window.innerWidth < 720
-						? media
-						: (media.closest<HTMLElement>('.solution-media-slot') ?? media)
+					media.closest<HTMLElement>('.solution-media-slot') ?? media
 				const rect = source.getBoundingClientRect()
 
 				return {
@@ -220,6 +222,56 @@ export function Solutions({
 
 			action.style.opacity = visible ? '1' : '0'
 			action.style.pointerEvents = visible ? '' : 'none'
+		}
+
+		const setMobileReleasedActionState = (
+			media: HTMLDivElement,
+			target: Rect,
+			releasedLeft: number,
+			releasedTop: number,
+		) => {
+			if (window.innerWidth >= 720) return
+
+			const action = media
+				.closest<HTMLElement>('.solution-media-slot')
+				?.querySelector<HTMLElement>('.solution-mobile-cta')
+
+			if (!action) return
+
+			const actionWidth = Math.min(240, target.width)
+			action.style.position = 'absolute'
+			action.style.left = `${Math.round(releasedLeft + (target.width - actionWidth) / 2)}px`
+			action.style.top = `${Math.round(releasedTop + target.height + 20)}px`
+			action.style.width = `${Math.round(actionWidth)}px`
+			action.style.margin = '0'
+			action.style.transition = 'none'
+			action.style.opacity = '1'
+			action.style.pointerEvents = ''
+			action.style.zIndex = '21'
+		}
+
+		const setMobileFixedActionState = (
+			media: HTMLDivElement,
+			mediaRect: Rect,
+		) => {
+			if (window.innerWidth >= 720) return
+
+			const action = media
+				.closest<HTMLElement>('.solution-media-slot')
+				?.querySelector<HTMLElement>('.solution-mobile-cta')
+
+			if (!action) return
+
+			const actionWidth = Math.min(240, mediaRect.width)
+			action.style.position = 'fixed'
+			action.style.left = `${Math.round(mediaRect.left + (mediaRect.width - actionWidth) / 2)}px`
+			action.style.top = `${Math.round(mediaRect.top + mediaRect.height + 20)}px`
+			action.style.width = `${Math.round(actionWidth)}px`
+			action.style.margin = '0'
+			action.style.transition = 'none'
+			action.style.opacity = '1'
+			action.style.pointerEvents = ''
+			action.style.zIndex = '501'
 		}
 
 		const setHiddenGlowState = (glow: HTMLDivElement, index: number) => {
@@ -299,7 +351,11 @@ export function Solutions({
 			if (!isLargeDesktopLayout()) {
 				const slot = media.closest<HTMLElement>('.solution-media-slot')
 				if (slot) slot.style.zIndex = ''
-				setMobileActionState(media, true)
+				if (window.innerWidth < 720) {
+					const action = slot?.querySelector<HTMLElement>('.solution-mobile-cta')
+					action?.removeAttribute('style')
+					setMobileActionState(media, false)
+				}
 				media.removeAttribute('style')
 				return
 			}
@@ -344,12 +400,23 @@ export function Solutions({
 			const slotRect = slot?.getBoundingClientRect()
 			const slotTop = (slotRect?.top ?? 0) + window.scrollY
 			const slotLeft = slotRect?.left ?? 0
+			const releasedLeft = Math.round(target.left - slotLeft)
+			const releasedTop = Math.round(releaseScroll + target.top - slotTop)
 
 			if (slot) slot.style.zIndex = ''
-			setMobileActionState(media, false)
+			if (window.innerWidth < 720) {
+				setMobileReleasedActionState(
+					media,
+					target,
+					releasedLeft,
+					releasedTop,
+				)
+			} else {
+				setMobileActionState(media, false)
+			}
 			media.style.position = 'absolute'
-			media.style.left = `${Math.round(target.left - slotLeft)}px`
-			media.style.top = `${Math.round(releaseScroll + target.top - slotTop)}px`
+			media.style.left = `${releasedLeft}px`
+			media.style.top = `${releasedTop}px`
 			media.style.width = `${target.width}px`
 			media.style.height = `${target.height}px`
 			media.style.borderRadius = '35px'
@@ -369,13 +436,23 @@ export function Solutions({
 			const eased = ease(progress)
 			const slot = media.closest<HTMLElement>('.solution-media-slot')
 			if (slot) slot.style.zIndex = `${zIndex}`
-			setMobileActionState(media, false)
+			const currentRect = {
+				left: lerp(start.left, target.left, eased),
+				top: lerp(start.top, target.top, eased),
+				width: lerp(start.width, target.width, eased),
+				height: lerp(start.height, target.height, eased),
+			}
+			if (window.innerWidth < 720) {
+				setMobileFixedActionState(media, currentRect)
+			} else {
+				setMobileActionState(media, false)
+			}
 
 			media.style.position = 'fixed'
-			media.style.left = `${lerp(start.left, target.left, eased)}px`
-			media.style.top = `${lerp(start.top, target.top, eased)}px`
-			media.style.width = `${lerp(start.width, target.width, eased)}px`
-			media.style.height = `${lerp(start.height, target.height, eased)}px`
+			media.style.left = `${currentRect.left}px`
+			media.style.top = `${currentRect.top}px`
+			media.style.width = `${currentRect.width}px`
+			media.style.height = `${currentRect.height}px`
 			media.style.borderRadius = '35px'
 			media.style.zIndex = `${zIndex}`
 			media.style.transform = 'none'
@@ -433,7 +510,9 @@ export function Solutions({
 							Math.abs(target.height - responsiveSource!.height) * 2,
 						)
 				const releaseScroll = animationStart + expansionDistance
-				const holdDistance = largeDesktopLayout ? 0 : window.innerHeight * 0.32
+				const holdDistance = largeDesktopLayout
+					? 0
+					: window.innerHeight * (window.innerWidth < 720 ? 0.18 : 0.32)
 				const transitionDistance = Math.max(1, expansionDistance)
 				const rawProgress =
 					(window.scrollY - animationStart) / transitionDistance
