@@ -272,7 +272,7 @@ h3,
 
 .hero-language {
 	display: flex;
-	width: 95px;
+	width: 195px;
 	align-items: center;
 	justify-content: center;
 	gap: 19px;
@@ -3592,15 +3592,25 @@ h3,
 /* Ecosystem semantic flow layout */
 .ecosystem-section {
 	--ecosystem-card-height: 717px;
-	--ecosystem-track-padding-inline: clamp(24px, 4vw, 96px);
-	--ecosystem-track-padding-block: clamp(28px, 4vw, 72px);
-	--ecosystem-track-gap: clamp(48px, 4vw, 116px);
-	--ecosystem-intro-width: clamp(320px, 28vw, 615px);
-	--ecosystem-feature-width: clamp(250px, 22vw, 452px);
+	--ecosystem-track-padding-start: 243px;
+	--ecosystem-track-padding-end: 243px;
+	--ecosystem-track-padding-top: 100px;
+	--ecosystem-track-padding-bottom: 40px;
+	--ecosystem-track-gap: 160px;
+	--ecosystem-intro-width: 575px;
+	--ecosystem-feature-1-width: 458px;
+	--ecosystem-feature-2-width: 451px;
+	--ecosystem-feature-3-width: 331px;
+	--ecosystem-feature-1-extra-gap: 0px;
+	--ecosystem-feature-lower-offset: 180px;
 	--ecosystem-intro-copy-gap: 32px;
-	--ecosystem-icon-to-title-gap: 40px;
+	--ecosystem-icon-to-title-gap: 56px;
 	--ecosystem-title-to-description-gap: 24px;
 	--ecosystem-intro-description-to-icon-gap: 64px;
+	--ecosystem-title-size: 60px;
+	--ecosystem-body-size: 23px;
+	--ecosystem-feature-title-size: 33px;
+	--ecosystem-icon-size: 83px;
 	background: linear-gradient(
 		180deg,
 		transparent 0 var(--ecosystem-card-offset),
@@ -3617,9 +3627,14 @@ h3,
 	width: max-content;
 	min-width: 100%;
 	height: var(--ecosystem-card-height);
-	padding: var(--ecosystem-track-padding-block)
-		var(--ecosystem-track-padding-inline);
+	margin: 0;
+	padding: var(--ecosystem-track-padding-top)
+		var(--ecosystem-track-padding-end)
+		var(--ecosystem-track-padding-bottom)
+		var(--ecosystem-track-padding-start);
 	gap: var(--ecosystem-track-gap);
+	box-sizing: border-box;
+	overflow: visible;
 	will-change: transform;
 }
 
@@ -3628,6 +3643,10 @@ h3,
 	display: flex;
 	flex: 0 0 auto;
 	min-width: 0;
+	height: auto;
+	left: auto;
+	top: auto;
+	transform: none;
 }
 
 .ecosystem-intro-column {
@@ -3646,11 +3665,12 @@ h3,
 .ecosystem-title {
 	max-width: min(100%, 615px);
 	font-family: var(--font-sansation), var(--font-golos-text), sans-serif;
-	font-size: clamp(36px, 3.8vw, 60px);
+	font-size: var(--ecosystem-title-size);
 	font-weight: 700;
 	line-height: 1.04;
 	letter-spacing: 0;
 	text-wrap: balance;
+	overflow-wrap: break-word;
 }
 
 .ecosystem-title-lead {
@@ -3659,84 +3679,115 @@ h3,
 
 .ecosystem-description {
 	max-width: 100%;
-	font-size: clamp(16px, 1.5vw, 23px);
+	height: auto;
+	font-size: var(--ecosystem-body-size);
 	font-weight: 500;
 	line-height: 1.35;
+	overflow-wrap: break-word;
 }
 
 .ecosystem-intro-icon {
 	align-self: flex-start;
 	margin-top: var(--ecosystem-intro-description-to-icon-gap);
-	width: clamp(52px, 4.8vw, 83px);
-	height: clamp(52px, 4.8vw, 83px);
+	width: var(--ecosystem-icon-size);
+	height: var(--ecosystem-icon-size);
 }
 
 .ecosystem-feature-column {
-	width: var(--ecosystem-feature-width);
 	flex-direction: column;
 	gap: 0;
 }
 
-.ecosystem-feature-column-1,
-.ecosystem-feature-column-3 {
-	margin-top: clamp(120px, 10vw, 180px);
+.ecosystem-feature-column-1 {
+	width: var(--ecosystem-feature-1-width);
+	margin-left: var(--ecosystem-feature-1-extra-gap);
 }
 
 .ecosystem-feature-column-2 {
-	margin-top: clamp(12px, 2vw, 64px);
+	width: var(--ecosystem-feature-2-width);
+}
+
+.ecosystem-feature-column-3 {
+	width: var(--ecosystem-feature-3-width);
+}
+
+.ecosystem-feature-column-1,
+.ecosystem-feature-column-3 {
+	margin-top: var(--ecosystem-feature-lower-offset);
+}
+
+.ecosystem-feature-column-2 {
+	margin-top: 0;
 }
 
 .ecosystem-feature-icon {
-	width: clamp(48px, 4.8vw, 83px);
-	height: clamp(48px, 4.8vw, 83px);
+	width: var(--ecosystem-icon-size);
+	height: var(--ecosystem-icon-size);
 }
 
 .ecosystem-feature-title {
 	max-width: 100%;
 	margin-top: var(--ecosystem-icon-to-title-gap);
 	font-family: var(--font-project-mini-heading);
-	font-size: clamp(22px, 2.2vw, 33px);
+	height: auto;
+	font-size: var(--ecosystem-feature-title-size);
 	font-weight: 600;
 	line-height: 1.1;
 	letter-spacing: 0;
 	text-wrap: balance;
+	overflow-wrap: break-word;
 }
 
 .ecosystem-feature-description {
 	max-width: 100%;
+	height: auto;
 	margin-top: var(--ecosystem-title-to-description-gap);
-	font-size: clamp(16px, 1.4vw, 23px);
+	font-size: var(--ecosystem-body-size);
 	font-weight: 500;
 	line-height: 1.35;
 	text-wrap: pretty;
+	overflow-wrap: break-word;
 }
 
 @media (max-width: 719px) {
 	.ecosystem-section {
-		--ecosystem-card-height: clamp(430px, 78vw, 520px);
-		--ecosystem-track-padding-inline: clamp(24px, 6vw, 40px);
-		--ecosystem-track-padding-block: clamp(24px, 6vw, 40px);
-		--ecosystem-track-gap: clamp(48px, 14vw, 92px);
-		--ecosystem-intro-width: clamp(260px, 78vw, 340px);
-		--ecosystem-feature-width: clamp(250px, 72vw, 320px);
-		--ecosystem-intro-copy-gap: 24px;
-		--ecosystem-icon-to-title-gap: 24px;
-		--ecosystem-title-to-description-gap: 16px;
-		--ecosystem-intro-description-to-icon-gap: 28px;
+		--ecosystem-card-height: clamp(443px, calc(43.611vw + 286px), 600px);
+		--ecosystem-track-padding-start: clamp(28px, calc(29.722vw - 79px), 135px);
+		--ecosystem-track-padding-end: clamp(112px, calc(6.389vw + 89px), 135px);
+		--ecosystem-track-padding-top: clamp(70px, calc(11.111vw + 30px), 110px);
+		--ecosystem-track-padding-bottom: 24px;
+		--ecosystem-track-gap: clamp(120px, calc(11.111vw + 80px), 160px);
+		--ecosystem-intro-width: clamp(300px, calc(2.5vw + 291px), 309px);
+		--ecosystem-feature-1-width: clamp(280px, calc(10.278vw + 243px), 317px);
+		--ecosystem-feature-2-width: clamp(280px, calc(31.944vw + 165px), 395px);
+		--ecosystem-feature-3-width: clamp(280px, calc(27.222vw + 182px), 378px);
+		--ecosystem-feature-1-extra-gap: clamp(87px, calc(1.111vw + 83px), 91px);
+		--ecosystem-feature-lower-offset: clamp(73px, calc(13.056vw + 26px), 120px);
+		--ecosystem-intro-copy-gap: clamp(20px, 3.333vw, 24px);
+		--ecosystem-icon-to-title-gap: clamp(34px, calc(3.889vw + 20px), 48px);
+		--ecosystem-title-to-description-gap: clamp(16px, 2.778vw, 20px);
+		--ecosystem-intro-description-to-icon-gap: clamp(24px, 5vw, 36px);
+		--ecosystem-title-size: clamp(28px, calc(3.333vw + 16px), 40px);
+		--ecosystem-body-size: clamp(16px, calc(0.556vw + 14px), 18px);
+		--ecosystem-feature-title-size: clamp(23px, calc(1.389vw + 18px), 28px);
+		--ecosystem-icon-size: clamp(58px, calc(-0.556vw + 62px), 60px);
 		height: calc(var(--ecosystem-card-height) + 112px) !important;
 	}
 
 	.ecosystem-wrapper {
-		left: 20px !important;
-		width: calc(100vw - 40px) !important;
+		left: 0 !important;
+		width: 100% !important;
 		height: var(--ecosystem-card-height) !important;
 		border-radius: 28px;
 	}
 
 	.ecosystem-track {
 		height: var(--ecosystem-card-height) !important;
-		padding: var(--ecosystem-track-padding-block)
-			var(--ecosystem-track-padding-inline) !important;
+		margin: 0 !important;
+		padding: var(--ecosystem-track-padding-top)
+			var(--ecosystem-track-padding-end)
+			var(--ecosystem-track-padding-bottom)
+			var(--ecosystem-track-padding-start) !important;
 		gap: var(--ecosystem-track-gap) !important;
 	}
 
@@ -3745,7 +3796,7 @@ h3,
 	}
 
 	.ecosystem-title {
-		font-size: clamp(26px, 7vw, 34px) !important;
+		font-size: var(--ecosystem-title-size) !important;
 		line-height: 1.05 !important;
 	}
 
@@ -3754,41 +3805,40 @@ h3,
 	}
 
 	.ecosystem-description {
-		font-size: clamp(15px, 4vw, 18px) !important;
+		font-size: var(--ecosystem-body-size) !important;
 		line-height: 1.35 !important;
 	}
 
 	.ecosystem-intro-icon {
-		width: clamp(48px, 12vw, 64px) !important;
-		height: clamp(48px, 12vw, 64px) !important;
+		width: var(--ecosystem-icon-size) !important;
+		height: var(--ecosystem-icon-size) !important;
 	}
 
 	.ecosystem-feature-column {
-		width: var(--ecosystem-feature-width) !important;
 		gap: 14px;
 	}
 
 	.ecosystem-feature-column-1,
 	.ecosystem-feature-column-3 {
-		margin-top: clamp(150px, 32vw, 210px) !important;
+		margin-top: var(--ecosystem-feature-lower-offset) !important;
 	}
 
 	.ecosystem-feature-column-2 {
-		margin-top: clamp(0px, 8vw, 56px) !important;
+		margin-top: 0 !important;
 	}
 
 	.ecosystem-feature-icon {
-		width: clamp(48px, 12vw, 64px) !important;
-		height: clamp(48px, 12vw, 64px) !important;
+		width: var(--ecosystem-icon-size) !important;
+		height: var(--ecosystem-icon-size) !important;
 	}
 
 	.ecosystem-feature-title {
-		font-size: clamp(20px, 5.5vw, 26px) !important;
+		font-size: var(--ecosystem-feature-title-size) !important;
 		line-height: 1.1 !important;
 	}
 
 	.ecosystem-feature-description {
-		font-size: clamp(15px, 4vw, 18px) !important;
+		font-size: var(--ecosystem-body-size) !important;
 		line-height: 1.35 !important;
 	}
 }
@@ -3796,88 +3846,122 @@ h3,
 @media (min-width: 720px) and (max-width: 767px) {
 	.ecosystem-section {
 		--ecosystem-card-height: 600px;
-		--ecosystem-track-padding-inline: 40px;
-		--ecosystem-track-padding-block: 40px;
-		--ecosystem-track-gap: 72px;
-		--ecosystem-intro-width: 420px;
-		--ecosystem-feature-width: 310px;
-		--ecosystem-intro-copy-gap: 28px;
-		--ecosystem-icon-to-title-gap: 28px;
-		--ecosystem-title-to-description-gap: 18px;
-		--ecosystem-intro-description-to-icon-gap: 44px;
+		--ecosystem-track-padding-start: 135px;
+		--ecosystem-track-padding-end: 135px;
+		--ecosystem-track-padding-top: 110px;
+		--ecosystem-track-padding-bottom: 32px;
+		--ecosystem-track-gap: 160px;
+		--ecosystem-intro-width: 309px;
+		--ecosystem-feature-1-width: 317px;
+		--ecosystem-feature-2-width: 395px;
+		--ecosystem-feature-3-width: 378px;
+		--ecosystem-feature-1-extra-gap: 91px;
+		--ecosystem-feature-lower-offset: 120px;
+		--ecosystem-intro-copy-gap: 24px;
+		--ecosystem-icon-to-title-gap: 48px;
+		--ecosystem-title-to-description-gap: 20px;
+		--ecosystem-intro-description-to-icon-gap: 36px;
+		--ecosystem-title-size: 40px;
+		--ecosystem-body-size: 18px;
+		--ecosystem-feature-title-size: 28px;
+		--ecosystem-icon-size: 58px;
 	}
 
 	.ecosystem-title {
-		font-size: 32px !important;
+		font-size: var(--ecosystem-title-size) !important;
 		line-height: 1.08 !important;
 	}
 
 	.ecosystem-feature-title {
-		font-size: 23px !important;
+		font-size: var(--ecosystem-feature-title-size) !important;
 		line-height: 1.12 !important;
 	}
 
 	.ecosystem-description,
 	.ecosystem-feature-description {
-		font-size: 17px !important;
+		font-size: var(--ecosystem-body-size) !important;
 		line-height: 1.35 !important;
 	}
 
 	.ecosystem-intro-icon,
 	.ecosystem-feature-icon {
-		width: 48px !important;
-		height: 48px !important;
+		width: var(--ecosystem-icon-size) !important;
+		height: var(--ecosystem-icon-size) !important;
 	}
 }
 
-@media (min-width: 768px) and (max-width: 1023px) {
+@media (min-width: 768px) and (max-width: 959px) {
 	.ecosystem-section {
 		--ecosystem-card-height: 600px;
-		--ecosystem-track-padding-inline: 48px;
-		--ecosystem-track-padding-block: 48px;
-		--ecosystem-track-gap: 84px;
-		--ecosystem-intro-width: 450px;
-		--ecosystem-feature-width: 320px;
-		--ecosystem-intro-copy-gap: 28px;
-		--ecosystem-icon-to-title-gap: 28px;
-		--ecosystem-title-to-description-gap: 18px;
-		--ecosystem-intro-description-to-icon-gap: 44px;
+		--ecosystem-track-padding-start: 135px;
+		--ecosystem-track-padding-end: 135px;
+		--ecosystem-track-padding-top: 110px;
+		--ecosystem-track-padding-bottom: 32px;
+		--ecosystem-track-gap: 160px;
+		--ecosystem-intro-width: 309px;
+		--ecosystem-feature-1-width: 317px;
+		--ecosystem-feature-2-width: 395px;
+		--ecosystem-feature-3-width: 378px;
+		--ecosystem-feature-1-extra-gap: 91px;
+		--ecosystem-feature-lower-offset: 120px;
+		--ecosystem-intro-copy-gap: 24px;
+		--ecosystem-icon-to-title-gap: 48px;
+		--ecosystem-title-to-description-gap: 20px;
+		--ecosystem-intro-description-to-icon-gap: 36px;
+		--ecosystem-title-size: 40px;
+		--ecosystem-body-size: 18px;
+		--ecosystem-feature-title-size: 28px;
+		--ecosystem-icon-size: 58px;
 	}
 
 	.ecosystem-title {
-		font-size: clamp(38px, 4.6vw, 40px) !important;
+		font-size: var(--ecosystem-title-size) !important;
 		line-height: 1.1 !important;
 	}
 
 	.ecosystem-description {
-		font-size: 18px !important;
+		font-size: var(--ecosystem-body-size) !important;
 		line-height: 1.35 !important;
 	}
 
 	.ecosystem-feature-title {
-		font-size: 24px !important;
+		font-size: var(--ecosystem-feature-title-size) !important;
 		line-height: 1.15 !important;
 	}
 
 	.ecosystem-feature-description {
-		font-size: 18px !important;
+		font-size: var(--ecosystem-body-size) !important;
 		line-height: 1.35 !important;
 	}
 }
 
-@media (min-width: 1024px) and (max-width: 1199px) {
+@media (min-width: 960px) and (max-width: 1199px) {
 	.ecosystem-section {
-		--ecosystem-card-height: 680px;
-		--ecosystem-track-padding-inline: clamp(72px, 6vw, 120px);
-		--ecosystem-track-padding-block: 72px;
-		--ecosystem-track-gap: clamp(96px, 7vw, 140px);
-		--ecosystem-intro-width: 615px;
-		--ecosystem-feature-width: 390px;
+		--ecosystem-card-height: clamp(600px, calc(17.5vw + 432px), 642px);
+		--ecosystem-track-padding-start: 135px;
+		--ecosystem-track-padding-end: 135px;
+		--ecosystem-track-padding-top: clamp(100px, calc(150px - 4.167vw), 110px);
+		--ecosystem-track-padding-bottom: 36px;
+		--ecosystem-track-gap: 160px;
+		--ecosystem-intro-width: clamp(309px, calc(54.583vw - 215px), 440px);
+		--ecosystem-feature-1-width: clamp(317px, calc(7.5vw + 245px), 335px);
+		--ecosystem-feature-2-width: clamp(337px, calc(627px - 24.167vw), 395px);
+		--ecosystem-feature-3-width: 378px;
+		--ecosystem-feature-1-extra-gap: clamp(0px, calc(455px - 37.917vw), 91px);
+		--ecosystem-feature-lower-offset: clamp(120px, calc(12.917vw - 4px), 151px);
+		--ecosystem-intro-copy-gap: clamp(24px, 2.667vw, 32px);
+		--ecosystem-icon-to-title-gap: clamp(48px, 4.667vw, 56px);
+		--ecosystem-title-to-description-gap: clamp(20px, 1.833vw, 22px);
+		--ecosystem-intro-description-to-icon-gap: clamp(36px, 3.667vw, 44px);
+		--ecosystem-title-size: clamp(40px, calc(5vw - 8px), 52px);
+		--ecosystem-body-size: clamp(18px, calc(0.833vw + 10px), 20px);
+		--ecosystem-feature-title-size: clamp(28px, calc(0.833vw + 20px), 30px);
+		--ecosystem-icon-size: clamp(58px, calc(5vw + 10px), 70px);
 	}
 
 	.ecosystem-feature-column-1,
 	.ecosystem-feature-column-3 {
-		margin-top: 112px;
+		margin-top: var(--ecosystem-feature-lower-offset);
 	}
 
 	.ecosystem-feature-column-2 {
@@ -3885,35 +3969,63 @@ h3,
 	}
 }
 
-@media (min-width: 1200px) and (max-width: 1599px) {
+@media (min-width: 1200px) and (max-width: 1439px) {
 	.ecosystem-section {
-		--ecosystem-card-height: 650px;
-		--ecosystem-track-padding-inline: clamp(96px, 6vw, 154px);
-		--ecosystem-track-padding-block: 72px;
-		--ecosystem-track-gap: clamp(104px, 7vw, 160px);
-		--ecosystem-intro-width: 615px;
-		--ecosystem-feature-width: 420px;
+		--ecosystem-card-height: clamp(642px, calc(31.25vw + 267px), 717px);
+		--ecosystem-track-padding-start: clamp(135px, calc(45vw - 405px), 243px);
+		--ecosystem-track-padding-end: clamp(135px, calc(45vw - 405px), 243px);
+		--ecosystem-track-padding-top: 100px;
+		--ecosystem-track-padding-bottom: 40px;
+		--ecosystem-track-gap: 160px;
+		--ecosystem-intro-width: clamp(440px, calc(56.25vw - 235px), 575px);
+		--ecosystem-feature-1-width: clamp(335px, calc(51.25vw - 280px), 458px);
+		--ecosystem-feature-2-width: clamp(337px, calc(47.5vw - 233px), 451px);
+		--ecosystem-feature-3-width: clamp(331px, calc(613px - 19.583vw), 378px);
+		--ecosystem-feature-1-extra-gap: 0px;
+		--ecosystem-feature-lower-offset: clamp(151px, calc(12.083vw + 6px), 180px);
+		--ecosystem-intro-copy-gap: 32px;
+		--ecosystem-icon-to-title-gap: 56px;
+		--ecosystem-title-to-description-gap: clamp(22px, 1.667vw, 24px);
+		--ecosystem-intro-description-to-icon-gap: clamp(44px, 4.444vw, 64px);
+		--ecosystem-title-size: clamp(52px, calc(3.333vw + 12px), 60px);
+		--ecosystem-body-size: clamp(20px, calc(1.25vw + 5px), 23px);
+		--ecosystem-feature-title-size: clamp(30px, calc(1.25vw + 15px), 33px);
+		--ecosystem-icon-size: clamp(70px, calc(5.417vw + 5px), 83px);
 	}
 
 	.ecosystem-feature-column-1,
 	.ecosystem-feature-column-3 {
-		margin-top: 124px;
+		margin-top: var(--ecosystem-feature-lower-offset);
 	}
 }
 
-@media (min-width: 1600px) {
+@media (min-width: 1440px) {
 	.ecosystem-section {
 		--ecosystem-card-height: 717px;
-		--ecosystem-track-padding-inline: clamp(120px, 7vw, 192px);
-		--ecosystem-track-padding-block: 80px;
-		--ecosystem-track-gap: clamp(112px, 7vw, 180px);
-		--ecosystem-intro-width: 615px;
-		--ecosystem-feature-width: 452px;
+		--ecosystem-track-padding-start: 243px;
+		--ecosystem-track-padding-end: 243px;
+		--ecosystem-track-padding-top: 100px;
+		--ecosystem-track-padding-bottom: 40px;
+		--ecosystem-track-gap: 160px;
+		--ecosystem-intro-width: 575px;
+		--ecosystem-feature-1-width: 458px;
+		--ecosystem-feature-2-width: 451px;
+		--ecosystem-feature-3-width: 331px;
+		--ecosystem-feature-1-extra-gap: 0px;
+		--ecosystem-feature-lower-offset: 180px;
+		--ecosystem-intro-copy-gap: 32px;
+		--ecosystem-icon-to-title-gap: 56px;
+		--ecosystem-title-to-description-gap: 24px;
+		--ecosystem-intro-description-to-icon-gap: 64px;
+		--ecosystem-title-size: 60px;
+		--ecosystem-body-size: 23px;
+		--ecosystem-feature-title-size: 33px;
+		--ecosystem-icon-size: 83px;
 	}
 
 	.ecosystem-feature-column-1,
 	.ecosystem-feature-column-3 {
-		margin-top: 140px;
+		margin-top: var(--ecosystem-feature-lower-offset);
 	}
 }
 
