@@ -57,14 +57,13 @@ const TITLE_LINE_MAP: Record<
     {
       desktop: [
         "CreativeTech hub for education,",
-        "practice, and development of immersive",
-        "digital products",
+        "practice, and development of",
+        "immersive digital products",
       ],
       compact: [
-        "CreativeTech hub for",
-        "education, practice, and",
-        "development of immersive",
-        "digital products",
+        "CreativeTech hub for education,",
+        "practice, and development of",
+        "immersive digital products",
       ],
     },
 };
@@ -86,11 +85,15 @@ export function HeroTitle({ title }: HeroTitleProps) {
         charsClass: "hero-char inline-block",
       });
 
-      gsap.set(split.chars, { yPercent: 110, opacity: 0 });
+      const visibleChars = split.chars.filter(
+        (character) => character.getBoundingClientRect().width > 0
+      );
+
+      gsap.set(visibleChars, { yPercent: 110, opacity: 0 });
 
       const tl = gsap.timeline({ delay: 0.1 });
 
-      tl.to(split.chars, {
+      tl.to(visibleChars, {
         yPercent: 0,
         opacity: 1,
         duration: 1,

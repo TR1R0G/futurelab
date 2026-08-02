@@ -44,7 +44,7 @@ const desktopBaselines: Record<
   '1600x900': {
     stage: { left: 0, top: 0, width: 1600, height: 1080 },
     header: { left: 0, top: 30, width: 1600, height: 64 },
-    title: { left: 82, top: 269, width: 1172 },
+    title: { left: 82, top: 245, width: 1172 },
     description: { left: 82, top: 645, width: 402, height: 234.56 },
     actions: { left: 1189, top: 649, width: 329, height: 174 },
     image: { left: 715, top: 557, width: 170, height: 298 },
@@ -60,7 +60,7 @@ const desktopBaselines: Record<
   '1920x1080': {
     stage: { left: 0, top: 0, width: 1920, height: 1296 },
     header: { left: 0, top: 30, width: 1920, height: 64 },
-    title: { left: 242, top: 269, width: 1172 },
+    title: { left: 242, top: 245, width: 1172 },
     description: { left: 242, top: 735, width: 402, height: 234.56 },
     actions: { left: 1349, top: 739, width: 329, height: 174 },
     image: { left: 875, top: 647, width: 170, height: 298 },
@@ -68,10 +68,28 @@ const desktopBaselines: Record<
   '2560x1440': {
     stage: { left: 0, top: 0, width: 2560, height: 1728 },
     header: { left: 0, top: 30, width: 2560, height: 64 },
-    title: { left: 562, top: 269, width: 1172 },
+    title: { left: 562, top: 245, width: 1172 },
     description: { left: 562, top: 735, width: 402, height: 234.56 },
     actions: { left: 1669, top: 739, width: 329, height: 174 },
     image: { left: 1195, top: 647, width: 170, height: 298 },
+  },
+}
+
+const englishDesktopBaselineOverrides: Record<
+  string,
+  Record<'description' | 'actions', Partial<Geometry>>
+> = {
+  '1600x900': {
+    description: { top: 588.53 },
+    actions: { top: 618.81 },
+  },
+  '1920x1080': {
+    description: { top: 678.55 },
+    actions: { top: 708.83 },
+  },
+  '2560x1440': {
+    description: { top: 678.55 },
+    actions: { top: 708.83 },
   },
 }
 
@@ -317,7 +335,23 @@ async function expectInitialHeroGeometry(
     expect(height).toBeGreaterThanOrEqual(44)
   }
 
-  const baseline = desktopBaselines[`${viewport.width}x${viewport.height}`]
+  const viewportKey = `${viewport.width}x${viewport.height}`
+  const sharedBaseline = desktopBaselines[viewportKey]
+  const englishOverrides = englishDesktopBaselineOverrides[viewportKey]
+  const baseline =
+    language === 'en' && sharedBaseline && englishOverrides
+      ? {
+          ...sharedBaseline,
+          description: {
+            ...sharedBaseline.description,
+            ...englishOverrides.description,
+          },
+          actions: {
+            ...sharedBaseline.actions,
+            ...englishOverrides.actions,
+          },
+        }
+      : sharedBaseline
   if (baseline) {
     for (const [name, expected] of Object.entries(baseline)) {
       const actual =
@@ -848,6 +882,32 @@ test('ru Hero keeps short-flow actions readable until they pass through normal f
 })
 
 test.describe('Hero narrow mobile composition', () => {
+  test('en short mobile keeps description, actions, and video in reading order', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 667, height: 375 })
+    await page.goto('/en')
+    await waitForHero(page)
+
+    const rects = await page.evaluate(() => {
+      const read = (selector: string) => {
+        const { top, bottom } = document
+          .querySelector<HTMLElement>(selector)!
+          .getBoundingClientRect()
+        return { top, bottom }
+      }
+
+      return {
+        description: read('.hero-description'),
+        actions: read('.hero-action-panel'),
+        image: read('.hero-image'),
+      }
+    })
+
+    expect(rects.description.bottom).toBeLessThanOrEqual(rects.actions.top)
+    expect(rects.actions.bottom).toBeLessThanOrEqual(rects.image.top)
+  })
+
   test('en Hero uses the available title width at 719px', async ({ page }) => {
     await page.setViewportSize({ width: 719, height: 905 })
     await page.goto('/en')
@@ -917,10 +977,312 @@ test.describe('Hero narrow mobile composition', () => {
   }
 })
 
+test.describe('Hero desktop composition', () => {
+  for (const width of [1600, 1920, 2560]) {
+    for (const language of ['en', 'ru'] as const) {
+      test(`${language} wide short Hero title clears support content at ${width}x768`, async ({
+        page,
+      }) => {
+        await page.setViewportSize({ width, height: 768 })
+        await page.goto(`/${language}`)
+        await waitForHero(page)
+        await page.waitForTimeout(1_500)
+
+        const gaps = await page.evaluate(() => {
+          const title = document
+            .querySelector<HTMLElement>('.hero-title')!
+            .getBoundingClientRect()
+          const description = document
+            .querySelector<HTMLElement>('.hero-description')!
+            .getBoundingClientRect()
+          const image = document
+            .querySelector<HTMLElement>('.hero-image')!
+            .getBoundingClientRect()
+
+          return {
+            titleToDescription: description.top - title.bottom,
+            titleToImage: image.top - title.bottom,
+          }
+        })
+
+        expect(gaps.titleToDescription).toBeGreaterThanOrEqual(20)
+        expect(gaps.titleToImage).toBeGreaterThanOrEqual(20)
+      })
+    }
+  }
+
+  for (const width of [1200, 1280, 1366, 1400, 1499, 1500, 1537]) {
+    for (const language of ['en', 'ru'] as const) {
+      test(`${language} Hero CTA labels remain centered on one line at ${width}px`, async ({
+        page,
+      }) => {
+        await page.setViewportSize({ width, height: 900 })
+        await page.goto(`/${language}`)
+        await waitForHero(page)
+        await page.waitForTimeout(1_500)
+
+        const buttons = await page.locator('.hero-button').evaluateAll((items) =>
+          items.map((button) => {
+            const element = button as HTMLElement
+            const buttonRect = element.getBoundingClientRect()
+            const styles = getComputedStyle(element)
+            const textRange = document.createRange()
+            textRange.selectNodeContents(element)
+            const textRect = textRange.getBoundingClientRect()
+
+            return {
+              label: element.textContent?.trim(),
+              lineHeight: Number.parseFloat(styles.lineHeight),
+              textHeight: textRect.height,
+              leftInset: textRect.left - buttonRect.left,
+              rightInset: buttonRect.right - textRect.right,
+              centerDelta:
+                (textRect.left + textRect.right) / 2 -
+                (buttonRect.left + buttonRect.right) / 2,
+            }
+          }),
+        )
+
+        for (const button of buttons) {
+          expect(
+            button.textHeight,
+            `${button.label} should remain on one line`,
+          ).toBeLessThanOrEqual(button.lineHeight * 1.1)
+          expect(button.leftInset, `${button.label} left padding`).toBeGreaterThanOrEqual(16)
+          expect(button.rightInset, `${button.label} right padding`).toBeGreaterThanOrEqual(16)
+          expect(Math.abs(button.centerDelta), `${button.label} centering`).toBeLessThanOrEqual(1)
+        }
+      })
+    }
+
+    test(`en Hero title uses three contained rows at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 })
+      await page.goto('/en')
+      await waitForHero(page)
+      await page.waitForTimeout(1_500)
+
+      const result = await page.locator('.hero-title').evaluate((title) => {
+        const stage = document
+          .querySelector<HTMLElement>('.hero-stage')!
+          .getBoundingClientRect()
+        const words = [
+          ...title.querySelectorAll<HTMLElement>('.hero-word'),
+        ].filter((word) => word.getBoundingClientRect().width > 0)
+
+        return {
+          rows: new Set(
+            words.map((word) => Math.round(word.getBoundingClientRect().top)),
+          ).size,
+          words: words.map((word) => {
+            const rect = word.getBoundingClientRect()
+            return {
+              text: word.textContent,
+              leftInset: rect.left - stage.left,
+              rightInset: stage.right - rect.right,
+            }
+          }),
+        }
+      })
+
+      expect(result.rows).toBe(3)
+      for (const word of result.words) {
+        expect(word.leftInset, `${word.text} left inset`).toBeGreaterThanOrEqual(0)
+        expect(word.rightInset, `${word.text} right inset`).toBeGreaterThanOrEqual(0)
+      }
+    })
+  }
+
+  for (const width of [1200, 1400, 1600, 1920]) {
+    test(`en Hero title remains contained at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 })
+      await page.goto('/en')
+      await waitForHero(page)
+      await page.waitForTimeout(1_500)
+
+      const result = await page.evaluate(() => {
+        const stage = document
+          .querySelector<HTMLElement>('.hero-stage')!
+          .getBoundingClientRect()
+        const title = document
+          .querySelector<HTMLElement>('.hero-title')!
+          .getBoundingClientRect()
+        const description = document
+          .querySelector<HTMLElement>('.hero-description')!
+          .getBoundingClientRect()
+        const visibleWords = [
+          ...document.querySelectorAll<HTMLElement>('.hero-title .hero-word'),
+        ].filter((word) => word.getBoundingClientRect().width > 0)
+
+        return {
+          titleToDescriptionGap: description.top - title.bottom,
+          words: visibleWords.map((word) => {
+            const rect = word.getBoundingClientRect()
+            return {
+              text: word.textContent,
+              leftInset: rect.left - stage.left,
+              rightInset: stage.right - rect.right,
+            }
+          }),
+        }
+      })
+
+      expect(result.titleToDescriptionGap).toBeGreaterThanOrEqual(20)
+      for (const word of result.words) {
+        expect(word.leftInset, `${word.text} left inset`).toBeGreaterThanOrEqual(0)
+        expect(word.rightInset, `${word.text} right inset`).toBeGreaterThanOrEqual(0)
+      }
+    })
+
+    test(`en Hero support columns align to the video at ${width}px`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width, height: 900 })
+      await page.goto('/en')
+      await waitForHero(page)
+      await page.waitForTimeout(1_500)
+
+      const centers = await page.evaluate(() => {
+        const centerY = (selector: string) => {
+          const rect = document
+            .querySelector<HTMLElement>(selector)!
+            .getBoundingClientRect()
+          return rect.top + rect.height / 2
+        }
+
+        return {
+          description: centerY('.hero-description'),
+          actions: centerY('.hero-action-panel'),
+          image: centerY('.hero-image'),
+        }
+      })
+
+      expect(Math.abs(centers.description - centers.image)).toBeLessThanOrEqual(1)
+      expect(Math.abs(centers.actions - centers.image)).toBeLessThanOrEqual(1)
+    })
+  }
+
+  test('en short desktop title clears the description at 1366x768', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1366, height: 768 })
+    await page.goto('/en')
+    await waitForHero(page)
+    await page.waitForTimeout(1_500)
+
+    const gap = await page.evaluate(() => {
+      const title = document
+        .querySelector<HTMLElement>('.hero-title')!
+        .getBoundingClientRect()
+      const description = document
+        .querySelector<HTMLElement>('.hero-description')!
+        .getBoundingClientRect()
+      return description.top - title.bottom
+    })
+
+    expect(gap).toBeGreaterThanOrEqual(20)
+  })
+
+  test('en compact desktop title completes its entrance without hidden variants', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1200, height: 900 })
+    await page.goto('/en')
+    await waitForHero(page)
+    await page.waitForTimeout(4_000)
+
+    const visibleCharacterOpacities = await page
+      .locator('.hero-title .hero-char')
+      .evaluateAll((characters) =>
+        characters
+          .filter((character) => character.getBoundingClientRect().width > 0)
+          .map((character) => Number(getComputedStyle(character).opacity)),
+      )
+
+    expect(visibleCharacterOpacities.length).toBeGreaterThan(0)
+    expect(Math.min(...visibleCharacterOpacities)).toBeGreaterThanOrEqual(0.99)
+  })
+})
+
+test.describe('Hero tablet and laptop vertical composition', () => {
+  test('en Hero title sits lower below the desktop breakpoint', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1199, height: 900 })
+    await page.goto('/en')
+    await waitForHero(page)
+
+    const titleTop = await page
+      .locator('.hero-title')
+      .evaluate((title) => title.getBoundingClientRect().top)
+
+    expect(titleTop).toBeGreaterThanOrEqual(270)
+  })
+
+  for (const width of [1200, 1600]) {
+    test(`en Hero title sits higher at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 })
+      await page.goto('/en')
+      await waitForHero(page)
+
+      const titleTop = await page
+        .locator('.hero-title')
+        .evaluate((title) => title.getBoundingClientRect().top)
+
+      expect(titleTop).toBeLessThanOrEqual(250)
+    })
+  }
+
+  for (const viewport of [
+    { width: 720, height: 900 },
+    { width: 768, height: 1024 },
+    { width: 960, height: 900 },
+    { width: 1024, height: 768 },
+    { width: 1199, height: 900 },
+  ]) {
+    test(`en Hero support row stays near the bottom at ${viewport.width}x${viewport.height}`, async ({
+      page,
+    }) => {
+      await page.setViewportSize(viewport)
+      await page.goto('/en')
+      await waitForHero(page)
+      await page.waitForTimeout(1_500)
+
+      const spacing = await page.evaluate(() => {
+        const stage = document
+          .querySelector<HTMLElement>('.hero-stage')!
+          .getBoundingClientRect()
+        const title = document
+          .querySelector<HTMLElement>('.hero-title')!
+          .getBoundingClientRect()
+        const supportRects = [
+          '.hero-description',
+          '.hero-image',
+          '.hero-action-panel',
+        ].map((selector) =>
+          document.querySelector<HTMLElement>(selector)!.getBoundingClientRect(),
+        )
+        const supportTop = Math.min(...supportRects.map((rect) => rect.top))
+        const supportBottom = Math.max(
+          ...supportRects.map((rect) => rect.bottom),
+        )
+
+        return {
+          titleToSupport: supportTop - title.bottom,
+          supportBottomInset: stage.bottom - supportBottom,
+        }
+      })
+
+      expect(spacing.titleToSupport).toBeGreaterThanOrEqual(80)
+      expect(spacing.supportBottomInset).toBeGreaterThanOrEqual(32)
+      expect(spacing.supportBottomInset).toBeLessThanOrEqual(64)
+    })
+  }
+})
+
 const shortHeightCases = [
-  { width: 768, height: 650, expectedPosition: 'relative', expectedOverflow: 'visible', tracks: 1 },
-  { width: 1024, height: 650, expectedPosition: 'relative', expectedOverflow: 'visible', tracks: 1 },
-  { width: 1024, height: 768, expectedPosition: 'relative', expectedOverflow: 'visible', tracks: 1 },
+  { width: 768, height: 650, expectedPosition: 'relative', expectedOverflow: 'visible', tracks: 3 },
+  { width: 1024, height: 650, expectedPosition: 'relative', expectedOverflow: 'visible', tracks: 3 },
+  { width: 1024, height: 768, expectedPosition: 'relative', expectedOverflow: 'visible', tracks: 3 },
   { width: 1024, height: 769, expectedPosition: 'sticky', expectedOverflow: 'hidden', tracks: 3 },
 ] as const
 
@@ -955,6 +1317,13 @@ for (const viewport of shortHeightCases) {
     expect(result.overlaps.titleDescription).toBe(false)
     expect(result.overlaps.descriptionActions).toBe(false)
     expect(result.overlaps.actionsImage).toBe(false)
+
+    expect(result.rects.description.right).toBeLessThanOrEqual(
+      result.rects.image.left,
+    )
+    expect(result.rects.image.right).toBeLessThanOrEqual(
+      result.rects.actions.left,
+    )
   })
 }
 
