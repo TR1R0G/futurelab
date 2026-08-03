@@ -1,6 +1,16 @@
 import { expect, test, type Page } from '@playwright/test'
 
-const viewports = [360, 720, 960, 1200, 1400, 1440, 1600] as const
+const viewports = [
+	360,
+	720,
+	960,
+	1200,
+	1370,
+	1400,
+	1440,
+	1600,
+	1920,
+] as const
 
 const alignedSelectors = [
 	'.infrastructure-heading',
@@ -148,6 +158,22 @@ for (const width of viewports) {
 		for (const box of layout.leftAligned) {
 			expect(box.width, box.selector).toBeGreaterThan(0)
 			expect(box.left, box.selector).toBeCloseTo(shellLeft, 0)
+		}
+
+		if (width >= 1370) {
+			const card = layout.contained.find(
+				box => box.selector === '.solutions-card-outline',
+			)
+
+			expect(card, '.solutions-card-outline').toBeDefined()
+			expect(card?.left, '.solutions-card-outline left edge').toBeCloseTo(
+				shellLeft,
+				0,
+			)
+			expect(card?.right, '.solutions-card-outline right edge').toBeCloseTo(
+				shellRight,
+				0,
+			)
 		}
 	})
 }

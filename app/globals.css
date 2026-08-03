@@ -5734,9 +5734,9 @@ main[lang='en'] .ecosystem-title-lead {
 	}
 
 	.solutions-inner.section-shell .solutions-card-outline {
-		left: 50% !important;
-		width: min(1170px, 100%) !important;
-		transform: translateX(-50%);
+		left: 0 !important;
+		width: 100% !important;
+		transform: none;
 	}
 }
 
