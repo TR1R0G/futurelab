@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Match the approved two-column Directions board design at every viewport below `720px` while preserving the current layout at `720px` and above.
+**Goal:** Match the approved two-column Directions board below `720px` and keep the staggered composition overlap-free at `720px` and above.
 
 **Architecture:** Keep the existing `Directions` markup, localized content, stable chip IDs, and JavaScript canvas measurements. Add a final mobile-only CSS reset after the existing responsive canvas rules so the cascade converts the canvas to normal flow, lays the six slots out as a two-column grid, and gives every chip the approved light appearance. Protect the breakpoint with a real-browser regression test.
 
@@ -11,7 +11,8 @@
 ## Global Constraints
 
 - Preserve all Russian and English content.
-- Preserve the current layout and chip variants at `720px` and above.
+- Preserve chip variants, typography, stable IDs, order, and rotation angles at `720px` and above.
+- Expand center spacing responsively without changing the staggered topology at `720px`, `1000px`, `1200px`, `1400px`, and `1600px`.
 - Use two equal chip columns at every width below `720px`, including `360px`.
 - Allow labels to wrap without clipping, overlap, or horizontal overflow.
 - Keep the board background, radius, title, bottom gradient, statement, and animation behavior unchanged.
@@ -263,3 +264,120 @@ Expected: all commands exit `0`.
 git add app/globals.css tests/directions-board-mobile.spec.ts docs/superpowers/plans/2026-08-03-directions-board-mobile.md
 git commit -m "fix: match mobile directions board design"
 ```
+
+---
+
+### Task 2: Remove Non-Mobile Chip Intersections
+
+**Files:**
+- Modify: `tests/directions-board-mobile.spec.ts`
+- Modify: `app/globals.css`
+
+**Interfaces:**
+- Consumes: the same six stable chip IDs and existing variant/rotation rules.
+- Produces: one expanded staggered composition with responsive board heights and no pairwise chip intersections from `720px` upward.
+
+- [ ] **Step 1: Add a failing non-overlap regression test**
+
+Extend `tests/directions-board-mobile.spec.ts` with tests at `720px`, `1000px`, `1200px`, `1400px`, and `1600px`. Read each chip rectangle and computed transform, assert every rectangle stays inside `.directions-board-card`, and reject every pairwise intersection. Derive rotation from the transform matrix using `Math.atan2(matrix.b, matrix.a)` and compare against these literal values:
+
+```ts
+const desktopRotationById = {
+  'ar-vr-webar': -16,
+  '3d-gamedev': 0,
+  'genai-animation': -5,
+  holography: -15,
+  gamification: 18,
+  'digital-tourism': 2,
+} as const
+```
+
+Also assert the approved topology:
+
+```ts
+expect(centerX['ar-vr-webar']).toBeLessThan(centerX['3d-gamedev'])
+expect(centerX['3d-gamedev']).toBeLessThan(centerX.holography)
+expect(centerX['digital-tourism']).toBeLessThan(centerX.gamification)
+expect(centerY.gamification).toBeLessThan(centerY['digital-tourism'])
+expect(centerY['digital-tourism']).toBeLessThan(centerY['genai-animation'])
+expect(centerY['genai-animation']).toBeLessThan(centerY['ar-vr-webar'])
+expect(centerY['ar-vr-webar']).toBeLessThan(centerY.holography)
+expect(centerY.holography).toBeLessThan(centerY['3d-gamedev'])
+```
+
+- [ ] **Step 2: Run the new tests and verify RED**
+
+Run:
+
+```bash
+npx playwright test tests/directions-board-mobile.spec.ts --reporter=line
+```
+
+Expected: all five non-mobile cases fail on pairwise intersections while the existing mobile cases remain green.
+
+- [ ] **Step 3: Implement the expanded composition**
+
+Add an authoritative `@media (min-width: 720px)` block after the existing Directions responsive rules. Reset the scaled canvas wrappers to `display: contents`, keep the chip layer absolute relative to the board, and assign the six stable slots these percentages:
+
+```css
+.directions-chip-slot--gamification {
+  left: 72% !important;
+  top: 7% !important;
+  width: 24% !important;
+}
+
+.directions-chip-slot--digital-tourism {
+  left: 42% !important;
+  top: 25% !important;
+  width: 27% !important;
+}
+
+.directions-chip-slot--genai-animation {
+  left: 65% !important;
+  top: 42% !important;
+  width: 27% !important;
+}
+
+.directions-chip-slot--ar-vr-webar {
+  left: 36% !important;
+  top: 58% !important;
+  width: 26% !important;
+}
+
+.directions-chip-slot--holography {
+  left: 74% !important;
+  top: 65% !important;
+  width: 24% !important;
+}
+
+.directions-chip-slot--3d-gamedev {
+  left: 48% !important;
+  top: 82% !important;
+  width: 28% !important;
+}
+```
+
+Use board heights of `620px` for `720–959px`, `540px` for `960–1279px`, and `460px` at `1280px+`. Do not override any chip transform or font-size rule.
+
+- [ ] **Step 4: Run the focused tests and adjust only shared geometry if needed**
+
+Run:
+
+```bash
+npx playwright test tests/directions-board-mobile.spec.ts --reporter=line
+```
+
+If a rotated bounding box still intersects, adjust the shared board height or the proportional center spacing while preserving the literal rotation values and topology assertions.
+
+- [ ] **Step 5: Run responsive regressions, lint, and build**
+
+Run:
+
+```bash
+npx playwright test tests/directions-board-mobile.spec.ts tests/shared-horizontal-gutters.spec.ts tests/typography-responsive.spec.ts --reporter=line
+npm run lint
+npm run build
+git diff --check
+```
+
+Expected: all commands exit `0` and no target width has horizontal overflow.
