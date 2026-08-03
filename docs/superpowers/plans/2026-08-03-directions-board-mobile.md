@@ -277,7 +277,7 @@ git commit -m "fix: match mobile directions board design"
 - Consumes: the same six stable chip IDs and existing variant/rotation rules.
 - Produces: one expanded staggered composition with responsive board heights and no pairwise chip intersections from `720px` upward.
 
-- [ ] **Step 1: Add a failing non-overlap regression test**
+- [x] **Step 1: Add a failing non-overlap regression test**
 
 Extend `tests/directions-board-mobile.spec.ts` with tests at `720px`, `1000px`, `1200px`, `1400px`, and `1600px`. Read each chip rectangle and computed transform, assert every rectangle stays inside `.directions-board-card`, and reject every pairwise intersection. Derive rotation from the transform matrix using `Math.atan2(matrix.b, matrix.a)` and compare against these literal values:
 
@@ -305,7 +305,7 @@ expect(centerY['ar-vr-webar']).toBeLessThan(centerY.holography)
 expect(centerY.holography).toBeLessThan(centerY['3d-gamedev'])
 ```
 
-- [ ] **Step 2: Run the new tests and verify RED**
+- [x] **Step 2: Run the new tests and verify RED**
 
 Run:
 
@@ -315,51 +315,51 @@ npx playwright test tests/directions-board-mobile.spec.ts --reporter=line
 
 Expected: all five non-mobile cases fail on pairwise intersections while the existing mobile cases remain green.
 
-- [ ] **Step 3: Implement the expanded composition**
+- [x] **Step 3: Implement the expanded composition**
 
 Add an authoritative `@media (min-width: 720px)` block after the existing Directions responsive rules. Reset the scaled canvas wrappers to `display: contents`, keep the chip layer absolute relative to the board, and assign the six stable slots these percentages:
 
 ```css
 .directions-chip-slot--gamification {
-  left: 72% !important;
-  top: 7% !important;
+  left: 72.96% !important;
+  top: 12% !important;
   width: 24% !important;
 }
 
 .directions-chip-slot--digital-tourism {
-  left: 42% !important;
+  left: 39.36% !important;
   top: 25% !important;
   width: 27% !important;
 }
 
 .directions-chip-slot--genai-animation {
-  left: 65% !important;
+  left: 65.12% !important;
   top: 42% !important;
   width: 27% !important;
 }
 
 .directions-chip-slot--ar-vr-webar {
-  left: 36% !important;
+  left: 32.64% !important;
   top: 58% !important;
   width: 26% !important;
 }
 
 .directions-chip-slot--holography {
-  left: 74% !important;
+  left: 75.2% !important;
   top: 65% !important;
   width: 24% !important;
 }
 
 .directions-chip-slot--3d-gamedev {
-  left: 48% !important;
+  left: 46.08% !important;
   top: 82% !important;
   width: 28% !important;
 }
 ```
 
-Use board heights of `620px` for `720–959px`, `540px` for `960–1279px`, and `460px` at `1280px+`. Do not override any chip transform or font-size rule.
+Use board heights of `620px` for `720–959px` and `580px` from `960px` upward. Expand every horizontal center distance from the cluster anchor by the same factor at `720px+`; do not override any chip transform or font-size rule.
 
-- [ ] **Step 4: Run the focused tests and adjust only shared geometry if needed**
+- [x] **Step 4: Run the focused tests and adjust only shared geometry if needed**
 
 Run:
 
@@ -369,7 +369,7 @@ npx playwright test tests/directions-board-mobile.spec.ts --reporter=line
 
 If a rotated bounding box still intersects, adjust the shared board height or the proportional center spacing while preserving the literal rotation values and topology assertions.
 
-- [ ] **Step 5: Run responsive regressions, lint, and build**
+- [x] **Step 5: Run responsive regressions, lint, and build**
 
 Run:
 

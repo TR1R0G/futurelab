@@ -4801,6 +4801,102 @@ main[lang='en'] .ecosystem-title-lead {
 	}
 }
 
+@media (min-width: 720px) {
+	.directions-board {
+		--directions-spread-board-height: 620px;
+	}
+
+	.directions-board-card {
+		height: var(--directions-spread-board-height) !important;
+		min-height: var(--directions-spread-board-height) !important;
+	}
+
+	.directions-chip-viewport {
+		position: absolute !important;
+		inset: 0 !important;
+		display: block !important;
+		width: 100% !important;
+		height: 100% !important;
+		margin: 0 !important;
+		overflow: visible !important;
+	}
+
+	.directions-chip-canvas {
+		position: static !important;
+		inset: auto !important;
+		display: contents !important;
+		width: auto !important;
+		height: auto !important;
+		transform: none !important;
+	}
+
+	.directions-chip-layer {
+		position: absolute !important;
+		inset: 0 !important;
+		display: block !important;
+		width: 100% !important;
+		height: 100% !important;
+		margin: 0 !important;
+	}
+
+	.directions-chip-slot,
+	.directions-chip-slot--ar-vr-webar,
+	.directions-chip-slot--3d-gamedev,
+	.directions-chip-slot--genai-animation,
+	.directions-chip-slot--holography,
+	.directions-chip-slot--gamification,
+	.directions-chip-slot--digital-tourism {
+		position: absolute !important;
+		display: flex !important;
+		height: auto !important;
+		min-width: 0 !important;
+		align-items: center !important;
+		justify-content: center !important;
+	}
+
+	.directions-chip-slot--gamification {
+		left: 72.96% !important;
+		top: 12% !important;
+		width: 24% !important;
+	}
+
+	.directions-chip-slot--digital-tourism {
+		left: 39.36% !important;
+		top: 25% !important;
+		width: 27% !important;
+	}
+
+	.directions-chip-slot--genai-animation {
+		left: 65.12% !important;
+		top: 42% !important;
+		width: 27% !important;
+	}
+
+	.directions-chip-slot--ar-vr-webar {
+		left: 32.64% !important;
+		top: 58% !important;
+		width: 26% !important;
+	}
+
+	.directions-chip-slot--holography {
+		left: 75.2% !important;
+		top: 65% !important;
+		width: 24% !important;
+	}
+
+	.directions-chip-slot--3d-gamedev {
+		left: 46.08% !important;
+		top: 82% !important;
+		width: 28% !important;
+	}
+}
+
+@media (min-width: 960px) {
+	.directions-board {
+		--directions-spread-board-height: 580px;
+	}
+}
+
 @media (min-width: 1280px) and (max-width: 1599px) {
 	.directions-section {
 		--programs-to-directions-gap: calc(
