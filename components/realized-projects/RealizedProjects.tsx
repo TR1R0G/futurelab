@@ -18,12 +18,19 @@ type RealizedProjectWithVideo = RealizedProject & { video: string };
 const hasCyrillic = (value: string) => /[А-Яа-яЁё]/.test(value);
 const getProjectActionLabel = (project: RealizedProject) =>
   hasCyrillic(project.title) ? "Смотреть видео" : "Watch video";
+const getProjectKey = (project: RealizedProject) =>
+  project.video ?? project.image ?? project.imageAlt;
 
 export function RealizedProjects({ id, title, projects }: RealizedProjectsProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<Array<HTMLElement | null>>([]);
+  const prefersReducedMotionRef = useRef(false);
   const [activeProject, setActiveProject] = useState<RealizedProject | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [canScrollPrevious, setCanScrollPrevious] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(projects.length > 1);
 
   useEffect(() => {
     registerGsapPlugins();
@@ -118,6 +125,91 @@ export function RealizedProjects({ id, title, projects }: RealizedProjectsProps)
   }, []);
 
   useEffect(() => {
+    const container = wrapperRef.current;
+    if (!container) return;
+
+    const reducedMotionQuery = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    );
+    let frame = 0;
+    let disposed = false;
+
+    const updateNavigationState = () => {
+      frame = 0;
+      const cards = cardRefs.current.filter(
+        (card): card is HTMLElement => Boolean(card)
+      );
+      if (!cards.length) return;
+
+      const containerRect = container.getBoundingClientRect();
+      const scrollPaddingStart =
+        Number.parseFloat(getComputedStyle(container).scrollPaddingLeft) || 0;
+      const currentPosition = container.scrollLeft + scrollPaddingStart;
+      let nearestIndex = 0;
+      let nearestDistance = Number.POSITIVE_INFINITY;
+
+      cards.forEach((card, index) => {
+        const cardRect = card.getBoundingClientRect();
+        const cardPosition =
+          container.scrollLeft + cardRect.left - containerRect.left;
+        const distance = Math.abs(cardPosition - currentPosition);
+
+        if (distance < nearestDistance) {
+          nearestIndex = index;
+          nearestDistance = distance;
+        }
+      });
+
+      const maxScrollLeft = Math.max(
+        0,
+        container.scrollWidth - container.clientWidth
+      );
+      const threshold = 4;
+
+      setActiveIndex(nearestIndex);
+      setCanScrollPrevious(container.scrollLeft > threshold);
+      setCanScrollNext(container.scrollLeft < maxScrollLeft - threshold);
+    };
+
+    const scheduleNavigationUpdate = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(updateNavigationState);
+    };
+
+    const handleReducedMotionChange = () => {
+      prefersReducedMotionRef.current = reducedMotionQuery.matches;
+    };
+
+    handleReducedMotionChange();
+    container.addEventListener("scroll", scheduleNavigationUpdate, {
+      passive: true,
+    });
+    reducedMotionQuery.addEventListener("change", handleReducedMotionChange);
+
+    const resizeObserver = new ResizeObserver(scheduleNavigationUpdate);
+    resizeObserver.observe(container);
+    cardRefs.current.forEach((card) => {
+      if (card) resizeObserver.observe(card);
+    });
+
+    void document.fonts.ready.then(() => {
+      if (!disposed) scheduleNavigationUpdate();
+    });
+    scheduleNavigationUpdate();
+
+    return () => {
+      disposed = true;
+      container.removeEventListener("scroll", scheduleNavigationUpdate);
+      reducedMotionQuery.removeEventListener(
+        "change",
+        handleReducedMotionChange
+      );
+      resizeObserver.disconnect();
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, [projects.length]);
+
+  useEffect(() => {
     if (!activeProject) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -138,6 +230,45 @@ export function RealizedProjects({ id, title, projects }: RealizedProjectsProps)
     : null;
   const portalRoot =
     typeof document === "undefined" ? null : document.body;
+  const isRussian = hasCyrillic(title);
+  const navigationLabels = isRussian
+    ? {
+        navigation: "Навигация по проектам",
+        previous: "Предыдущий проект",
+        next: "Следующий проект",
+        goTo: (index: number) => `Перейти к проекту ${index + 1}`,
+      }
+    : {
+        navigation: "Project navigation",
+        previous: "Previous project",
+        next: "Next project",
+        goTo: (index: number) => `Go to project ${index + 1}`,
+      };
+
+  const scrollToCard = (requestedIndex: number) => {
+    const container = wrapperRef.current;
+    const index = Math.min(
+      Math.max(requestedIndex, 0),
+      Math.max(projects.length - 1, 0)
+    );
+    const card = cardRefs.current[index];
+    if (!container || !card) return;
+
+    const containerRect = container.getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+    const scrollPaddingStart =
+      Number.parseFloat(getComputedStyle(container).scrollPaddingLeft) || 0;
+    const left =
+      container.scrollLeft +
+      cardRect.left -
+      containerRect.left -
+      scrollPaddingStart;
+
+    container.scrollTo({
+      left: Math.max(0, left),
+      behavior: prefersReducedMotionRef.current ? "auto" : "smooth",
+    });
+  };
 
   return (
     <section
@@ -159,15 +290,56 @@ export function RealizedProjects({ id, title, projects }: RealizedProjectsProps)
           ref={trackRef}
           className="realized-projects-track flex w-max gap-10 will-change-transform"
         >
-          {projects.map((project) => (
+          {projects.map((project, index) => (
             <ProjectCard
-              key={project.title}
+              key={getProjectKey(project)}
+              articleRef={(card) => {
+                cardRefs.current[index] = card;
+              }}
               project={project}
               onOpenVideo={setActiveProject}
             />
           ))}
         </div>
       </div>
+
+      <nav
+        className="realized-projects-navigation section-shell"
+        aria-label={navigationLabels.navigation}
+      >
+        <button
+          type="button"
+          className="realized-projects-arrow realized-projects-arrow--previous"
+          aria-label={navigationLabels.previous}
+          disabled={!canScrollPrevious}
+          onClick={() => scrollToCard(activeIndex - 1)}
+        >
+          <span className="realized-projects-chevron" aria-hidden="true" />
+        </button>
+
+        <div className="realized-projects-pagination">
+          {projects.map((project, index) => (
+            <button
+              key={getProjectKey(project)}
+              type="button"
+              aria-label={navigationLabels.goTo(index)}
+              aria-current={activeIndex === index ? "true" : undefined}
+              className="realized-projects-dot"
+              onClick={() => scrollToCard(index)}
+            />
+          ))}
+        </div>
+
+        <button
+          type="button"
+          className="realized-projects-arrow realized-projects-arrow--next"
+          aria-label={navigationLabels.next}
+          disabled={!canScrollNext}
+          onClick={() => scrollToCard(activeIndex + 1)}
+        >
+          <span className="realized-projects-chevron" aria-hidden="true" />
+        </button>
+      </nav>
 
       {activeVideoProject && portalRoot
         ? createPortal(
@@ -183,14 +355,19 @@ export function RealizedProjects({ id, title, projects }: RealizedProjectsProps)
 }
 
 function ProjectCard({
+  articleRef,
   project,
   onOpenVideo,
 }: {
+  articleRef: (card: HTMLElement | null) => void;
   project: RealizedProject;
   onOpenVideo: (project: RealizedProject) => void;
 }) {
   return (
-    <article className="realized-project-card relative h-[var(--realized-card-height,874px)] w-[var(--realized-card-width,698px)] shrink-0 origin-top-left overflow-hidden bg-[#1D1D1D]">
+    <article
+      ref={articleRef}
+      className="realized-project-card relative h-[var(--realized-card-height,874px)] w-[var(--realized-card-width,698px)] shrink-0 origin-top-left overflow-hidden bg-[#1D1D1D]"
+    >
       <div className="realized-project-card-shell relative z-10 h-[868px] w-[698px] origin-top-left scale-[var(--realized-card-scale,1)] rounded-[35px] bg-[#1D1D1D]">
         <div className="realized-project-card-copy absolute left-10 top-10 w-[618px]">
           <h3 className="realized-project-card-title project-mini-heading text-[40px] font-semibold leading-[48px] text-[#DE5CFF]">
