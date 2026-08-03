@@ -35,9 +35,6 @@ const DIRECTIONS_CANVAS_RIGHT = -14
 const DIRECTIONS_CANVAS_VISUAL_TOP = 16
 const DIRECTIONS_CANVAS_VISUAL_HEIGHT =
 	DIRECTIONS_CANVAS_HEIGHT - DIRECTIONS_CANVAS_VISUAL_TOP
-const DIRECTIONS_CANONICAL_FONT_SIZE = 13.44
-const DIRECTIONS_MIN_VISUAL_FONT_SIZE = 10
-const DIRECTIONS_NARROW_MIN_VISUAL_FONT_SIZE = 8.5
 const DIRECTIONS_RESPONSIVE_PROPERTIES = [
 	'--directions-chip-scale',
 	'--directions-chip-canvas-width',
@@ -124,9 +121,6 @@ export function Directions({
 				: isNarrow
 					? DIRECTIONS_NARROW_CANVAS_HEIGHT
 					: DIRECTIONS_CANVAS_VISUAL_HEIGHT
-			const canonicalFontSize = isNarrow
-				? 14.5
-				: DIRECTIONS_CANONICAL_FONT_SIZE
 			const scale = Math.min(1, viewportWidth / canvasWidth)
 
 			if (
@@ -138,17 +132,7 @@ export function Directions({
 				return
 			}
 
-			const minimumVisualFontSize = Math.min(
-				DIRECTIONS_MIN_VISUAL_FONT_SIZE,
-				Math.max(
-					DIRECTIONS_NARROW_MIN_VISUAL_FONT_SIZE,
-					window.innerWidth / 60,
-				),
-			)
-			const responsiveFontSize = Math.max(
-				canonicalFontSize,
-				minimumVisualFontSize / scale,
-			)
+			const responsiveFontSize = 'var(--type-body)'
 
 			boardCard.style.setProperty(
 				'--directions-chip-canvas-width',
@@ -184,7 +168,7 @@ export function Directions({
 			)
 			boardCard.style.setProperty(
 				'--directions-responsive-font-size',
-				`${responsiveFontSize}px`,
+				responsiveFontSize,
 			)
 
 			previousScale = scale

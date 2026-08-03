@@ -3679,6 +3679,10 @@ h3,
 	white-space: nowrap;
 }
 
+main[lang='en'] .ecosystem-title-lead {
+	white-space: normal;
+}
+
 .ecosystem-description {
 	max-width: 100%;
 	height: auto;
@@ -5574,5 +5578,337 @@ h3,
 		left: 50% !important;
 		width: min(1170px, 100%) !important;
 		transform: translateX(-50%);
+	}
+}
+
+/* Responsive typography scale. Anchor widths: 360, 720, 960, 1200, 1440. */
+:root {
+	--type-hero-title: 30px;
+	--type-body: 16px;
+	--type-button: 16px;
+	--type-section-title: 26px;
+	--type-secondary-title: 22px;
+	--type-cta: 18px;
+	--type-academy-body: 16px;
+	--type-academy-card: 16px;
+	--type-program-description: 16px;
+	--type-program-meta: 16px;
+	--type-program-button: 16px;
+	--type-directions-statement: 26px;
+	--type-solutions-card-title: 22px;
+	--type-realized-title: 26px;
+	--type-realized-card-title: 22px;
+	--type-experience-title: 26px;
+	--type-stat-title: 18px;
+	--type-contact-card-title: 22px;
+	--type-contact-description: 16px;
+	--type-contact-item: 16px;
+	--type-footer: 12px;
+}
+
+@media (min-width: 360px) and (max-width: 719px) {
+	:root {
+		--type-hero-title: clamp(30px, calc(10px + 5.5556vw), 50px);
+		--type-body: clamp(16px, calc(14px + 0.5556vw), 18px);
+		--type-button: 16px;
+		--type-section-title: clamp(26px, calc(16px + 2.7778vw), 36px);
+		--type-secondary-title: clamp(22px, calc(18px + 1.1111vw), 26px);
+		--type-cta: clamp(18px, calc(14px + 1.1111vw), 22px);
+		--type-academy-body: clamp(16px, calc(14px + 0.5556vw), 18px);
+		--type-academy-card: clamp(16px, calc(14px + 0.5556vw), 18px);
+		--type-program-description: clamp(16px, calc(14px + 0.5556vw), 18px);
+		--type-program-meta: clamp(16px, calc(14px + 0.5556vw), 18px);
+		--type-program-button: 16px;
+		--type-directions-statement: clamp(26px, calc(22px + 1.1111vw), 30px);
+		--type-solutions-card-title: clamp(22px, calc(14px + 2.2222vw), 30px);
+		--type-realized-title: clamp(26px, calc(16px + 2.7778vw), 36px);
+		--type-realized-card-title: clamp(22px, calc(18px + 1.1111vw), 26px);
+		--type-experience-title: clamp(26px, calc(16px + 2.7778vw), 36px);
+		--type-stat-title: clamp(18px, calc(16px + 0.5556vw), 20px);
+		--type-contact-card-title: clamp(22px, calc(14px + 2.2222vw), 30px);
+		--type-contact-description: clamp(16px, calc(14px + 0.5556vw), 18px);
+		--type-contact-item: clamp(16px, calc(14px + 0.5556vw), 18px);
+		--type-footer: clamp(12px, calc(10px + 0.5556vw), 14px);
+	}
+}
+
+@media (min-width: 720px) and (max-width: 959px) {
+	:root {
+		--type-hero-title: clamp(50px, calc(26px + 3.3333vw), 58px);
+		--type-body: clamp(18px, calc(12px + 0.8333vw), 20px);
+		--type-button: clamp(16px, calc(7px + 1.25vw), 19px);
+		--type-section-title: clamp(36px, 5vw, 48px);
+		--type-secondary-title: clamp(26px, calc(20px + 0.8333vw), 28px);
+		--type-cta: clamp(22px, calc(13px + 1.25vw), 25px);
+		--type-academy-body: clamp(18px, calc(12px + 0.8333vw), 20px);
+		--type-academy-card: clamp(18px, calc(12px + 0.8333vw), 20px);
+		--type-program-description: clamp(18px, calc(12px + 0.8333vw), 20px);
+		--type-program-meta: 18px;
+		--type-program-button: 16px;
+		--type-directions-statement: clamp(30px, calc(12px + 2.5vw), 36px);
+		--type-solutions-card-title: clamp(30px, calc(6px + 3.3333vw), 38px);
+		--type-realized-title: clamp(36px, calc(-6px + 5.8333vw), 50px);
+		--type-realized-card-title: clamp(26px, calc(-4px + 4.1667vw), 36px);
+		--type-experience-title: clamp(36px, calc(24px + 1.6667vw), 40px);
+		--type-stat-title: clamp(20px, calc(14px + 0.8333vw), 22px);
+		--type-contact-card-title: 30px;
+		--type-contact-description: clamp(18px, calc(9px + 1.25vw), 21px);
+		--type-contact-item: clamp(18px, calc(9px + 1.25vw), 21px);
+		--type-footer: 14px;
+	}
+}
+
+@media (min-width: 960px) and (max-width: 1199px) {
+	:root {
+		--type-hero-title: clamp(58px, calc(10px + 5vw), 70px);
+		--type-body: clamp(20px, calc(16px + 0.4167vw), 21px);
+		--type-button: clamp(19px, calc(15px + 0.4167vw), 20px);
+		--type-section-title: clamp(48px, 5vw, 60px);
+		--type-secondary-title: 28px;
+		--type-cta: clamp(25px, calc(13px + 1.25vw), 28px);
+		--type-academy-body: clamp(20px, calc(16px + 0.4167vw), 21px);
+		--type-academy-card: clamp(20px, calc(16px + 0.4167vw), 21px);
+		--type-program-description: 20px;
+		--type-program-meta: clamp(18px, calc(10px + 0.8333vw), 20px);
+		--type-program-button: clamp(16px, 1.6667vw, 20px);
+		--type-directions-statement: clamp(36px, calc(-12px + 5vw), 48px);
+		--type-solutions-card-title: clamp(38px, calc(-10px + 5vw), 50px);
+		--type-realized-title: 50px;
+		--type-realized-card-title: clamp(36px, calc(28px + 0.8333vw), 38px);
+		--type-experience-title: clamp(40px, calc(-8px + 5vw), 52px);
+		--type-stat-title: clamp(22px, calc(18px + 0.4167vw), 23px);
+		--type-contact-card-title: 30px;
+		--type-contact-description: 21px;
+		--type-contact-item: 21px;
+		--type-footer: 14px;
+	}
+}
+
+@media (min-width: 1200px) and (max-width: 1439px) {
+	:root {
+		--type-hero-title: clamp(70px, calc(20px + 4.1667vw), 80px);
+		--type-body: clamp(21px, calc(11px + 0.8333vw), 23px);
+		--type-button: clamp(20px, calc(10px + 0.8333vw), 22px);
+		--type-section-title: clamp(60px, calc(35px + 2.0833vw), 65px);
+		--type-secondary-title: clamp(28px, calc(3px + 2.0833vw), 33px);
+		--type-cta: clamp(28px, calc(3px + 2.0833vw), 33px);
+		--type-academy-body: clamp(21px, calc(1px + 1.6667vw), 25px);
+		--type-academy-card: clamp(21px, calc(1px + 1.6667vw), 25px);
+		--type-program-description: clamp(20px, calc(10px + 0.8333vw), 22px);
+		--type-program-meta: clamp(20px, calc(10px + 0.8333vw), 22px);
+		--type-program-button: clamp(20px, calc(10px + 0.8333vw), 22px);
+		--type-directions-statement: clamp(48px, calc(13px + 2.9167vw), 55px);
+		--type-solutions-card-title: clamp(50px, calc(25px + 2.0833vw), 55px);
+		--type-realized-title: clamp(50px, calc(25px + 2.0833vw), 55px);
+		--type-realized-card-title: clamp(38px, calc(28px + 0.8333vw), 40px);
+		--type-experience-title: clamp(52px, calc(37px + 1.25vw), 55px);
+		--type-stat-title: clamp(23px, calc(13px + 0.8333vw), 25px);
+		--type-contact-card-title: 30px;
+		--type-contact-description: clamp(21px, calc(11px + 0.8333vw), 23px);
+		--type-contact-item: clamp(21px, calc(16px + 0.4167vw), 22px);
+		--type-footer: clamp(14px, calc(4px + 0.8333vw), 16px);
+	}
+}
+
+@media (min-width: 1440px) {
+	:root {
+		--type-hero-title: 80px;
+		--type-body: 23px;
+		--type-button: 22px;
+		--type-section-title: 65px;
+		--type-secondary-title: 33px;
+		--type-cta: 33px;
+		--type-academy-body: 25px;
+		--type-academy-card: 25px;
+		--type-program-description: 22px;
+		--type-program-meta: 22px;
+		--type-program-button: 22px;
+		--type-directions-statement: 55px;
+		--type-solutions-card-title: 55px;
+		--type-realized-title: 55px;
+		--type-realized-card-title: 40px;
+		--type-experience-title: 55px;
+		--type-stat-title: 25px;
+		--type-contact-card-title: 30px;
+		--type-contact-description: 23px;
+		--type-contact-item: 22px;
+		--type-footer: 16px;
+	}
+}
+
+.hero-title {
+	font-size: var(--type-hero-title) !important;
+}
+
+.hero-description,
+.ecosystem-description,
+.ecosystem-feature-description,
+.infrastructure-heading p,
+.infrastructure-card p,
+.solutions-description,
+.solutions-card-outline .solutions-card-description,
+.realized-project-card-description,
+.trust-intro,
+.trust-additional-copy,
+.experience-stat-card-label {
+	font-size: var(--type-body) !important;
+}
+
+.hero-button,
+.infrastructure-cta-button,
+.trust-cta {
+	font-size: var(--type-button) !important;
+}
+
+.ecosystem-title,
+.infrastructure-heading h2,
+.academy-heading h2,
+.solutions-heading h2 {
+	font-size: var(--type-section-title) !important;
+}
+
+.ecosystem-feature-title,
+.ecosystem-card-title,
+.infrastructure-card h3,
+.program-card-title,
+.directions-board-title {
+	font-size: var(--type-secondary-title) !important;
+}
+
+.academy-programs-stage .program-card-title {
+	font-size: var(--type-secondary-title) !important;
+}
+
+.infrastructure-cta-title {
+	font-size: var(--type-cta) !important;
+}
+
+.academy-description {
+	font-size: var(--type-academy-body) !important;
+}
+
+.academy-card-title {
+	font-size: var(--type-academy-card) !important;
+}
+
+.academy-programs-stage .program-card-description {
+	font-size: var(--type-program-description) !important;
+}
+
+.academy-programs-stage .program-card-meta {
+	font-size: var(--type-program-meta) !important;
+}
+
+.academy-programs-stage .program-card-cta {
+	font-size: var(--type-program-button) !important;
+}
+
+.directions-chip {
+	font-size: var(--type-body) !important;
+}
+
+.directions-statement-copy {
+	font-size: var(--type-directions-statement) !important;
+}
+
+.solutions-card-outline .solutions-card-title {
+	font-size: var(--type-solutions-card-title) !important;
+}
+
+.realized-title-frame h2 {
+	font-size: var(--type-realized-title) !important;
+}
+
+.realized-project-card-title {
+	font-size: var(--type-realized-card-title) !important;
+}
+
+.experience-content h2,
+.contact-content > h2 {
+	font-size: var(--type-experience-title) !important;
+}
+
+.experience-stat-card-title {
+	font-size: var(--type-stat-title) !important;
+}
+
+.contact-card-intro h3 {
+	font-size: var(--type-contact-card-title) !important;
+}
+
+.contact-card-description {
+	font-size: var(--type-contact-description) !important;
+}
+
+.contact-item p {
+	font-size: var(--type-contact-item) !important;
+}
+
+.footer-contact-list,
+.footer-contact-text,
+.footer-copyright {
+	font-size: var(--type-footer) !important;
+}
+
+/* Hero copy keeps its established content-safe geometry at each layout state. */
+@media (max-width: 719px) {
+	.hero-title {
+		font-size: clamp(30px, calc(20px + 2.7778vw), 40px) !important;
+	}
+}
+
+@media (min-width: 720px) and (max-width: 959px) {
+	.hero-title {
+		font-size: clamp(44px, 6.5vw, 50px) !important;
+	}
+}
+
+@media (min-width: 960px) and (max-width: 1199px) {
+	.hero-title {
+		font-size: clamp(48px, 5.3vw, 54px) !important;
+	}
+
+	.hero-description,
+	.hero-button {
+		font-size: 18px !important;
+	}
+}
+
+@media (min-width: 1200px) {
+	.hero-title {
+		font-size: clamp(64px, 5vw, 80px) !important;
+	}
+
+	main[lang='en'] .hero-title {
+		font-size: clamp(60px, 4.8vw, 80px) !important;
+	}
+
+	.hero-button {
+		line-height: 1.2 !important;
+	}
+}
+
+@media (min-width: 720px) and (max-width: 1199px) and (max-height: 820px) {
+	.hero-title {
+		font-size: clamp(30px, 5vw, 42px) !important;
+	}
+}
+
+@media (min-width: 1200px) and (max-width: 1499px) and (max-height: 820px) {
+	main[lang='en'] .hero-title {
+		font-size: clamp(50px, 3.9vw, 54px) !important;
+	}
+}
+
+@media (min-width: 1200px) and (max-width: 1499px) and (max-height: 740px) {
+	.hero-description {
+		font-size: 21px !important;
+	}
+}
+
+@media (min-width: 1500px) and (max-height: 820px) {
+	.hero-title,
+	main[lang='en'] .hero-title {
+		font-size: clamp(54px, 3.4vw, 60px) !important;
 	}
 }
