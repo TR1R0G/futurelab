@@ -113,9 +113,7 @@ export function Directions({
 				: isNarrow
 					? DIRECTIONS_NARROW_CANVAS_HEIGHT
 					: DIRECTIONS_CANVAS_HEIGHT
-			const canvasVisualTop = isNarrow
-				? 0
-				: DIRECTIONS_CANVAS_VISUAL_TOP
+			const canvasVisualTop = isNarrow ? 0 : DIRECTIONS_CANVAS_VISUAL_TOP
 			const canvasVisualHeight = isUltraNarrow
 				? DIRECTIONS_ULTRA_NARROW_CANVAS_HEIGHT
 				: isNarrow
@@ -142,10 +140,7 @@ export function Directions({
 				'--directions-chip-canvas-height',
 				`${canvasHeight}px`,
 			)
-			boardCard.style.setProperty(
-				'--directions-chip-scale',
-				scale.toFixed(5),
-			)
+			boardCard.style.setProperty('--directions-chip-scale', scale.toFixed(5))
 			boardCard.style.setProperty(
 				'--directions-responsive-board-height',
 				`${DIRECTIONS_DESKTOP_BOARD_HEIGHT * scale}px`,
@@ -217,10 +212,7 @@ export function Directions({
 						{title}
 					</h2>
 
-					<div
-						ref={chipViewportRef}
-						className='directions-chip-viewport'
-					>
+					<div ref={chipViewportRef} className='directions-chip-viewport'>
 						<div className='directions-chip-canvas'>
 							<div className='directions-chip-layer z-10'>
 								{chips.map(chip => (
@@ -243,7 +235,9 @@ export function Directions({
 				<div className='directions-statement-copy relative isolate z-10 text-[32px] font-semibold leading-[1.18] tracking-normal text-white md:text-[37px] md:leading-[1.24] min-[960px]:max-[1369px]:text-[clamp(31px,3.3vw,44px)] min-[960px]:max-[1369px]:leading-[1.42] min-[1370px]:text-[55px] min-[1370px]:leading-[78px]'>
 					<div className='directions-statement-desktop hidden min-[960px]:block'>
 						<p className='directions-statement-text'>
-							<span data-directions-inline-before>{statement.inlineBefore}</span>{' '}
+							<span data-directions-inline-before>
+								{statement.inlineBefore}
+							</span>{' '}
 							<span className='directions-inline-image relative z-20 inline-flex h-[91px] w-[52px] overflow-hidden rounded-[8px] align-middle shadow-[0_10px_34px_rgba(0,0,0,0.45)]'>
 								<AcademyInlineVideo
 									poster={statement.imageSrc}
@@ -363,8 +357,7 @@ function DirectionChip({
 			<div
 				className={`${baseClass} ${className} text-black`}
 				style={{
-					backgroundImage:
-						directionGradients[chip.gradient ?? 'primary'],
+					backgroundImage: directionGradients[chip.gradient ?? 'primary'],
 				}}
 			>
 				{chip.label}

@@ -3630,10 +3630,8 @@ h3,
 	min-width: 100%;
 	height: var(--ecosystem-card-height);
 	margin: 0;
-	padding: var(--ecosystem-track-padding-top)
-		var(--ecosystem-track-padding-end)
-		var(--ecosystem-track-padding-bottom)
-		var(--ecosystem-track-padding-start);
+	padding: var(--ecosystem-track-padding-top) var(--ecosystem-track-padding-end)
+		var(--ecosystem-track-padding-bottom) var(--ecosystem-track-padding-start);
 	gap: var(--ecosystem-track-gap);
 	box-sizing: border-box;
 	overflow: visible;
@@ -3791,8 +3789,7 @@ main[lang='en'] .ecosystem-title-lead {
 		height: var(--ecosystem-card-height) !important;
 		margin: 0 !important;
 		padding: var(--ecosystem-track-padding-top)
-			var(--ecosystem-track-padding-end)
-			var(--ecosystem-track-padding-bottom)
+			var(--ecosystem-track-padding-end) var(--ecosystem-track-padding-bottom)
 			var(--ecosystem-track-padding-start) !important;
 		gap: var(--ecosystem-track-gap) !important;
 	}
@@ -4269,11 +4266,11 @@ main[lang='en'] .ecosystem-title-lead {
 }
 
 .directions-chip-slot--gamification .directions-chip {
-	transform: rotate(18deg) !important;
+	transform: rotate(10deg) !important;
 }
 
 .directions-chip-slot--digital-tourism .directions-chip {
-	transform: rotate(2deg) !important;
+	transform: rotate(-2deg) !important;
 }
 
 .directions-statement {
@@ -4856,31 +4853,31 @@ main[lang='en'] .ecosystem-title-lead {
 
 	.directions-chip-slot--gamification {
 		left: 72.96% !important;
-		top: 12% !important;
+		top: 45% !important;
 		width: 24% !important;
 	}
 
 	.directions-chip-slot--digital-tourism {
-		left: 39.36% !important;
-		top: 25% !important;
+		left: 50% !important;
+		top: 55% !important;
 		width: 27% !important;
 	}
 
 	.directions-chip-slot--genai-animation {
 		left: 65.12% !important;
-		top: 42% !important;
+		top: 62% !important;
 		width: 27% !important;
 	}
 
 	.directions-chip-slot--ar-vr-webar {
-		left: 32.64% !important;
-		top: 58% !important;
+		left: 30% !important;
+		top: 72% !important;
 		width: 26% !important;
 	}
 
 	.directions-chip-slot--holography {
 		left: 75.2% !important;
-		top: 65% !important;
+		top: 75% !important;
 		width: 24% !important;
 	}
 
