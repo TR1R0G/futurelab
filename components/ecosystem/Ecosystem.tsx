@@ -34,6 +34,49 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 		const wrapper = wrapperRef.current
 		const track = trackRef.current
 		if (!section || !wrapper || !track) return
+		const titleElement = section.querySelector<HTMLElement>('.ecosystem-title')
+		const introCopy = section.querySelector<HTMLElement>('.ecosystem-intro-copy')
+		const introIcon = section.querySelector<HTMLElement>('.ecosystem-intro-icon')
+		if (!titleElement || !introCopy || !introIcon) return
+
+		let balanceFrame = 0
+		let refreshFrame = 0
+		let isDisposed = false
+
+		const balanceIntroInsets = () => {
+			// Read the responsive CSS baseline before applying the content-driven height.
+			section.style.removeProperty('--ecosystem-card-height')
+
+			const wrapperRect = wrapper.getBoundingClientRect()
+			const titleRect = titleElement.getBoundingClientRect()
+			const iconRect = introIcon.getBoundingClientRect()
+			const topInset = titleRect.top - wrapperRect.top
+			const contentBottom = iconRect.bottom - wrapperRect.top
+			const balancedHeight = Math.ceil(
+				Math.max(wrapperRect.height, contentBottom + topInset),
+			)
+
+			section.style.setProperty(
+				'--ecosystem-card-height',
+				`${balancedHeight}px`,
+			)
+		}
+
+		const scheduleBalance = () => {
+			if (isDisposed) return
+			window.cancelAnimationFrame(balanceFrame)
+			balanceFrame = window.requestAnimationFrame(() => {
+				balanceFrame = 0
+				balanceIntroInsets()
+				window.cancelAnimationFrame(refreshFrame)
+				refreshFrame = window.requestAnimationFrame(() => {
+					refreshFrame = 0
+					if (!isDisposed) ScrollTrigger.refresh()
+				})
+			})
+		}
+
+		balanceIntroInsets()
 
 		const getTravel = () => Math.max(0, track.scrollWidth - wrapper.clientWidth)
 		const getPinDistance = (slowdown: number) =>
@@ -43,10 +86,13 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 			) / (1 - ECOSYSTEM_SCROLL_HOLD_RATIO)
 
 		const media = gsap.matchMedia()
-		let isDisposed = false
+		const resizeObserver = new ResizeObserver(scheduleBalance)
+		resizeObserver.observe(titleElement)
+		resizeObserver.observe(introCopy)
+		window.addEventListener('resize', scheduleBalance)
 		document.fonts?.ready
 			.then(() => {
-				if (!isDisposed) ScrollTrigger.refresh()
+				if (!isDisposed) scheduleBalance()
 			})
 			.catch(() => {})
 		const ctx = gsap.context(() => {
@@ -128,8 +174,13 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 
 		return () => {
 			isDisposed = true
+			window.cancelAnimationFrame(balanceFrame)
+			window.cancelAnimationFrame(refreshFrame)
+			resizeObserver.disconnect()
+			window.removeEventListener('resize', scheduleBalance)
 			media.revert()
 			ctx.revert()
+			section.style.removeProperty('--ecosystem-card-height')
 		}
 	}, [])
 

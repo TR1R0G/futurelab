@@ -2,11 +2,12 @@ import { compileMDX } from "next-mdx-remote/rsc";
 import fs from "fs/promises";
 import path from "path";
 
-export type Language = "ru" | "en";
+export type Language = "ru" | "en" | "uz";
 
 export function normalizeLanguage(value?: string | string[] | null): Language {
   const language = Array.isArray(value) ? value[0] : value;
-  return language === "en" ? "en" : "ru";
+  if (language === "en" || language === "uz") return language;
+  return "ru";
 }
 
 async function loadFrontmatter<T>(fileName: string, language: Language): Promise<T> {
@@ -164,5 +165,14 @@ export interface RealizedProjectsContent {
 }
 
 export async function loadRealizedProjectsContent(language: Language = "ru"): Promise<RealizedProjectsContent> {
-  return loadFrontmatter<RealizedProjectsContent>("realized-projects.mdx", language);
+  // Uzbek copy for the individual project cards has not been supplied yet.
+  // Preserve their existing source while localizing the supplied section title.
+  const content = await loadFrontmatter<RealizedProjectsContent>(
+    "realized-projects.mdx",
+    language === "uz" ? "ru" : language,
+  );
+
+  return language === "uz"
+    ? { ...content, title: "Keyslar va joriy etilgan yechimlar" }
+    : content;
 }

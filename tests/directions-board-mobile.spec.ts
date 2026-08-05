@@ -7,11 +7,48 @@ const desktopRotationById = {
 	'3d-gamedev': 0,
 	'genai-animation': -5,
 	holography: -15,
-	gamification: 18,
-	'digital-tourism': 2,
+	gamification: 8,
+	'digital-tourism': -2,
+} as const
+const referenceCenterById = {
+	'ar-vr-webar': { x: 0.42, y: 0.686 },
+	'3d-gamedev': { x: 0.605, y: 0.812 },
+	'genai-animation': { x: 0.78, y: 0.551 },
+	holography: { x: 0.865, y: 0.736 },
+	gamification: { x: 0.848, y: 0.268 },
+	'digital-tourism': { x: 0.607, y: 0.405 },
 } as const
 
 type DirectionId = keyof typeof desktopRotationById
+type Point = { x: number; y: number }
+
+function polygonsOverlap(first: Point[], second: Point[]) {
+	for (const polygon of [first, second]) {
+		for (let index = 0; index < polygon.length; index += 1) {
+			const start = polygon[index]
+			const end = polygon[(index + 1) % polygon.length]
+			const axis = {
+				x: -(end.y - start.y),
+				y: end.x - start.x,
+			}
+			const firstProjection = first.map(
+				point => point.x * axis.x + point.y * axis.y,
+			)
+			const secondProjection = second.map(
+				point => point.x * axis.x + point.y * axis.y,
+			)
+
+			if (
+				Math.max(...firstProjection) <= Math.min(...secondProjection) ||
+				Math.max(...secondProjection) <= Math.min(...firstProjection)
+			) {
+				return false
+			}
+		}
+	}
+
+	return true
+}
 
 for (const width of mobileWidths) {
 	test(`directions board uses the approved mobile grid at ${width}px`, async ({
@@ -168,9 +205,13 @@ for (const width of nonMobileWidths) {
 			const board = document.querySelector<HTMLElement>(
 				'.directions-board-card',
 			)
-			if (!board) throw new Error('Directions board is missing')
+			const title = document.querySelector<HTMLElement>(
+				'.directions-board-title',
+			)
+			if (!board || !title) throw new Error('Directions board is missing')
 
 			const boardRect = board.getBoundingClientRect()
+			const titleRect = title.getBoundingClientRect()
 			const chips = Object.fromEntries(
 				ids.map(id => {
 					const chip = document.querySelector<HTMLElement>(
@@ -186,6 +227,20 @@ for (const width of nonMobileWidths) {
 						.split(',')
 						.slice(0, 2)
 						.map(Number)
+					const angle = Math.atan2(b, a)
+					const centerX = (rect.left + rect.right) / 2
+					const centerY = (rect.top + rect.bottom) / 2
+					const halfWidth = chip.offsetWidth / 2
+					const halfHeight = chip.offsetHeight / 2
+					const corners = [
+						[-halfWidth, -halfHeight],
+						[halfWidth, -halfHeight],
+						[halfWidth, halfHeight],
+						[-halfWidth, halfHeight],
+					].map(([x, y]) => ({
+						x: centerX + x * Math.cos(angle) - y * Math.sin(angle),
+						y: centerY + x * Math.sin(angle) + y * Math.cos(angle),
+					}))
 
 					return [
 						id,
@@ -194,9 +249,10 @@ for (const width of nonMobileWidths) {
 							right: rect.right,
 							top: rect.top,
 							bottom: rect.bottom,
-							centerX: (rect.left + rect.right) / 2,
-							centerY: (rect.top + rect.bottom) / 2,
+							centerX,
+							centerY,
 							rotation: (Math.atan2(b, a) * 180) / Math.PI,
+							corners,
 						},
 					]
 				}),
@@ -208,6 +264,7 @@ for (const width of nonMobileWidths) {
 				centerX: number
 				centerY: number
 				rotation: number
+				corners: Point[]
 			}>
 
 			return {
@@ -217,6 +274,12 @@ for (const width of nonMobileWidths) {
 					top: boardRect.top,
 					bottom: boardRect.bottom,
 				},
+				title: {
+					left: titleRect.left,
+					right: titleRect.right,
+					top: titleRect.top,
+					bottom: titleRect.bottom,
+				},
 				chips,
 				pageOverflow:
 					document.documentElement.scrollWidth >
@@ -225,6 +288,22 @@ for (const width of nonMobileWidths) {
 		}, Object.keys(desktopRotationById) as DirectionId[])
 
 		expect(geometry.pageOverflow).toBe(false)
+		const boardWidth = geometry.board.right - geometry.board.left
+		const boardHeight = geometry.board.bottom - geometry.board.top
+		const normalizedCenter = (id: DirectionId) => ({
+			x:
+				(geometry.chips[id].centerX - geometry.board.left) /
+				boardWidth,
+			y:
+				(geometry.chips[id].centerY - geometry.board.top) /
+				boardHeight,
+		})
+
+		expect(geometry.title.left - geometry.board.left).toBeGreaterThanOrEqual(20)
+		expect(geometry.title.top - geometry.board.top).toBeGreaterThanOrEqual(20)
+		expect(geometry.title.right).toBeLessThan(
+			geometry.chips.gamification.left,
+		)
 
 		for (const [id, expectedRotation] of Object.entries(
 			desktopRotationById,
@@ -255,11 +334,7 @@ for (const width of nonMobileWidths) {
 				const secondId = ids[second]
 				const a = geometry.chips[firstId]
 				const b = geometry.chips[secondId]
-				const overlaps =
-					a.left < b.right &&
-					a.right > b.left &&
-					a.top < b.bottom &&
-					a.bottom > b.top
+				const overlaps = polygonsOverlap(a.corners, b.corners)
 				expect(
 					overlaps,
 					`${firstId} overlaps ${secondId} at ${width}px`,
@@ -268,6 +343,45 @@ for (const width of nonMobileWidths) {
 		}
 
 		const chips = geometry.chips
+		const gamification = normalizedCenter('gamification')
+		const digitalTourism = normalizedCenter('digital-tourism')
+		const genai = normalizedCenter('genai-animation')
+		const arVr = normalizedCenter('ar-vr-webar')
+		const gameDev = normalizedCenter('3d-gamedev')
+		const holography = normalizedCenter('holography')
+
+		expect(gamification.x).toBeGreaterThan(0.78)
+		expect(gamification.y).toBeLessThan(0.4)
+		expect(digitalTourism.x).toBeGreaterThan(0.48)
+		expect(digitalTourism.x).toBeLessThan(0.76)
+		expect(digitalTourism.y).toBeLessThan(0.53)
+		expect(genai.x).toBeGreaterThan(0.68)
+		expect(genai.y).toBeGreaterThan(0.42)
+		expect(genai.y).toBeLessThan(0.72)
+		expect(arVr.x).toBeGreaterThan(0.35)
+		expect(arVr.x).toBeLessThan(0.62)
+		expect(arVr.y).toBeGreaterThan(0.55)
+		expect(gameDev.x).toBeGreaterThan(0.5)
+		expect(gameDev.y).toBeGreaterThan(0.68)
+		expect(holography.x).toBeGreaterThan(0.76)
+		expect(holography.y).toBeGreaterThan(0.58)
+
+		if (width >= 1600) {
+			for (const [id, expectedCenter] of Object.entries(
+				referenceCenterById,
+			) as [DirectionId, { x: number; y: number }][]) {
+				const center = normalizedCenter(id)
+				expect(center.x, `${id} reference x`).toBeCloseTo(
+					expectedCenter.x,
+					1,
+				)
+				expect(center.y, `${id} reference y`).toBeCloseTo(
+					expectedCenter.y,
+					1,
+				)
+			}
+		}
+
 		expect(chips['ar-vr-webar'].centerX).toBeLessThan(
 			chips['3d-gamedev'].centerX,
 		)

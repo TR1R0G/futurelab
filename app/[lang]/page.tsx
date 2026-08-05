@@ -32,7 +32,7 @@ interface HomeProps {
 }
 
 export function generateStaticParams() {
-  return [{ lang: "ru" }, { lang: "en" }];
+  return [{ lang: "ru" }, { lang: "en" }, { lang: "uz" }];
 }
 
 export const dynamicParams = false;
@@ -41,7 +41,7 @@ export async function generateMetadata({
   params,
 }: HomeProps): Promise<Metadata> {
   const { lang } = await params;
-  if (lang !== "ru" && lang !== "en") notFound();
+  if (lang !== "ru" && lang !== "en" && lang !== "uz") notFound();
 
   const language = normalizeLanguage(lang);
   const seo = seoCopy[language];
@@ -61,7 +61,8 @@ export async function generateMetadata({
           description: seo.openGraph.description,
           url: seo.canonical,
           type: "website",
-          locale: language === "ru" ? "ru_RU" : "en_US",
+          locale:
+            language === "ru" ? "ru_RU" : language === "uz" ? "uz_UZ" : "en_US",
         }
       : undefined,
   };
@@ -69,7 +70,7 @@ export async function generateMetadata({
 
 export default async function Home({ params }: HomeProps) {
   const { lang } = await params;
-  if (lang !== "ru" && lang !== "en") notFound();
+  if (lang !== "ru" && lang !== "en" && lang !== "uz") notFound();
 
   const language = normalizeLanguage(lang);
   const copy = uiCopy[language];
@@ -156,7 +157,13 @@ export default async function Home({ params }: HomeProps) {
         }}
       />
       <GlobalSoundToggle
-        enableLabel={language === "en" ? "Turn on sound" : undefined}
+        enableLabel={
+          language === "en"
+            ? "Turn on sound"
+            : language === "uz"
+              ? "Ovozni yoqish"
+              : undefined
+        }
       />
       <Hero
         title={heroContent.title}

@@ -79,6 +79,30 @@ export const seoCopy: Record<
 			},
 		},
 	},
+	uz: {
+		title:
+			'FutureLab by NazzAR — AI, AR/VR, 3D va immersiv digital-mahsulotlar uchun CreativeTech Hub',
+		description:
+			'FutureLab by NazzAR — Samarqanddagi CreativeTech xabi: muzeylar, turizm va biznes uchun AI, AR/VR, WebAR, 3D, Holography va digital-mahsulotlarni o‘rganish, amaliyotda qo‘llash va ishlab chiqish.',
+		keywords:
+			'FutureLab, NazzAR, CreativeTech, AI, AR, VR, WebAR, 3D, GameDev, Holography, raqamli turizm, muzey texnologiyalari, immersiv mahsulotlar, Samarqand, O‘zbekiston',
+		canonical: 'https://future-lab.uz/uz',
+		openGraph: {
+			title:
+				'FutureLab by NazzAR — AI, AR/VR, 3D va Holography uchun CreativeTech Hub',
+			description:
+				'Muzeylar, turizm, ta’lim va biznes uchun immersiv digital-mahsulotlarni o‘rganish, loyiha amaliyoti va ishlab chiqish.',
+		},
+		structuredData: {
+			description:
+				'Samarqandda AI, AR/VR, WebAR, 3D, Holography va immersiv digital-mahsulotlarni o‘rganish, amaliyotda qo‘llash va ishlab chiqish uchun CreativeTech xabi.',
+			address: {
+				streetAddress: 'Amir Temur ko‘chasi, 162',
+				addressLocality: 'Samarqand',
+				addressCountry: 'UZ',
+			},
+		},
+	},
 }
 
 export const uiCopy: Record<
@@ -214,6 +238,50 @@ export const uiCopy: Record<
 			address: 'Uzbekistan, Samarkand, Amir Temur Street, 162',
 			copyright:
 				'© 2026 FutureLab by NazzAR Innovation. All rights reserved.',
+		},
+	},
+	uz: {
+		projectCta: {
+			text:
+				'Vazifangiz haqida ayting — biz loyihangiz uchun mos digital-yechim formatini taklif qilamiz',
+			buttonText: 'Yechimni muhokama qilish',
+		},
+		directionsCta: {
+			text:
+				'CreativeTech yo‘lingizni ta’lim, vorkshoplar va loyiha amaliyoti orqali boshlang',
+			buttonText: 'Tanlovga ariza topshirish',
+		},
+		experience: {
+			title: 'Joriy etilgan loyihalar bilan tasdiqlangan ishonch',
+			intro: [
+				'FutureLab NazzAR Innovation Group ekotizimi ichida rivojlanadi — bu muhitda ta’lim, texnologiyalar, digital-mahsulotlar hamda CreativeTech, AI, AR/VR, 3D, Holography va smart-turizm yo‘nalishlaridagi amaliy loyihalar birlashadi.',
+				'Biz muzeylar, ta’lim tashkilotlari, turistik obyektlar va biznes bilan ishlaymiz, real makonlar, tashrif buyuruvchilar va mijozlar uchun digital-yechimlar yaratamiz.',
+			],
+			stats: [
+				{ value: '250 dan ortiq', label: 'muzeylar, ko‘rgazmalar, turistik obyektlar va biznes uchun AR/WebAR-yechimlar' },
+				{ value: '1 000 000 dan ortiq', label: 'NazzAR yechimlari bilan foydalanuvchi o‘zaro aloqalari' },
+				{ value: 'Jamoaning 8+ yillik tajribasi', label: 'xalqaro tanlovlar g‘oliblari' },
+			],
+			outro: [
+				'Bizning tajribamiz yuqori tashrif ko‘rsatkichlariga ega loyihalar, ko‘p tilli kontent, murakkab o‘zaro ta’sir ssenariylari hamda muzey, turistik va tijorat makonlarida real foydalanish asosida shakllangan.',
+				'Texnologiyalar muzeylar, turizm, ta’lim va biznes uchun allaqachon ishlayotgan NazzAR loyihalarini ko‘ring.',
+			],
+			buttonText: 'Loyihalarni ko‘rish',
+			aboutText:
+				'FutureLab by NazzAR — ta’lim, amaliyot va ishlab chiqish yagona muhitda birlashadigan CreativeTech xabi. Biz muzeylar, turizm, ta’lim va biznes uchun digital-mahsulotlar yaratamiz: WebAR-gidlar, virtual ekspertlar, 3D-kontent, interaktiv ekspozitsiyalar, AI-servislar, golografik yechimlar va web-platformalar.',
+		},
+		contact: {
+			title: 'Savollaringiz bormi?',
+			cardTitle: 'FutureLab jamoasi bilan bog‘laning',
+			cardText:
+				'FutureLab yo‘nalishlaridan sizga nima kerakligini ayting — biz mos formatni taklif qilamiz.',
+			emailTitle: 'FutureLab jamoasiga yozish',
+			telegramTitle: 'Telegram’da yozish',
+		},
+		footer: {
+			address: 'O‘zbekiston, Samarqand shahri, Amir Temur ko‘chasi, 162',
+			copyright:
+				'© 2026 FutureLab by NazzAR Innovation. Barcha huquqlar himoyalangan.',
 		},
 	},
 }

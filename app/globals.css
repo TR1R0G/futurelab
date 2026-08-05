@@ -268,6 +268,8 @@ h3,
 	min-height: 44px;
 	align-items: center;
 	justify-content: center;
+	box-sizing: border-box;
+	padding-inline: clamp(16px, 2.5vw, 24px);
 	text-align: center;
 	text-decoration: none;
 }
@@ -4925,12 +4927,27 @@ main[lang='en'] .ecosystem-title-lead {
 
 @media (min-width: 720px) {
 	.directions-board {
-		--directions-spread-board-height: 620px;
+		--directions-spread-board-height: clamp(380px, 35vw, 510px);
+		--directions-spread-chip-font: clamp(
+			16px,
+			calc(1.25vw + 6px),
+			23px
+		);
+		--directions-spread-chip-height: clamp(52px, 5vw, 72px);
+		--directions-spread-chip-padding-block: clamp(10px, 1vw, 14px);
+		--directions-spread-chip-padding-inline: clamp(18px, 2vw, 32px);
 	}
 
 	.directions-board-card {
 		height: var(--directions-spread-board-height) !important;
 		min-height: var(--directions-spread-board-height) !important;
+		padding: clamp(26px, 3vw, 52px) !important;
+	}
+
+	.directions-board-title {
+		width: 38% !important;
+		font-size: clamp(26px, 2.25vw, 36px) !important;
+		line-height: 1.08 !important;
 	}
 
 	.directions-chip-viewport {
@@ -4976,46 +4993,100 @@ main[lang='en'] .ecosystem-title-lead {
 		justify-content: center !important;
 	}
 
+	.directions-chip-slot .directions-chip {
+		width: 100% !important;
+		max-width: none !important;
+		height: auto !important;
+		min-height: var(--directions-spread-chip-height) !important;
+		padding: var(--directions-spread-chip-padding-block)
+			var(--directions-spread-chip-padding-inline) !important;
+		border-radius: 999px !important;
+		font-size: var(--directions-spread-chip-font) !important;
+		line-height: 1.1 !important;
+		white-space: normal !important;
+		text-wrap: balance;
+	}
+
 	.directions-chip-slot--gamification {
-		left: 72.96% !important;
-		top: 45% !important;
-		width: 24% !important;
+		left: 74% !important;
+		top: 14% !important;
+		width: 22% !important;
 	}
 
 	.directions-chip-slot--digital-tourism {
-		left: 50% !important;
-		top: 55% !important;
-		width: 27% !important;
-	}
-
-	.directions-chip-slot--genai-animation {
-		left: 65.12% !important;
-		top: 62% !important;
-		width: 27% !important;
-	}
-
-	.directions-chip-slot--ar-vr-webar {
-		left: 30% !important;
-		top: 72% !important;
+		left: 45% !important;
+		top: 31% !important;
 		width: 26% !important;
 	}
 
+	.directions-chip-slot--genai-animation {
+		left: 64% !important;
+		top: 48% !important;
+		width: 25% !important;
+	}
+
+	.directions-chip-slot--ar-vr-webar {
+		left: 29% !important;
+		top: 60% !important;
+		width: 22% !important;
+	}
+
 	.directions-chip-slot--holography {
-		left: 75.2% !important;
-		top: 75% !important;
-		width: 24% !important;
+		left: 78% !important;
+		top: 74% !important;
+		width: 20% !important;
 	}
 
 	.directions-chip-slot--3d-gamedev {
-		left: 46.08% !important;
-		top: 82% !important;
-		width: 28% !important;
+		left: 52% !important;
+		top: 80% !important;
+		width: 23% !important;
+	}
+
+	.directions-chip-slot--gamification .directions-chip {
+		transform: rotate(8deg) !important;
+	}
+
+	.directions-chip-slot--digital-tourism .directions-chip {
+		transform: rotate(-2deg) !important;
 	}
 }
 
 @media (min-width: 960px) {
-	.directions-board {
-		--directions-spread-board-height: 580px;
+	.directions-chip-slot--gamification {
+		left: 74% !important;
+		top: 11% !important;
+		width: 22% !important;
+	}
+
+	.directions-chip-slot--digital-tourism {
+		left: 46% !important;
+		top: 29% !important;
+		width: 26% !important;
+	}
+
+	.directions-chip-slot--genai-animation {
+		left: 65% !important;
+		top: 46% !important;
+		width: 26% !important;
+	}
+
+	.directions-chip-slot--ar-vr-webar {
+		left: 30% !important;
+		top: 56% !important;
+		width: 24% !important;
+	}
+
+	.directions-chip-slot--3d-gamedev {
+		left: 47% !important;
+		top: 77% !important;
+		width: 27% !important;
+	}
+
+	.directions-chip-slot--holography {
+		left: 75% !important;
+		top: 66% !important;
+		width: 24% !important;
 	}
 }
 
@@ -5030,6 +5101,42 @@ main[lang='en'] .ecosystem-title-lead {
 @media (min-width: 1600px) {
 	.directions-section {
 		--programs-to-directions-gap: calc(104px + clamp(72px, 12svh, 108px));
+	}
+
+	.directions-chip-slot--gamification {
+		left: 72.5% !important;
+		top: 19% !important;
+		width: 24% !important;
+	}
+
+	.directions-chip-slot--digital-tourism {
+		left: 47.7% !important;
+		top: 32.4% !important;
+		width: 26% !important;
+	}
+
+	.directions-chip-slot--genai-animation {
+		left: 65% !important;
+		top: 47.4% !important;
+		width: 26% !important;
+	}
+
+	.directions-chip-slot--ar-vr-webar {
+		left: 30% !important;
+		top: 60.9% !important;
+		width: 24% !important;
+	}
+
+	.directions-chip-slot--3d-gamedev {
+		left: 47% !important;
+		top: 74.1% !important;
+		width: 27% !important;
+	}
+
+	.directions-chip-slot--holography {
+		left: 75% !important;
+		top: 66.5% !important;
+		width: 24% !important;
 	}
 }
 
@@ -5352,17 +5459,18 @@ main[lang='en'] .ecosystem-title-lead {
 	}
 
 	.hero-header {
-		left: 0;
-		top: 40px;
-		width: 100%;
+		left: 40px;
+		top: 24px;
+		width: calc(100% - 80px);
 		transform: none;
-		flex-direction: row;
-		justify-content: center;
-		gap: 0;
+		flex-direction: column-reverse;
+		align-items: center;
+		justify-content: flex-start;
+		gap: 18px;
 	}
 
 	.hero-brand-shell {
-		width: 610px;
+		width: min(100%, 610px);
 		height: 64px;
 		justify-content: space-between;
 		padding: 0 12px 0 25px;
@@ -5387,8 +5495,7 @@ main[lang='en'] .ecosystem-title-lead {
 	}
 
 	.hero-language {
-		position: absolute;
-		right: 35px;
+		position: static;
 		width: auto;
 		gap: 18px;
 		font-size: 15px;
@@ -5628,6 +5735,22 @@ main[lang='en'] .ecosystem-title-lead {
 		line-height: 1.04;
 	}
 
+	main[lang='uz'] .hero-section {
+		--hero-actions-width: clamp(360px, 25vw, 420px);
+	}
+
+	main[lang='uz'] .hero-title {
+		font-size: clamp(52px, 3.8vw, 64px);
+		line-height: 1.05;
+	}
+
+	main[lang='uz'] .hero-button {
+		height: auto;
+		min-height: 44px;
+		padding-block: 10px;
+		white-space: normal;
+	}
+
 	.hero-title-lines-default {
 		display: block;
 	}
@@ -5682,8 +5805,8 @@ main[lang='en'] .ecosystem-title-lead {
 		top: var(--hero-light-top);
 	}
 
-	main[lang='en'] .hero-description,
-	main[lang='en'] .hero-action-panel {
+	.hero-description,
+	.hero-action-panel {
 		top: var(--hero-support-center);
 		translate: 0 -50%;
 	}
@@ -5693,14 +5816,32 @@ main[lang='en'] .ecosystem-title-lead {
 	.hero-section {
 		--hero-actions-width: clamp(310px, 22vw, 340px);
 	}
+
+	.hero-header {
+		gap: 18px;
+	}
+
+	.hero-brand-shell {
+		width: min(770px, calc(100% - 190px));
+	}
+
+	.hero-language {
+		position: static;
+		top: auto;
+		right: auto;
+		flex: 0 0 auto;
+		transform: none;
+	}
 }
 
 @media (min-width: 1200px) and (max-width: 1499px) {
-	main[lang='en'] .hero-title-lines-default {
+	main[lang='en'] .hero-title-lines-default,
+	main[lang='uz'] .hero-title-lines-default {
 		display: none;
 	}
 
-	main[lang='en'] .hero-title-lines-compact {
+	main[lang='en'] .hero-title-lines-compact,
+	main[lang='uz'] .hero-title-lines-compact {
 		display: block;
 	}
 }
@@ -5710,11 +5851,16 @@ main[lang='en'] .ecosystem-title-lead {
 		font-size: clamp(50px, 3.9vw, 54px);
 		line-height: 1.04;
 	}
+
+	main[lang='uz'] .hero-title {
+		font-size: clamp(46px, 3.5vw, 52px);
+	}
 }
 
 @media (min-width: 1500px) and (max-height: 820px) {
 	.hero-title,
-	main[lang='en'] .hero-title {
+	main[lang='en'] .hero-title,
+	main[lang='uz'] .hero-title {
 		font-size: clamp(54px, 3.4vw, 60px);
 		line-height: 1.04;
 	}
@@ -6164,6 +6310,11 @@ main[lang='en'] .ecosystem-title-lead {
 		font-size: clamp(60px, 4.8vw, 80px) !important;
 	}
 
+	main[lang='uz'] .hero-title {
+		font-size: clamp(52px, 3.8vw, 64px) !important;
+		line-height: 1.05 !important;
+	}
+
 	.hero-button {
 		line-height: 1.2 !important;
 	}
@@ -6179,6 +6330,10 @@ main[lang='en'] .ecosystem-title-lead {
 	main[lang='en'] .hero-title {
 		font-size: clamp(50px, 3.9vw, 54px) !important;
 	}
+
+	main[lang='uz'] .hero-title {
+		font-size: clamp(46px, 3.5vw, 52px) !important;
+	}
 }
 
 @media (min-width: 1200px) and (max-width: 1499px) and (max-height: 740px) {
@@ -6189,7 +6344,8 @@ main[lang='en'] .ecosystem-title-lead {
 
 @media (min-width: 1500px) and (max-height: 820px) {
 	.hero-title,
-	main[lang='en'] .hero-title {
+	main[lang='en'] .hero-title,
+	main[lang='uz'] .hero-title {
 		font-size: clamp(54px, 3.4vw, 60px) !important;
 	}
 }

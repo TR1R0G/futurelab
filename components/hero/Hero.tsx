@@ -728,6 +728,14 @@ function HeroHeader({
 				</Link>
 				<span className='hero-language-divider' aria-hidden='true' />
 				<Link
+					href='/uz'
+					className={language === 'uz' ? 'font-bold' : 'font-normal'}
+					aria-current={language === 'uz' ? 'true' : undefined}
+				>
+					O‘zbek
+				</Link>
+				<span className='hero-language-divider' aria-hidden='true' />
+				<Link
 					href='/ru'
 					className={language === 'ru' ? 'font-bold' : 'font-normal'}
 					aria-current={language === 'ru' ? 'true' : undefined}

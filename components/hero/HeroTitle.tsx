@@ -66,6 +66,21 @@ const TITLE_LINE_MAP: Record<
         "immersive digital products",
       ],
     },
+  "Immersiv digital-mahsulotlarni o‘rganish, amaliyotda qo‘llash va ishlab chiqish uchun CreativeTech xabi":
+    {
+      desktop: [
+        "Immersiv digital-mahsulotlarni",
+        "o‘rganish, amaliyotda qo‘llash",
+        "va ishlab chiqish uchun",
+        "CreativeTech xabi",
+      ],
+      compact: [
+        "Immersiv digital-mahsulotlarni",
+        "o‘rganish, amaliyotda",
+        "qo‘llash va ishlab chiqish",
+        "uchun CreativeTech xabi",
+      ],
+    },
 };
 
 export function HeroTitle({ title }: HeroTitleProps) {
@@ -121,7 +136,7 @@ export function HeroTitle({ title }: HeroTitleProps) {
             {titleLines.map((line) => (
               <span
                 key={line}
-                className="block whitespace-normal min-[1200px]:whitespace-nowrap"
+                className="block whitespace-normal"
               >
                 {line}
               </span>
@@ -139,7 +154,7 @@ export function HeroTitle({ title }: HeroTitleProps) {
         titleLines.map((line) => (
           <span
             key={line}
-            className="block whitespace-normal min-[1200px]:whitespace-nowrap"
+            className="block whitespace-normal"
           >
             {line}
           </span>
