@@ -5862,6 +5862,14 @@ main[lang='en'] .ecosystem-title-lead {
 		line-height: 1.04;
 	}
 
+	main[lang='ru'] .hero-section {
+		/* Russian title needs more usable line length than the shared title token. */
+		--hero-copy-width: min(
+			calc(100vw - var(--hero-edge) - 20px),
+			clamp(1080px, 90vw, 1500px)
+		);
+	}
+
 	main[lang='uz'] .hero-section {
 		--hero-actions-width: clamp(360px, 25vw, 420px);
 	}
@@ -6407,6 +6415,24 @@ main[lang='en'] .ecosystem-title-lead {
 .footer-copyright-protected {
 	display: inline-block;
 	white-space: nowrap;
+}
+
+@media (max-width: 719px) {
+	.footer-contact-item--address {
+		align-items: flex-start;
+		min-width: 0;
+		white-space: normal;
+	}
+
+	.footer-contact-item--address .footer-contact-icon {
+		flex: 0 0 auto;
+		margin-top: 0.25em;
+	}
+
+	.footer-contact-item--address .footer-contact-text {
+		min-width: 0;
+		overflow-wrap: anywhere;
+	}
 }
 
 /* Hero copy keeps its established content-safe geometry at each layout state. */

@@ -147,6 +147,42 @@ export function Hero({
 					let frame = 0
 					let finalStageOffset = 0
 					let finalStateApplied = false
+					const syncSupportingContentClearance = () => {
+						if (!conditions.desktop && !conditions.largeDesktop) return
+
+						const stage = section.querySelector<HTMLElement>('.hero-stage')!
+						const stageBox = stage.getBoundingClientRect()
+						const copyBox = copy.getBoundingClientRect()
+						const minimumGap = Math.max(
+							32,
+							Math.min(64, stageBox.height * 0.05),
+						)
+						const boxes = [desc, image, actions].map(element => ({
+							element,
+							box: element.getBoundingClientRect(),
+						}))
+						const highestCenter = Math.max(
+							...boxes.map(({ box }) =>
+								box.top - stageBox.top + box.height / 2,
+							),
+						)
+						const tallestSupportingElement = Math.max(
+							...boxes.map(({ box }) => box.height),
+						)
+						const sharedCenter = Math.max(
+							highestCenter,
+							copyBox.bottom -
+								stageBox.top +
+								minimumGap +
+								tallestSupportingElement / 2,
+						)
+
+						// Description and CTA use CSS translateY(-50%); the video does not.
+						desc.style.top = `${sharedCenter}px`
+						actions.style.top = `${sharedCenter}px`
+						const imageBox = boxes.find(({ element }) => element === image)!.box
+						image.style.top = `${sharedCenter - imageBox.height / 2}px`
+					}
 
 					const measure = () => {
 						const stage = section.querySelector<HTMLElement>('.hero-stage')!
@@ -286,6 +322,7 @@ export function Hero({
 					}
 
 					clearAnimationStyles()
+					syncSupportingContentClearance()
 					let geometry = measure()
 
 					const positionElement = (
@@ -326,6 +363,7 @@ export function Hero({
 						)
 						if (progress === 0) {
 							clearAnimationStyles()
+							syncSupportingContentClearance()
 							return
 						}
 						const columnTransitionAt = 0.25
@@ -540,6 +578,7 @@ export function Hero({
 						if (frame) window.cancelAnimationFrame(frame)
 						frame = 0
 						clearAnimationStyles()
+						syncSupportingContentClearance()
 						geometry = measure()
 						const triggerEnd = geometry.sectionTop + geometry.scrollDistance
 						finalStateApplied = window.scrollY >= triggerEnd

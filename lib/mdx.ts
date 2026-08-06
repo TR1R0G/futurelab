@@ -5,9 +5,9 @@ import path from "path";
 export type Language = "ru" | "en" | "uz";
 
 export function normalizeLanguage(value?: string | string[] | null): Language {
-  const language = Array.isArray(value) ? value[0] : value;
-  if (language === "en" || language === "uz") return language;
-  return "ru";
+	const language = Array.isArray(value) ? value[0] : value;
+	if (language === "en" || language === "ru") return language;
+	return "uz";
 }
 
 async function loadFrontmatter<T>(fileName: string, language: Language): Promise<T> {
@@ -46,11 +46,11 @@ export interface EcosystemContent {
   cards: EcosystemCard[];
 }
 
-export async function loadHeroContent(language: Language = "ru"): Promise<HeroContent> {
+export async function loadHeroContent(language: Language = "uz"): Promise<HeroContent> {
   return loadFrontmatter<HeroContent>("hero.mdx", language);
 }
 
-export async function loadEcosystemContent(language: Language = "ru"): Promise<EcosystemContent> {
+export async function loadEcosystemContent(language: Language = "uz"): Promise<EcosystemContent> {
   return loadFrontmatter<EcosystemContent>("ecosystem.mdx", language);
 }
 
@@ -69,7 +69,7 @@ export interface InfrastructureContent {
   cards: InfrastructureCard[];
 }
 
-export async function loadInfrastructureContent(language: Language = "ru"): Promise<InfrastructureContent> {
+export async function loadInfrastructureContent(language: Language = "uz"): Promise<InfrastructureContent> {
   return loadFrontmatter<InfrastructureContent>("infrastructure.mdx", language);
 }
 
@@ -83,7 +83,7 @@ export interface AcademyContent {
   cards: AcademyCard[];
 }
 
-export async function loadAcademyContent(language: Language = "ru"): Promise<AcademyContent> {
+export async function loadAcademyContent(language: Language = "uz"): Promise<AcademyContent> {
   return loadFrontmatter<AcademyContent>("academy.mdx", language);
 }
 
@@ -102,7 +102,7 @@ export interface ProgramsContent {
   cards: ProgramCard[];
 }
 
-export async function loadProgramsContent(language: Language = "ru"): Promise<ProgramsContent> {
+export async function loadProgramsContent(language: Language = "uz"): Promise<ProgramsContent> {
   return loadFrontmatter<ProgramsContent>("programs.mdx", language);
 }
 
@@ -128,7 +128,7 @@ export interface DirectionsContent {
   };
 }
 
-export async function loadDirectionsContent(language: Language = "ru"): Promise<DirectionsContent> {
+export async function loadDirectionsContent(language: Language = "uz"): Promise<DirectionsContent> {
   return loadFrontmatter<DirectionsContent>("directions.mdx", language);
 }
 
@@ -147,7 +147,7 @@ export interface SolutionsContent {
   }[];
 }
 
-export async function loadSolutionsContent(language: Language = "ru"): Promise<SolutionsContent> {
+export async function loadSolutionsContent(language: Language = "uz"): Promise<SolutionsContent> {
   return loadFrontmatter<SolutionsContent>("solutions.mdx", language);
 }
 
@@ -164,7 +164,7 @@ export interface RealizedProjectsContent {
   projects: RealizedProject[];
 }
 
-export async function loadRealizedProjectsContent(language: Language = "ru"): Promise<RealizedProjectsContent> {
+export async function loadRealizedProjectsContent(language: Language = "uz"): Promise<RealizedProjectsContent> {
   // Uzbek copy for the individual project cards has not been supplied yet.
   // Preserve their existing source while localizing the supplied section title.
   const content = await loadFrontmatter<RealizedProjectsContent>(
