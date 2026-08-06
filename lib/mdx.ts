@@ -165,14 +165,5 @@ export interface RealizedProjectsContent {
 }
 
 export async function loadRealizedProjectsContent(language: Language = "uz"): Promise<RealizedProjectsContent> {
-  // Uzbek copy for the individual project cards has not been supplied yet.
-  // Preserve their existing source while localizing the supplied section title.
-  const content = await loadFrontmatter<RealizedProjectsContent>(
-    "realized-projects.mdx",
-    language === "uz" ? "ru" : language,
-  );
-
-  return language === "uz"
-    ? { ...content, title: "Keyslar va joriy etilgan yechimlar" }
-    : content;
+  return loadFrontmatter<RealizedProjectsContent>("realized-projects.mdx", language);
 }

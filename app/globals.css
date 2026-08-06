@@ -6001,6 +6001,18 @@ main[lang='en'] .ecosystem-title-lead {
 	}
 }
 
+@media (min-width: 1200px) and (max-height: 960px) {
+	.hero-section {
+		--hero-title-top: clamp(205px, calc(100svh - 695px), 225px);
+	}
+
+	.hero-image {
+		width: 148px;
+		height: auto;
+		aspect-ratio: 530 / 928;
+	}
+}
+
 @media (min-width: 1400px) {
 	.hero-section {
 		--hero-edge: clamp(82px, calc(350px - 16.75vw), 115.5px);

@@ -29,6 +29,7 @@ test.describe('Russian hero title clearance', () => {
 				}
 
 				return {
+					viewportHeight: window.innerHeight,
 					title: rect('.hero-title'),
 					description: rect('.hero-description'),
 					actions: rect('.hero-action-panel'),
@@ -39,6 +40,11 @@ test.describe('Russian hero title clearance', () => {
 			expect(layout.title.bottom).toBeLessThanOrEqual(layout.description.top)
 			expect(layout.title.bottom).toBeLessThanOrEqual(layout.actions.top)
 			expect(layout.title.bottom).toBeLessThanOrEqual(layout.image.top)
+			expect(layout.description.bottom).toBeLessThanOrEqual(
+				layout.viewportHeight,
+			)
+			expect(layout.actions.bottom).toBeLessThanOrEqual(layout.viewportHeight)
+			expect(layout.image.bottom).toBeLessThanOrEqual(layout.viewportHeight)
 		})
 	}
 

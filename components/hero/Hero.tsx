@@ -153,9 +153,13 @@ export function Hero({
 						const stage = section.querySelector<HTMLElement>('.hero-stage')!
 						const stageBox = stage.getBoundingClientRect()
 						const copyBox = copy.getBoundingClientRect()
+						const visibleStageHeight = Math.min(
+							stageBox.height,
+							window.innerHeight,
+						)
 						const minimumGap = Math.max(
-							32,
-							Math.min(64, stageBox.height * 0.05),
+							24,
+							Math.min(40, visibleStageHeight * 0.04),
 						)
 						const boxes = [desc, image, actions].map(element => ({
 							element,
@@ -169,11 +173,21 @@ export function Hero({
 						const tallestSupportingElement = Math.max(
 							...boxes.map(({ box }) => box.height),
 						)
-						const sharedCenter = Math.max(
+						const requestedCenter = Math.max(
 							highestCenter,
 							copyBox.bottom -
 								stageBox.top +
 								minimumGap +
+								tallestSupportingElement / 2,
+						)
+						const visibleBottomPadding = Math.max(
+							16,
+							Math.min(32, visibleStageHeight * 0.03),
+						)
+						const sharedCenter = Math.min(
+							requestedCenter,
+							visibleStageHeight -
+								visibleBottomPadding -
 								tallestSupportingElement / 2,
 						)
 
