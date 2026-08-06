@@ -16,6 +16,8 @@ interface ExpandedImageScreenProps {
 	fadingElementSelector?: string
 	sourceSelector?: string
 	showGradient?: boolean
+	verticalAlignment?: 'bottom' | 'center'
+	mobileContainMedia?: boolean
 }
 
 export function ExpandedImageScreen({
@@ -27,6 +29,8 @@ export function ExpandedImageScreen({
 	fadingElementSelector,
 	sourceSelector,
 	showGradient = true,
+	verticalAlignment = 'bottom',
+	mobileContainMedia = false,
 }: ExpandedImageScreenProps) {
 	const sectionRef = useRef<HTMLElement>(null)
 	const stageRef = useRef<HTMLDivElement>(null)
@@ -72,11 +76,18 @@ export function ExpandedImageScreen({
 				? Array.from(document.querySelectorAll<HTMLElement>(sourceSelector))
 				: []
 
+		const sourceElements = getSourceElements()
+		let sourceOpacity: 0 | 1 | null = null
 		const getVisibleSourceElement = () =>
-			getSourceElements().find(source => {
+			sourceElements.find(source => {
 				const rect = source.getBoundingClientRect()
 				return rect.width > 0 && rect.height > 0
 			}) ?? null
+		const setSourceOpacity = (opacity: 0 | 1) => {
+			if (sourceOpacity === opacity) return
+			sourceOpacity = opacity
+			gsap.set(sourceElements, { opacity })
+		}
 
 		const toStageRect = (rect: {
 			left: number
@@ -165,6 +176,11 @@ export function ExpandedImageScreen({
 		}
 
 		const readTargetRect = () => {
+			const targetTop = (height: number) =>
+				verticalAlignment === 'center'
+					? Math.max(0, Math.round((window.innerHeight - height) / 2))
+					: Math.max(0, Math.round(window.innerHeight - height))
+
 			if (window.innerWidth < 720) {
 				const horizontalInset = 20
 				const verticalInset = 20
@@ -181,7 +197,7 @@ export function ExpandedImageScreen({
 
 				return {
 					left: Math.round((window.innerWidth - width) / 2),
-					top: Math.max(0, Math.round(window.innerHeight - height)),
+					top: targetTop(height),
 					width: Math.round(width),
 					height: Math.round(height),
 				}
@@ -199,7 +215,7 @@ export function ExpandedImageScreen({
 
 			return {
 				left: Math.round((window.innerWidth - width) / 2),
-				top: Math.max(0, Math.round(window.innerHeight - height)),
+				top: targetTop(height),
 				width,
 				height,
 			}
@@ -247,7 +263,7 @@ export function ExpandedImageScreen({
 				startRect = readSourceRect()
 				hasStartRect = true
 				lastFrameTop = startRect.top
-				gsap.set(getSourceElements(), { opacity: 0 })
+				setSourceOpacity(0)
 				gsap.set(frame, {
 					...startRect,
 					autoAlpha: 1,
@@ -260,14 +276,16 @@ export function ExpandedImageScreen({
 				frameId = 0
 
 				const sectionRect = section.getBoundingClientRect()
-				const sourceElement = getVisibleSourceElement()
-				const sourceRect = sourceElement?.getBoundingClientRect()
+				const sectionIsVisible =
+					sectionRect.bottom > 0 && sectionRect.top < window.innerHeight
+				const sourceRect = sectionIsVisible
+					? null
+					: getVisibleSourceElement()?.getBoundingClientRect()
 				const isAnimationVisible =
-					(sectionRect.bottom > 0 && sectionRect.top < window.innerHeight) ||
-					(sourceRect ? isRectInViewport(sourceRect) : false)
+					sectionIsVisible || (sourceRect ? isRectInViewport(sourceRect) : false)
 
 				if (!isAnimationVisible) {
-					gsap.set(getSourceElements(), { opacity: 1 })
+					setSourceOpacity(1)
 					gsap.set(frame, { autoAlpha: 0 })
 					hasStartRect = false
 					lastFrameTop = null
@@ -280,7 +298,7 @@ export function ExpandedImageScreen({
 				const scrollDelta = window.scrollY - sectionTop
 
 				if (scrollDelta < 0) {
-					gsap.set(getSourceElements(), { opacity: 1 })
+					setSourceOpacity(1)
 					gsap.set(frame, { autoAlpha: 0 })
 					hasStartRect = false
 					lastFrameTop = null
@@ -341,7 +359,7 @@ export function ExpandedImageScreen({
 					top: mix(lockedTop, rect.top, topLockProgress),
 				}
 
-				gsap.set(getSourceElements(), { opacity: 0 })
+				setSourceOpacity(0)
 				gsap.set(frame, {
 					...nextRect,
 					autoAlpha: 1,
@@ -455,7 +473,12 @@ export function ExpandedImageScreen({
 		return () => {
 			ctx.revert()
 		}
-	}, [fadingElementSelector, movingTextSelector, sourceSelector])
+	}, [
+		fadingElementSelector,
+		movingTextSelector,
+		sourceSelector,
+		verticalAlignment,
+	])
 
 	return (
 		<section
@@ -483,12 +506,15 @@ export function ExpandedImageScreen({
 						<LazyVideo
 							ref={videoRef}
 							key={videoSrc}
-							className='h-full w-full object-cover'
+							className={`h-full w-full object-cover ${
+								mobileContainMedia ? 'max-[719px]:object-contain' : ''
+							}`}
 							aria-label={alt}
 							autoPlay
 							loop
 							playsInline
 							preload='metadata'
+							loadMargin='1400px 0px'
 							poster={src}
 							disablePictureInPicture
 							sourceSrc={videoSrc}

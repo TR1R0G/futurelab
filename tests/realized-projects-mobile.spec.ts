@@ -22,6 +22,62 @@ async function waitForCarousel(page: Page) {
 	)
 }
 
+test('desktop realized-projects scroll keeps adjacent cards visible at both sides', async ({
+	page,
+}) => {
+	await page.setViewportSize({ width: 1440, height: 900 })
+	await page.goto('/ru', { waitUntil: 'domcontentloaded' })
+	await waitForCarousel(page)
+	const previousArrow = page.getByRole('button', {
+		name: 'Предыдущий проект',
+	})
+	const nextArrow = page.getByRole('button', { name: 'Следующий проект' })
+	await expect(previousArrow).toBeVisible()
+	await expect(nextArrow).toBeVisible()
+	await expect(nextArrow).toBeEnabled()
+
+	const visibleCards = await page.evaluate(() => {
+		const viewport = document.querySelector<HTMLElement>(
+			'.realized-projects-viewport',
+		)
+		const track = document.querySelector<HTMLElement>(
+			'.realized-projects-track',
+		)
+		const cards = [
+			...document.querySelectorAll<HTMLElement>('.realized-project-card'),
+		]
+		if (!viewport || !track || cards.length < 4) {
+			throw new Error('Realized project cards are missing')
+		}
+
+		const viewportRect = viewport.getBoundingClientRect()
+		const travel = Math.max(0, track.scrollWidth - viewport.clientWidth)
+		const middleCard = cards[1]
+		const middleCardOffset =
+			middleCard.offsetLeft + middleCard.offsetWidth / 2 - viewport.clientWidth / 2
+		track.style.transform = `translate3d(${-middleCardOffset}px, 0, 0)`
+
+		const rects = cards.map(card => card.getBoundingClientRect())
+		track.style.removeProperty('transform')
+
+		return {
+			travel,
+			leftPeek: rects[0].right > viewportRect.left,
+			rightPeek: rects[2].left < viewportRect.right,
+			middleCardVisible:
+				rects[1].left >= viewportRect.left &&
+				rects[1].right <= viewportRect.right,
+			viewport: { left: viewportRect.left, right: viewportRect.right },
+			cards: rects.map(rect => ({ left: rect.left, right: rect.right })),
+		}
+	})
+
+	expect(visibleCards.travel, JSON.stringify(visibleCards)).toBeGreaterThan(0)
+	expect(visibleCards.leftPeek, JSON.stringify(visibleCards)).toBe(true)
+	expect(visibleCards.rightPeek, JSON.stringify(visibleCards)).toBe(true)
+	expect(visibleCards.middleCardVisible, JSON.stringify(visibleCards)).toBe(true)
+})
+
 for (const viewport of mobileViewports) {
 	test(`realized projects exposes the next card at ${viewport.width}x${viewport.height}`, async ({
 		page,
@@ -130,6 +186,47 @@ test('mobile arrows and pagination follow clicks and manual scrolling', async ({
 	await previous.click()
 	await expect(dots.nth(0)).toHaveAttribute('aria-current', 'true')
 	await expect(previous).toBeDisabled()
+})
+
+test('mobile cards keep vertical page scrolling and compact content spacing', async ({
+	page,
+}) => {
+	await page.setViewportSize({ width: 390, height: 844 })
+	await page.goto('/ru', { waitUntil: 'domcontentloaded' })
+	await waitForCarousel(page)
+
+	const layout = await page.evaluate(() => {
+		const viewportElement = document.querySelector<HTMLElement>(
+			'.realized-projects-viewport',
+		)
+		const card = document.querySelector<HTMLElement>('.realized-project-card')
+		const media = document.querySelector<HTMLElement>('.realized-project-media')
+		const caseButton = document.querySelector<HTMLElement>(
+			'.realized-project-case-button',
+		)
+
+		if (!viewportElement || !card || !media) {
+			throw new Error('Realized project card geometry is missing')
+		}
+
+		return {
+			touchAction: getComputedStyle(viewportElement).touchAction,
+			cardHeight: card.getBoundingClientRect().height,
+			mediaHeight: media.getBoundingClientRect().height,
+			gradientHeight: Number.parseFloat(
+				getComputedStyle(card, '::before').height,
+			),
+			caseButtonDisplay: caseButton
+				? getComputedStyle(caseButton).display
+				: null,
+		}
+	})
+
+	expect(layout.touchAction).toBe('pan-x pan-y')
+	expect(layout.mediaHeight).toBeLessThanOrEqual(190)
+	expect(layout.cardHeight).toBeLessThan(1060)
+	expect(layout.gradientHeight).toBe(12)
+	expect(layout.caseButtonDisplay).toBe('none')
 })
 
 test('mobile navigation exposes localized Russian labels', async ({ page }) => {

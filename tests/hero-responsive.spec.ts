@@ -1469,6 +1469,36 @@ test('ru Hero keeps short-flow actions readable until they pass through normal f
 })
 
 test.describe('Hero narrow mobile composition', () => {
+	test('mobile Hero keeps generous vertical separation between primary blocks', async ({
+		page,
+	}) => {
+		await page.setViewportSize({ width: 390, height: 844 })
+		await page.goto('/ru')
+		await waitForHero(page)
+
+		const gaps = await page.evaluate(() => {
+			const rect = (selector: string) =>
+				document.querySelector<HTMLElement>(selector)!.getBoundingClientRect()
+			const header = rect('.hero-header')
+			const title = rect('.hero-title')
+			const description = rect('.hero-description')
+			const actions = rect('.hero-action-panel')
+			const image = rect('.hero-image')
+
+			return {
+				headerToTitle: title.top - header.bottom,
+				titleToDescription: description.top - title.bottom,
+				descriptionToActions: actions.top - description.bottom,
+				actionsToImage: image.top - actions.bottom,
+			}
+		})
+
+		expect(gaps.headerToTitle).toBeGreaterThanOrEqual(72)
+		expect(gaps.titleToDescription).toBeGreaterThanOrEqual(44)
+		expect(gaps.descriptionToActions).toBeGreaterThanOrEqual(30)
+		expect(gaps.actionsToImage).toBeGreaterThanOrEqual(30)
+	})
+
   test('en short mobile keeps description, actions, and video in reading order', async ({
     page,
   }) => {

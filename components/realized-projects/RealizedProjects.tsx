@@ -26,6 +26,10 @@ export function RealizedProjects({ id, title, projects }: RealizedProjectsProps)
   const wrapperRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<Array<HTMLElement | null>>([]);
+  const desktopScrollTriggerRef = useRef<{
+    start: number;
+    end: number;
+  } | null>(null);
   const prefersReducedMotionRef = useRef(false);
   const [activeProject, setActiveProject] = useState<RealizedProject | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -42,16 +46,47 @@ export function RealizedProjects({ id, title, projects }: RealizedProjectsProps)
 
     const media = gsap.matchMedia();
     const ctx = gsap.context(() => {
+      const updateDesktopNavigation = () => {
+        if (window.innerWidth < 1024) return;
+
+        const cards = cardRefs.current.filter(
+          (card): card is HTMLElement => Boolean(card)
+        );
+        if (!cards.length) return;
+
+        const viewportRect = wrapper.getBoundingClientRect();
+        const viewportCenter = viewportRect.left + viewportRect.width / 2;
+        let closestIndex = 0;
+        let closestDistance = Number.POSITIVE_INFINITY;
+
+        cards.forEach((card, index) => {
+          const rect = card.getBoundingClientRect();
+          const distance = Math.abs(rect.left + rect.width / 2 - viewportCenter);
+          if (distance < closestDistance) {
+            closestIndex = index;
+            closestDistance = distance;
+          }
+        });
+
+        setActiveIndex(closestIndex);
+        setCanScrollPrevious(closestIndex > 0);
+        setCanScrollNext(closestIndex < cards.length - 1);
+      };
+
       const setViewportFit = () => {
         const title = section.querySelector<HTMLElement>(".realized-title-frame h2");
         const titleHeight = title?.getBoundingClientRect().height ?? 62;
         const topPadding = Math.min(120, Math.max(56, window.innerHeight * 0.09));
         const cardGap = Math.min(70, Math.max(36, window.innerHeight * 0.055));
         const bottomPadding = Math.min(96, Math.max(44, window.innerHeight * 0.05));
-        const horizontalPadding = window.innerWidth >= 768 ? 64 : 40;
         const availableCardHeight =
           window.innerHeight - topPadding - titleHeight - cardGap - bottomPadding;
-        const widthScale = (window.innerWidth - horizontalPadding) / 698;
+        const desktopCardsInView = window.innerWidth >= 1200 ? 3 : 2;
+        const trackGap = 40;
+        const availableCardWidth =
+          (wrapper.clientWidth - trackGap * (desktopCardsInView - 1)) /
+          desktopCardsInView;
+        const widthScale = availableCardWidth / 698;
         const heightScale = availableCardHeight / 874;
         const scale = Math.min(
           1,
@@ -62,11 +97,16 @@ export function RealizedProjects({ id, title, projects }: RealizedProjectsProps)
         const sectionHeight = topPadding + titleHeight + cardGap + cardHeight + bottomPadding;
 
         section.style.setProperty("--realized-top-padding", `${topPadding}px`);
+        section.style.setProperty("--realized-title-height", `${titleHeight}px`);
         section.style.setProperty("--realized-card-gap", `${cardGap}px`);
         section.style.setProperty("--realized-bottom-padding", `${bottomPadding}px`);
         section.style.setProperty("--realized-card-scale", String(scale));
         section.style.setProperty("--realized-card-width", `${cardWidth}px`);
         section.style.setProperty("--realized-card-height", `${cardHeight}px`);
+        section.style.setProperty(
+          "--realized-card-half-height",
+          `${cardHeight / 2}px`
+        );
         section.style.setProperty(
           "--realized-section-height",
           `${Math.max(window.innerHeight, sectionHeight)}px`
@@ -74,14 +114,7 @@ export function RealizedProjects({ id, title, projects }: RealizedProjectsProps)
       };
 
       const getScrollDistance = () => {
-        const wrapperRect = wrapper.getBoundingClientRect();
-        const trackRect = track.getBoundingClientRect();
-        const sideSpace = trackRect.left - wrapperRect.left;
-
-        return Math.max(
-          0,
-          track.scrollWidth - wrapper.clientWidth + sideSpace * 2
-        );
+        return Math.max(0, track.scrollWidth - wrapper.clientWidth);
       };
 
       setViewportFit();
@@ -105,10 +138,15 @@ export function RealizedProjects({ id, title, projects }: RealizedProjectsProps)
             scrub: 1,
             anticipatePin: 1,
             invalidateOnRefresh: true,
+            onUpdate: updateDesktopNavigation,
+            onRefresh: updateDesktopNavigation,
           },
         });
+        desktopScrollTriggerRef.current = tween.scrollTrigger ?? null;
+        updateDesktopNavigation();
 
         return () => {
+          desktopScrollTriggerRef.current = null;
           tween.kill();
         };
       });
@@ -254,6 +292,31 @@ export function RealizedProjects({ id, title, projects }: RealizedProjectsProps)
     const card = cardRefs.current[index];
     if (!container || !card) return;
 
+    const desktopTrigger = desktopScrollTriggerRef.current;
+    if (window.innerWidth >= 1024 && desktopTrigger) {
+      const maxTranslation = Math.max(
+        0,
+        (trackRef.current?.scrollWidth ?? 0) - container.clientWidth
+      );
+      const targetTranslation = Math.min(
+        Math.max(
+          card.offsetLeft + card.offsetWidth / 2 - container.clientWidth / 2,
+          0
+        ),
+        maxTranslation
+      );
+      const progress = maxTranslation ? targetTranslation / maxTranslation : 0;
+      const top =
+        desktopTrigger.start +
+        (desktopTrigger.end - desktopTrigger.start) * progress;
+
+      window.scrollTo({
+        top,
+        behavior: prefersReducedMotionRef.current ? "auto" : "smooth",
+      });
+      return;
+    }
+
     const containerRect = container.getBoundingClientRect();
     const cardRect = card.getBoundingClientRect();
     const scrollPaddingStart =
@@ -274,7 +337,7 @@ export function RealizedProjects({ id, title, projects }: RealizedProjectsProps)
     <section
       ref={sectionRef}
       id={id}
-      className="realized-projects-section overflow-hidden bg-black pb-[var(--realized-bottom-padding,112px)] pt-[var(--realized-top-padding,80px)]"
+      className="realized-projects-section relative overflow-hidden bg-black pb-[var(--realized-bottom-padding,112px)] pt-[var(--realized-top-padding,80px)]"
     >
       <div className="realized-title-frame section-shell">
         <h2 className="font-heading text-[42px] font-bold leading-tight tracking-normal text-white md:text-[55px] md:leading-[62px]">

@@ -449,15 +449,15 @@ export function Solutions({
 			}
 
 			media.style.position = 'fixed'
-			media.style.left = `${currentRect.left}px`
-			media.style.top = `${currentRect.top}px`
-			media.style.width = `${currentRect.width}px`
-			media.style.height = `${currentRect.height}px`
+			media.style.left = '0'
+			media.style.top = '0'
+			media.style.width = `${target.width}px`
+			media.style.height = `${target.height}px`
 			media.style.borderRadius = '35px'
 			media.style.zIndex = `${zIndex}`
-			media.style.transform = 'none'
-			media.style.transformOrigin = 'center center'
-			media.style.willChange = 'left, top, width, height, border-radius'
+			media.style.transform = `translate3d(${Math.round(currentRect.left)}px, ${Math.round(currentRect.top)}px, 0) scale(${currentRect.width / Math.max(1, target.width)}, ${currentRect.height / Math.max(1, target.height)})`
+			media.style.transformOrigin = 'top left'
+			media.style.willChange = 'transform, border-radius'
 		}
 
 		const update = () => {
@@ -1089,7 +1089,8 @@ function TransitionMedia({
 					autoPlay
 					loop
 					playsInline
-					preload='metadata'
+					preload='auto'
+					loadMargin='1400px 0px'
 					poster={image}
 					disablePictureInPicture
 					sourceSrc={videoSrc}

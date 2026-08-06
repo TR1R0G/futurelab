@@ -120,7 +120,7 @@ for (const width of mobileWidths) {
 			}
 		})
 
-		expect(layout.columnCount).toBe(2)
+		expect(layout.columnCount).toBe(1)
 		expect(layout.chipCount).toBe(6)
 		expect(layout.pageOverflow).toBe(false)
 
@@ -154,6 +154,24 @@ for (const width of mobileWidths) {
 		expect(layout.gradientBottom).toBeGreaterThan(layout.board.bottom)
 	})
 }
+
+test('mobile Directions background light stays soft and subdued', async ({ page }) => {
+	await page.setViewportSize({ width: 390, height: 844 })
+	await page.goto('/ru', { waitUntil: 'domcontentloaded' })
+
+	const light = await page.evaluate(() => {
+		const element = document.querySelector<HTMLElement>(
+			'.directions-statement > .directions-statement-light',
+		)
+		if (!element) throw new Error('Directions background light is missing')
+
+		const style = getComputedStyle(element)
+		return { filter: style.filter, opacity: Number(style.opacity) }
+	})
+
+	expect(light.filter).toContain('blur(250px)')
+	expect(light.opacity).toBeCloseTo(0.58, 2)
+})
 
 test('720px retains the existing non-mobile directions composition', async ({
 	page,
@@ -406,5 +424,62 @@ for (const width of nonMobileWidths) {
 		expect(chips.holography.centerY).toBeLessThan(
 			chips['3d-gamedev'].centerY,
 		)
+	})
+}
+
+for (const width of [390, 1440]) {
+	test(`directions expanded video is centered in the viewport at ${width}px`, async ({
+		page,
+	}) => {
+		const height = 900
+		await page.setViewportSize({ width, height })
+		await page.goto('/ru', { waitUntil: 'domcontentloaded' })
+		await page.evaluate(() => document.fonts.ready)
+
+		const scrollToExpansionEnd = () =>
+			page.evaluate(() => {
+				const section = document.querySelector<HTMLElement>(
+					'.directions-section .expanded-image-section',
+				)
+				if (!section)
+					throw new Error('Directions expanded media section is missing')
+
+				const top = section.getBoundingClientRect().top + window.scrollY
+				window.scrollTo({
+					top: top + section.offsetHeight - window.innerHeight - 1,
+					behavior: 'instant',
+				})
+			})
+
+		// Pin spacers settle after the first scroll on wider layouts.
+		await scrollToExpansionEnd()
+		await page.waitForTimeout(120)
+		await scrollToExpansionEnd()
+		await page.waitForTimeout(200)
+
+		const mediaCenter = await page.evaluate(() => {
+			const section = document.querySelector<HTMLElement>(
+				'.directions-section .expanded-image-section',
+			)
+			const video = document.querySelector<HTMLVideoElement>(
+				'.directions-section .expanded-image-section video',
+			)
+			const frame = video?.parentElement
+			if (!section || !frame)
+				throw new Error('Directions expanded video frame is missing')
+
+			const rect = frame.getBoundingClientRect()
+			return {
+				x: rect.left + rect.width / 2,
+				y: rect.top + rect.height / 2,
+				objectFit: getComputedStyle(video).objectFit,
+			}
+		})
+
+		expect(mediaCenter.x, JSON.stringify(mediaCenter)).toBeCloseTo(width / 2, 0)
+		expect(mediaCenter.y, JSON.stringify(mediaCenter)).toBeCloseTo(height / 2, 0)
+		if (width < 720) {
+			expect(mediaCenter.objectFit).toBe('contain')
+		}
 	})
 }

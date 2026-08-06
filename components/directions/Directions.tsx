@@ -230,7 +230,7 @@ export function Directions({
 			</div>
 
 			<div className='directions-statement section-shell sticky top-[12svh] isolate mt-12 text-center md:mt-16 min-[960px]:mt-44 lg:mt-52'>
-				<DirectionsLight className='left-1/2 top-[calc(38svh_-_377.84px)] z-0 block max-[719px]:left-[calc(50%_-_32px)] max-[719px]:top-[33px] max-[719px]:[--directions-light-blur:75px] max-[719px]:[--directions-light-scale:.447] min-[720px]:max-[959px]:[--directions-light-blur:100px] min-[720px]:max-[959px]:[--directions-light-scale:.72] min-[960px]:[--directions-light-scale:1]' />
+				<DirectionsLight className='left-1/2 top-[calc(38svh_-_377.84px)] z-0 block max-[719px]:left-[calc(50%_-_32px)] max-[719px]:top-[33px] max-[719px]:opacity-[.58] max-[719px]:[--directions-light-blur:250px] max-[719px]:[--directions-light-scale:.447] min-[720px]:max-[959px]:[--directions-light-blur:100px] min-[720px]:max-[959px]:[--directions-light-scale:.72] min-[960px]:[--directions-light-scale:1]' />
 
 				<div className='directions-statement-copy relative isolate z-10 text-[32px] font-semibold leading-[1.18] tracking-normal text-white md:text-[37px] md:leading-[1.24] min-[960px]:max-[1369px]:text-[clamp(31px,3.3vw,44px)] min-[960px]:max-[1369px]:leading-[1.42] min-[1370px]:text-[55px] min-[1370px]:leading-[78px]'>
 					<div className='directions-statement-desktop hidden min-[960px]:block'>
@@ -273,6 +273,8 @@ export function Directions({
 				fadingElementSelector='.directions-statement > .directions-statement-light'
 				sourceSelector='.directions-inline-image'
 				showGradient={false}
+				verticalAlignment='center'
+				mobileContainMedia
 			/>
 
 			<div className='directions-post-image relative z-[200] isolate flex min-h-[40svh] flex-col justify-start overflow-hidden'>

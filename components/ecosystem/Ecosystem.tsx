@@ -4,7 +4,7 @@ import { gsap, registerGsapPlugins, ScrollTrigger } from '@/lib/gsap'
 import type { EcosystemContent } from '@/lib/mdx'
 import Image from 'next/image'
 import type { CSSProperties } from 'react'
-import { useEffect, useRef } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 
 const ECOSYSTEM_BLOCK_HEIGHT = 717
 const ECOSYSTEM_SCROLL_SLOWDOWN = 2.4
@@ -27,7 +27,7 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 	const titleTail =
 		titleSeparatorIndex >= 0 ? title.slice(titleSeparatorIndex + 1) : ''
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		registerGsapPlugins()
 
 		const section = sectionRef.current
@@ -37,13 +37,24 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 		const titleElement = section.querySelector<HTMLElement>('.ecosystem-title')
 		const introCopy = section.querySelector<HTMLElement>('.ecosystem-intro-copy')
 		const introIcon = section.querySelector<HTMLElement>('.ecosystem-intro-icon')
-		if (!titleElement || !introCopy || !introIcon) return
+		const featureDescriptions = [
+			...section.querySelectorAll<HTMLElement>(
+				'.ecosystem-feature-description',
+			),
+		]
+		if (
+			!titleElement ||
+			!introCopy ||
+			!introIcon ||
+			featureDescriptions.length === 0
+		)
+			return
 
 		let balanceFrame = 0
 		let refreshFrame = 0
 		let isDisposed = false
 
-		const balanceIntroInsets = () => {
+		const balanceContentInsets = () => {
 			// Read the responsive CSS baseline before applying the content-driven height.
 			section.style.removeProperty('--ecosystem-card-height')
 
@@ -51,7 +62,13 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 			const titleRect = titleElement.getBoundingClientRect()
 			const iconRect = introIcon.getBoundingClientRect()
 			const topInset = titleRect.top - wrapperRect.top
-			const contentBottom = iconRect.bottom - wrapperRect.top
+			const contentBottom = Math.max(
+				iconRect.bottom - wrapperRect.top,
+				...featureDescriptions.map(
+					description =>
+						description.getBoundingClientRect().bottom - wrapperRect.top,
+				),
+			)
 			const balancedHeight = Math.ceil(
 				Math.max(wrapperRect.height, contentBottom + topInset),
 			)
@@ -67,7 +84,7 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 			window.cancelAnimationFrame(balanceFrame)
 			balanceFrame = window.requestAnimationFrame(() => {
 				balanceFrame = 0
-				balanceIntroInsets()
+				balanceContentInsets()
 				window.cancelAnimationFrame(refreshFrame)
 				refreshFrame = window.requestAnimationFrame(() => {
 					refreshFrame = 0
@@ -76,7 +93,7 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 			})
 		}
 
-		balanceIntroInsets()
+		balanceContentInsets()
 
 		const getTravel = () => Math.max(0, track.scrollWidth - wrapper.clientWidth)
 		const getPinDistance = (slowdown: number) =>
@@ -89,6 +106,7 @@ export function Ecosystem({ title, subtitle, cards }: EcosystemProps) {
 		const resizeObserver = new ResizeObserver(scheduleBalance)
 		resizeObserver.observe(titleElement)
 		resizeObserver.observe(introCopy)
+		featureDescriptions.forEach(description => resizeObserver.observe(description))
 		window.addEventListener('resize', scheduleBalance)
 		document.fonts?.ready
 			.then(() => {

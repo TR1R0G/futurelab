@@ -6,7 +6,6 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 
 const GALLERY_GAP = 20
 const MOBILE_GALLERY_GAP = 16
-const MOBILE_SIDE_PADDING = 20
 const GALLERY_FRAME_HEIGHT = 396
 const GALLERY_LANDSCAPE_WIDTH = 552
 
@@ -99,9 +98,11 @@ const getGallerySetWidth = (
 ) => items.reduce((offset, item) => offset + item.width + gap, 0)
 
 const getMobileGalleryItems = (viewportWidth: number) => {
+	// Let the mobile gallery extend beyond the viewport so the moving frames remain
+	// prominent beneath the curved masks instead of shrinking into the available width.
 	const landscapeWidth = Math.min(
 		GALLERY_LANDSCAPE_WIDTH,
-		Math.max(280, viewportWidth - MOBILE_SIDE_PADDING * 2),
+		Math.max(320, Math.round(viewportWidth * 1.24)),
 	)
 	const frameHeight = Math.round(
 		(landscapeWidth / GALLERY_LANDSCAPE_WIDTH) * GALLERY_FRAME_HEIGHT,
@@ -292,7 +293,7 @@ export function ImageGallery({ alts }: { alts: string[] }) {
 									src={image.src}
 									alt={setIndex === 0 ? image.alt : ''}
 									fill
-									className={isMobile ? 'object-contain' : 'object-cover'}
+									className='object-cover'
 									style={{ objectPosition: image.position }}
 									sizes={`${image.width}px`}
 								/>
@@ -303,11 +304,17 @@ export function ImageGallery({ alts }: { alts: string[] }) {
 			</div>
 
 			<div
-				className='pointer-events-none absolute inset-y-0 left-0 z-10 w-[242px] bg-[linear-gradient(270deg,rgba(0,0,0,0)_0%,#000_100%)]'
+				data-gallery-mask='left'
+				className={`pointer-events-none absolute inset-y-0 left-0 z-10 w-[242px] bg-[linear-gradient(270deg,rgba(0,0,0,0)_0%,#000_100%)] ${
+					isMobile ? 'opacity-0' : ''
+				}`}
 				aria-hidden='true'
 			/>
 			<div
-				className='pointer-events-none absolute inset-y-0 right-0 z-10 w-[242px] bg-[linear-gradient(90deg,rgba(0,0,0,0)_0%,#000_100%)]'
+				data-gallery-mask='right'
+				className={`pointer-events-none absolute inset-y-0 right-0 z-10 w-[242px] bg-[linear-gradient(90deg,rgba(0,0,0,0)_0%,#000_100%)] ${
+					isMobile ? 'opacity-0' : ''
+				}`}
 				aria-hidden='true'
 			/>
 			<GalleryCurveOverlay position='top' />

@@ -138,7 +138,10 @@ h3,
 .hero-section {
 	--hero-inline: clamp(20px, 4vw, 64px);
 	--hero-content-gap: clamp(32px, 5vw, 72px);
-	--hero-scroll-distance: clamp(1100px, 150svh, 1800px);
+	--hero-post-video-clearance: clamp(140px, 16svh, 220px);
+	--hero-scroll-distance: calc(
+		clamp(1100px, 150svh, 1800px) + var(--hero-post-video-clearance)
+	);
 	min-width: 0;
 	min-height: calc(100svh + var(--hero-scroll-distance));
 	height: auto;
@@ -406,6 +409,21 @@ h3,
 
 .hero-word {
 	margin-right: 0.18em;
+}
+
+.solutions-transition-media {
+	backface-visibility: hidden;
+	transform: translateZ(0);
+	will-change: transform;
+}
+
+.hero-image video,
+.expanded-image-section video,
+.solutions-transition-media video,
+.solutions-transition-media iframe {
+	display: block;
+	backface-visibility: hidden;
+	transform: translateZ(0);
 }
 
 .hero-title-lines-mobile {
@@ -956,6 +974,65 @@ h3,
 
 .realized-projects-navigation {
 	display: none;
+}
+
+@media (min-width: 1024px) {
+	.realized-projects-track {
+		/* Keep the track aligned with its viewport so adjacent cards peek evenly. */
+		margin-left: 0 !important;
+	}
+
+	.realized-projects-navigation {
+		display: block;
+		position: absolute;
+		top: calc(
+			var(--realized-top-padding, 80px) +
+				var(--realized-title-height, 62px) +
+				var(--realized-card-gap, 70px) +
+				var(--realized-card-half-height, 437px) - 26px
+		);
+		left: 0;
+		right: 0;
+		height: 52px;
+		pointer-events: none;
+	}
+
+	.realized-projects-navigation .realized-projects-arrow {
+		display: grid;
+		position: absolute;
+		top: 0;
+		width: 52px;
+		height: 52px;
+		place-items: center;
+		border: 1px solid rgba(255, 255, 255, 0.35);
+		border-radius: 50%;
+		background: rgba(29, 29, 29, 0.9);
+		color: #fff;
+		pointer-events: auto;
+		transition: opacity 160ms ease, border-color 160ms ease;
+	}
+
+	.realized-projects-arrow--previous {
+		left: -64px;
+	}
+
+	.realized-projects-arrow--next {
+		right: -64px;
+	}
+
+	.realized-projects-navigation .realized-projects-arrow:disabled {
+		opacity: 0.32;
+		cursor: not-allowed;
+	}
+
+	.realized-projects-navigation .realized-projects-pagination {
+		display: none;
+	}
+
+	.realized-projects-navigation .realized-projects-arrow:focus-visible {
+		outline: 2px solid #fff;
+		outline-offset: 3px;
+	}
 }
 
 .post-realized-cta {
@@ -2412,7 +2489,12 @@ h3,
 }
 
 @media (max-width: 719px) {
+	.solutions-section {
+		padding-bottom: 32px !important;
+	}
+
 	.realized-projects-section {
+		--realized-top-padding: 42px;
 		height: auto !important;
 		min-height: 0 !important;
 	}
@@ -2426,7 +2508,8 @@ h3,
 		scroll-behavior: smooth;
 		overscroll-behavior-x: contain;
 		-webkit-overflow-scrolling: touch;
-		touch-action: pan-x;
+		/* Keep native horizontal swiping without blocking vertical page scrolling. */
+		touch-action: pan-x pan-y;
 		scrollbar-width: none;
 	}
 
@@ -2449,7 +2532,7 @@ h3,
 	}
 
 	.realized-project-card::before {
-		height: 24px !important;
+		height: 12px !important;
 		border-radius: 0 0 25px 25px !important;
 	}
 
@@ -2461,7 +2544,7 @@ h3,
 		transform: none !important;
 		flex-direction: column;
 		border-radius: 25px !important;
-		padding: 28px 24px 36px;
+		padding: 22px 20px 26px;
 	}
 
 	.realized-project-card-copy {
@@ -2475,7 +2558,7 @@ h3,
 	}
 
 	.realized-project-card-description {
-		margin-top: 20px !important;
+		margin-top: 14px !important;
 		font-size: clamp(15px, 4.35vw, 18px) !important;
 		line-height: clamp(21px, 6vw, 25px) !important;
 	}
@@ -2485,28 +2568,13 @@ h3,
 		left: auto !important;
 		top: auto !important;
 		width: 100% !important;
-		height: clamp(180px, 54vw, 260px) !important;
-		margin-top: 28px;
+		height: clamp(170px, 48vw, 230px) !important;
+		margin-top: 20px;
 		border-radius: 12px !important;
 	}
 
 	.realized-project-media .realized-project-case-button {
-		position: absolute;
-		right: 14px;
-		bottom: 14px;
-		z-index: 30;
-		display: inline-flex;
-		min-height: 44px;
-		align-items: center;
-		justify-content: center;
-		border-radius: 999px;
-		background: #0051ff;
-		padding-inline: 20px;
-		color: #fff;
-		font-size: 15px;
-		font-weight: 500;
-		line-height: 18px;
-		box-shadow: 0 10px 26px rgb(0 0 0 / 0.28);
+		display: none;
 	}
 
 	.realized-project-media .realized-project-case-button:focus-visible {
@@ -2972,12 +3040,16 @@ h3,
 }
 
 @media (max-width: 719px) {
+	.academy-section {
+		--academy-cards-gap: clamp(56px, 10vw, 72px);
+	}
+
 	.academy-pin {
 		padding-top: 24px !important;
 	}
 
 	.academy-card-stage {
-		--academy-mobile-card-size: clamp(250px, 68vw, 430px);
+		--academy-mobile-card-size: clamp(230px, 63vw, 390px);
 		--academy-mobile-card-offset: calc(var(--academy-mobile-card-size) * 0.05);
 		height: calc(
 			var(--academy-mobile-card-size) + var(--academy-mobile-card-offset) * 6
@@ -3503,6 +3575,45 @@ h3,
 @media (max-width: 719px) {
 	.trust-section {
 		--trust-intro-to-stats-gap: 32px;
+		padding-top: 56px !important;
+	}
+
+	.cases-to-trust-cta {
+		padding-top: 48px !important;
+		padding-bottom: 48px !important;
+	}
+
+	.trust-intro {
+		margin-top: 36px;
+	}
+
+	.experience-stats {
+		gap: 28px;
+	}
+
+	.experience-stat-card {
+		height: auto !important;
+		min-height: clamp(190px, 54vw, 230px) !important;
+		border-radius: 28px;
+	}
+
+	.experience-stat-card-inner {
+		position: relative !important;
+		inset: auto !important;
+		width: calc(100% - 7px) !important;
+		min-height: calc(clamp(190px, 54vw, 230px) - 14px);
+		margin: 7px 0 7px 7px;
+		gap: 14px;
+		border-radius: 21px;
+		padding: 24px 26px;
+	}
+
+	.experience-stat-card-title {
+		line-height: 1.25;
+	}
+
+	.experience-stat-card-label {
+		line-height: 1.45;
 	}
 }
 
@@ -4886,8 +4997,8 @@ main[lang='en'] .ecosystem-title-lead {
 		position: relative !important;
 		inset: auto !important;
 		display: grid !important;
-		grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-		gap: clamp(8px, 2vw, 14px) clamp(10px, 2.5vw, 18px) !important;
+		grid-template-columns: minmax(0, 1fr) !important;
+		gap: clamp(8px, 2vw, 14px) !important;
 		width: 100% !important;
 		height: auto !important;
 		margin: 0 !important;
@@ -5180,15 +5291,28 @@ main[lang='en'] .ecosystem-title-lead {
 /* Keep equal breathing room on both sides of the Infrastructure divider. */
 .infrastructure-section {
 	--infrastructure-divider-gap: clamp(76px, 10svh, 92px);
+	--infrastructure-divider-before-gap: var(--infrastructure-divider-gap);
+	--infrastructure-divider-after-gap: var(--infrastructure-divider-gap);
 }
 
 .infrastructure-separator-wrap {
-	padding-block: var(--infrastructure-divider-gap);
+	padding-block: var(--infrastructure-divider-before-gap)
+		var(--infrastructure-divider-after-gap);
 }
 
 .infrastructure-separator {
 	box-shadow: none;
 	filter: none;
+}
+
+@media (max-width: 719px) {
+	.infrastructure-section {
+		--infrastructure-divider-after-gap: clamp(36px, 5svh, 48px);
+	}
+
+	.academy-pin {
+		padding-top: 12px !important;
+	}
 }
 
 @media (min-width: 720px) {
@@ -5239,6 +5363,9 @@ main[lang='en'] .ecosystem-title-lead {
 /* Hero responsive layout states. Keep these together to avoid breakpoint drift. */
 @media (max-width: 719px) {
 	.hero-section {
+		--hero-mobile-header-to-title-gap: clamp(72px, 10svh, 92px);
+		--hero-mobile-title-to-support-gap: clamp(44px, 6svh, 56px);
+		--hero-mobile-support-gap: clamp(30px, 4svh, 40px);
 		height: auto;
 		min-height: calc(100svh + var(--hero-scroll-distance));
 	}
@@ -5253,9 +5380,9 @@ main[lang='en'] .ecosystem-title-lead {
 
 	.hero-content {
 		display: grid;
-		padding-top: 164px;
+		padding-top: calc(112px + var(--hero-mobile-header-to-title-gap));
 		padding-bottom: 48px;
-		gap: var(--hero-content-gap);
+		gap: var(--hero-mobile-title-to-support-gap);
 	}
 
 	.hero-copy,
@@ -5273,7 +5400,7 @@ main[lang='en'] .ecosystem-title-lead {
 			'description'
 			'actions'
 			'image';
-		gap: 24px;
+		gap: var(--hero-mobile-support-gap);
 	}
 
 	.hero-image {
@@ -6275,6 +6402,11 @@ main[lang='en'] .ecosystem-title-lead {
 .footer-contact-text,
 .footer-copyright {
 	font-size: var(--type-footer) !important;
+}
+
+.footer-copyright-protected {
+	display: inline-block;
+	white-space: nowrap;
 }
 
 /* Hero copy keeps its established content-safe geometry at each layout state. */

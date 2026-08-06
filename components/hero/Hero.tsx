@@ -94,7 +94,8 @@ export function Hero({
 		const lerp = (start: number, end: number, progress: number) =>
 			start + (end - start) * progress
 		const ease = gsap.parseEase('power2.inOut')
-		const finalImageAt = 0.82
+		// Reserve the last part of Hero for the completed video and its gradient.
+		const finalImageAt = 0.78
 		const videoAspect = 530 / 928
 
 		const toBox = (element: HTMLElement, stageBox: DOMRect) => {

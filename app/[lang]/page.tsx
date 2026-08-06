@@ -214,7 +214,7 @@ export default async function Home({ params }: HomeProps) {
         title={realizedProjectsContent.title}
         projects={realizedProjectsContent.projects}
       />
-      <section className="bg-black px-0 pb-28 pt-24 md:pb-36 md:pt-32 lg:pb-40 lg:pt-[200px]">
+      <section className="cases-to-trust-cta bg-black px-0 pb-28 pt-24 md:pb-36 md:pt-32 lg:pb-40 lg:pt-[200px]">
         <CTACard
           variant="project"
           text={copy.projectCta.text}
