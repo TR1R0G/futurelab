@@ -166,8 +166,8 @@ export function Hero({
 							box: element.getBoundingClientRect(),
 						}))
 						const highestCenter = Math.max(
-							...boxes.map(({ box }) =>
-								box.top - stageBox.top + box.height / 2,
+							...boxes.map(
+								({ box }) => box.top - stageBox.top + box.height / 2,
 							),
 						)
 						const tallestSupportingElement = Math.max(
@@ -286,7 +286,9 @@ export function Hero({
 							image:
 								transitionStageTop + start.image.top + start.image.height / 2,
 							actions:
-								transitionStageTop + start.actions.top + start.actions.height / 2,
+								transitionStageTop +
+								start.actions.top +
+								start.actions.height / 2,
 						}
 
 						return {
@@ -363,9 +365,9 @@ export function Hero({
 						frame = 0
 						const videoTransitionStart = hideSupportingText
 							? Math.min(
-								geometry.videoTransitionStart,
-								geometry.scrollDistance - 1,
-							)
+									geometry.videoTransitionStart,
+									geometry.scrollDistance - 1,
+								)
 							: 0
 						const videoTransitionDistance = Math.max(
 							1,
@@ -556,9 +558,7 @@ export function Hero({
 								actionsWidth,
 								undefined,
 								actionsLeft,
-								actionsViewportCenterY -
-									actionsHeight / 2 -
-									targetStageTop,
+								actionsViewportCenterY - actionsHeight / 2 - targetStageTop,
 								stageBox,
 								false,
 							)
@@ -615,7 +615,7 @@ export function Hero({
 						},
 						invalidateOnRefresh: true,
 						onRefreshInit: remeasureAndUpdate,
-						onRefresh: (self) => {
+						onRefresh: self => {
 							finalStateApplied = window.scrollY >= self.end
 							finalStageOffset = finalStateApplied
 								? window.scrollY - self.end
@@ -623,7 +623,7 @@ export function Hero({
 							applyUpdate()
 							requestUpdate()
 						},
-						onUpdate: (self) => {
+						onUpdate: self => {
 							if (self.progress < 1) {
 								finalStateApplied = false
 								finalStageOffset = 0
@@ -786,7 +786,7 @@ function HeroHeader({
 					className={language === 'uz' ? 'font-bold' : 'font-normal'}
 					aria-current={language === 'uz' ? 'true' : undefined}
 				>
-					O‘zbek
+					O‘zb
 				</Link>
 				<span className='hero-language-divider' aria-hidden='true' />
 				<Link

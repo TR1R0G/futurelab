@@ -946,6 +946,13 @@ h3,
 
 .realized-project-card {
 	border-radius: calc(35px * var(--realized-card-scale, 1));
+	background: linear-gradient(
+		65.17deg,
+		#4b0e5b -2.47%,
+		#a91e83 18.71%,
+		#fd9a34 44.05%,
+		#f9eb44 68.37%
+	) !important;
 }
 
 .realized-project-card::before {
@@ -954,8 +961,8 @@ h3,
 	right: 0;
 	bottom: 0;
 	left: 0;
-	z-index: 0;
-	height: calc(41px * var(--realized-card-scale, 1));
+	z-index: 20;
+	height: calc(6px * var(--realized-card-scale, 1));
 	border-radius: 0 0 calc(35px * var(--realized-card-scale, 1))
 		calc(35px * var(--realized-card-scale, 1));
 	background: linear-gradient(
@@ -976,6 +983,22 @@ h3,
 	display: none;
 }
 
+.realized-projects-track {
+	align-items: flex-start;
+}
+
+@media (min-width: 720px) {
+	/* The design is a 868px dark shell over a 874px gradient card. The exposed
+	 * outer layer creates both the 6px lower stripe and the rounded corner reveal. */
+	.realized-project-card::before {
+		display: none;
+	}
+
+	.realized-projects-track {
+		min-height: var(--realized-track-height, 882px);
+	}
+}
+
 @media (min-width: 1024px) {
 	.realized-projects-track {
 		/* Keep the track aligned with its viewport so adjacent cards peek evenly. */
@@ -986,8 +1009,7 @@ h3,
 		display: block;
 		position: absolute;
 		top: calc(
-			var(--realized-top-padding, 80px) +
-				var(--realized-title-height, 62px) +
+			var(--realized-top-padding, 80px) + var(--realized-title-height, 62px) +
 				var(--realized-card-gap, 70px) +
 				var(--realized-card-half-height, 437px) - 26px
 		);
@@ -1009,7 +1031,9 @@ h3,
 		background: rgba(29, 29, 29, 0.9);
 		color: #fff;
 		pointer-events: auto;
-		transition: opacity 160ms ease, border-color 160ms ease;
+		transition:
+			opacity 160ms ease,
+			border-color 160ms ease;
 	}
 
 	.realized-projects-arrow--previous {
@@ -2532,7 +2556,7 @@ h3,
 	}
 
 	.realized-project-card::before {
-		height: 12px !important;
+		height: 4px !important;
 		border-radius: 0 0 25px 25px !important;
 	}
 
@@ -2544,7 +2568,7 @@ h3,
 		transform: none !important;
 		flex-direction: column;
 		border-radius: 25px !important;
-		padding: 22px 20px 26px;
+		padding: 22px 20px 16px;
 	}
 
 	.realized-project-card-copy {
@@ -2553,14 +2577,14 @@ h3,
 	}
 
 	.realized-project-card-title {
-		font-size: clamp(24px, 7.2vw, 30px) !important;
-		line-height: clamp(29px, 8.5vw, 36px) !important;
+		font-size: clamp(28px, 8.1vw, 36px) !important;
+		line-height: clamp(33px, 9.4vw, 42px) !important;
 	}
 
 	.realized-project-card-description {
 		margin-top: 14px !important;
-		font-size: clamp(15px, 4.35vw, 18px) !important;
-		line-height: clamp(21px, 6vw, 25px) !important;
+		font-size: clamp(17px, 4.8vw, 20px) !important;
+		line-height: clamp(23px, 6.5vw, 28px) !important;
 	}
 
 	.realized-project-media {
@@ -5039,11 +5063,7 @@ main[lang='en'] .ecosystem-title-lead {
 @media (min-width: 720px) {
 	.directions-board {
 		--directions-spread-board-height: clamp(380px, 35vw, 510px);
-		--directions-spread-chip-font: clamp(
-			16px,
-			calc(1.25vw + 6px),
-			23px
-		);
+		--directions-spread-chip-font: clamp(16px, calc(1.25vw + 6px), 23px);
 		--directions-spread-chip-height: clamp(52px, 5vw, 72px);
 		--directions-spread-chip-padding-block: clamp(10px, 1vw, 14px);
 		--directions-spread-chip-padding-inline: clamp(18px, 2vw, 32px);
@@ -5862,6 +5882,14 @@ main[lang='en'] .ecosystem-title-lead {
 		line-height: 1.04;
 	}
 
+	main[lang='en'] .hero-section {
+		/* Keep the three approved English title lines within the safe stage width. */
+		--hero-copy-width: min(
+			calc(100vw - var(--hero-edge) - 20px),
+			clamp(1080px, 90vw, 1500px)
+		);
+	}
+
 	main[lang='ru'] .hero-section {
 		/* Russian title needs more usable line length than the shared title token. */
 		--hero-copy-width: min(
@@ -6517,5 +6545,213 @@ main[lang='en'] .ecosystem-title-lead {
 	main[lang='en'] .hero-title,
 	main[lang='uz'] .hero-title {
 		font-size: clamp(54px, 3.4vw, 60px) !important;
+	}
+}
+
+/* Short desktop viewports scale the realized-project cards down as a whole.
+ * Increase the source type here so the resulting on-screen text stays aligned
+ * with the rest of the page without changing the compact card composition. */
+@media (min-width: 900px) and (max-width: 1399px) and (max-height: 820px) {
+	.realized-project-card-title {
+		font-size: 54px !important;
+		line-height: 60px !important;
+	}
+
+	.realized-project-card-description {
+		font-size: 33px !important;
+		line-height: 38px !important;
+	}
+
+	.realized-project-card-shell {
+		display: flex !important;
+		height: auto !important;
+		flex-direction: column;
+		box-sizing: border-box;
+		padding: 32px 24px 24px !important;
+	}
+
+	.realized-project-card-copy {
+		position: static !important;
+		width: 100% !important;
+	}
+
+	.realized-project-media {
+		position: relative !important;
+		inset: auto !important;
+		width: 100% !important;
+		height: 332px !important;
+		margin-top: 32px;
+	}
+}
+
+@media (min-width: 1200px) and (max-width: 1399px) and (max-height: 820px) {
+	.realized-project-card {
+		height: var(--realized-card-natural-height, 720px) !important;
+	}
+}
+
+@media (min-width: 900px) and (max-width: 1199px) and (max-height: 820px) {
+	.realized-project-card {
+		height: var(--realized-card-natural-height, 650px) !important;
+	}
+}
+
+@media (min-width: 720px) and (max-width: 899px) {
+	.realized-project-card {
+		height: var(--realized-card-natural-height, auto) !important;
+	}
+
+	.realized-project-card-shell {
+		display: flex !important;
+		height: auto !important;
+		flex-direction: column;
+		box-sizing: border-box;
+		padding: 32px 40px 24px !important;
+	}
+
+	.realized-project-card-copy {
+		position: static !important;
+		width: 100% !important;
+	}
+
+	.realized-project-media {
+		position: relative !important;
+		inset: auto !important;
+		width: 100% !important;
+		height: 332px !important;
+		margin-top: 28px;
+	}
+}
+
+/* The project cards keep a distinct reading hierarchy from the surrounding
+ * section copy at tablet and laptop widths. The shared height variables below
+ * make the tallest copy block define the common video baseline. */
+@media (min-width: 720px) and (max-width: 959px) {
+	.realized-project-card-title {
+		font-size: clamp(32px, 4.6vw, 40px) !important;
+		line-height: clamp(38px, 5.4vw, 47px) !important;
+	}
+
+	.realized-project-card-description {
+		font-size: clamp(20px, 2.5vw, 22px) !important;
+		line-height: clamp(25px, 3vw, 28px) !important;
+	}
+}
+
+@media (min-width: 960px) and (max-width: 1199px) and (min-height: 821px) {
+	.realized-project-card-title {
+		font-size: clamp(42px, 4vw, 46px) !important;
+		line-height: clamp(49px, 4.7vw, 54px) !important;
+	}
+
+	.realized-project-card-description {
+		font-size: clamp(22px, 2.1vw, 24px) !important;
+		line-height: clamp(27px, 2.6vw, 30px) !important;
+	}
+}
+
+@media (min-width: 1200px) and (max-width: 1399px) and (min-height: 821px) {
+	.realized-project-card-title {
+		font-size: 44px !important;
+		line-height: 52px !important;
+	}
+
+	.realized-project-card-description {
+		font-size: 24px !important;
+		line-height: 29px !important;
+	}
+}
+
+/* At sub-desktop widths, reserve media space in normal flow. This prevents
+ * longer localized copy from reaching the video while the shared copy height
+ * below keeps every card's media baseline identical. */
+@media (min-width: 720px) and (max-width: 1399px) {
+	.realized-project-card-shell {
+		display: flex !important;
+		height: auto !important;
+		flex-direction: column;
+		box-sizing: border-box;
+		padding: 32px 32px 24px !important;
+	}
+
+	.realized-project-card-copy {
+		position: static !important;
+		width: 100% !important;
+	}
+
+	.realized-project-media {
+		position: relative !important;
+		inset: auto !important;
+		width: 100% !important;
+		height: 332px !important;
+		margin-top: 48px !important;
+	}
+}
+
+/* The full-size cards also need a stronger reading hierarchy than the page body. */
+@media (min-width: 1400px) {
+	.realized-projects-track {
+		align-items: flex-start;
+	}
+
+	.realized-project-card {
+		height: var(--realized-card-natural-height, auto) !important;
+	}
+
+	.realized-project-card-shell {
+		display: flex !important;
+		width: 698px !important;
+		height: auto !important;
+		min-height: 868px;
+		flex-direction: column;
+		box-sizing: border-box;
+		padding: 40px !important;
+	}
+
+	.realized-project-card-copy {
+		position: static !important;
+		width: 100% !important;
+		min-height: 416px;
+	}
+
+	.realized-project-card-title {
+		font-size: 48px !important;
+		line-height: 56px !important;
+	}
+
+	.realized-project-card-description {
+		margin-top: 40px !important;
+		font-size: 27px !important;
+		line-height: 32px !important;
+	}
+
+	.realized-project-media {
+		position: relative !important;
+		inset: auto !important;
+		width: 100% !important;
+		height: 332px !important;
+		margin-top: 40px;
+	}
+}
+
+@media (min-width: 720px) {
+	/* All cards use the tallest shell so their gradient edges stay aligned. */
+	.realized-project-card-shell {
+		min-height: var(--realized-card-shell-height, 868px) !important;
+	}
+
+	.realized-project-card-copy {
+		min-height: var(--realized-card-copy-height, 0px) !important;
+	}
+
+	/* The desktop track is allowed to extend beyond the content shell so the
+	 * adjacent cards remain visible instead of being cut by an inner frame. */
+	.realized-projects-viewport {
+		overflow: visible !important;
+	}
+
+	/* Arrow and dot controls belong only to the mobile swipe carousel. */
+	.realized-projects-navigation {
+		display: none !important;
 	}
 }

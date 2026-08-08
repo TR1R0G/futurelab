@@ -31,8 +31,8 @@ const TITLE_LINE_MAP: Record<
     {
       desktop: [
         "CreativeTech-хаб для обучения,",
-        "практики и разработки иммерсивных",
-        "digital-продуктов",
+        "практики и разработки",
+        "иммерсивных digital-продуктов",
       ],
       compact: [
         "CreativeTech-хаб для",

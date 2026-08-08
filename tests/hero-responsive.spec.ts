@@ -77,17 +77,20 @@ const desktopBaselines: Record<
 
 const englishDesktopBaselineOverrides: Record<
   string,
-  Record<'description' | 'actions', Partial<Geometry>>
+  Record<'title' | 'description' | 'actions', Partial<Geometry>>
 > = {
   '1600x900': {
+    title: { width: 1440 },
     description: { top: 588.53 },
     actions: { top: 618.81 },
   },
   '1920x1080': {
+    title: { width: 1500 },
     description: { top: 678.55 },
     actions: { top: 708.83 },
   },
   '2560x1440': {
+    title: { width: 1500 },
     description: { top: 678.55 },
     actions: { top: 708.83 },
   },
@@ -376,6 +379,10 @@ async function expectInitialHeroGeometry(
     language === 'en' && sharedBaseline && englishOverrides
       ? {
           ...sharedBaseline,
+          title: {
+            ...sharedBaseline.title,
+            ...englishOverrides.title,
+          },
           description: {
             ...sharedBaseline.description,
             ...englishOverrides.description,
@@ -432,6 +439,76 @@ for (const language of ['en', 'ru'] as const) {
     await page.goto(`/${language}`)
     await waitForHero(page)
     await expectInitialHeroGeometry(page, language, zoomEquivalentViewport)
+  })
+}
+
+for (const width of [1200, 1280, 1400, 1600]) {
+  test(`ru Hero keeps the approved title in three visual lines at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 900 })
+    await page.goto('/ru')
+    await waitForHero(page)
+
+    const titleRows = await page.locator('.hero-title').evaluate((title) => {
+      const lineHeight = Number.parseFloat(getComputedStyle(title).lineHeight)
+      const rows = [
+        ...title.querySelectorAll<HTMLElement>(
+          '.hero-title-lines-default > span',
+        ),
+      ].reduce(
+        (count, line) => count + Math.round(line.getBoundingClientRect().height / lineHeight),
+        0,
+      )
+
+      return rows
+    })
+
+    expect(titleRows).toBe(3)
+  })
+}
+
+for (const width of [1200, 1280, 1400, 1600]) {
+  test(`en Hero uses the full safe title width at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 })
+    await page.goto('/en')
+    await waitForHero(page)
+
+    const titleWidth = await page.locator('.hero-title').evaluate((title) =>
+      title.getBoundingClientRect().width,
+    )
+
+    expect(titleWidth).toBeGreaterThanOrEqual(width * 0.9 - 1)
+  })
+}
+
+for (const viewport of [
+  { width: 1024, height: 768 },
+  { width: 1280, height: 720 },
+]) {
+  test(`realized project card text remains readable at ${viewport.width}x${viewport.height}`, async ({
+    page,
+  }) => {
+    await page.setViewportSize(viewport)
+    await page.goto('/ru')
+    await page.locator('.realized-project-card').waitFor({ state: 'visible' })
+
+    const sizes = await page.locator('.realized-project-card').evaluate((card) => {
+      const shell = card.querySelector<HTMLElement>('.realized-project-card-shell')!
+      const title = card.querySelector<HTMLElement>('.realized-project-card-title')!
+      const description = card.querySelector<HTMLElement>(
+        '.realized-project-card-description',
+      )!
+      const scale = new DOMMatrixReadOnly(getComputedStyle(shell).transform).a || 1
+
+      return {
+        title: Number.parseFloat(getComputedStyle(title).fontSize) * scale,
+        description: Number.parseFloat(getComputedStyle(description).fontSize) * scale,
+      }
+    })
+
+    expect(sizes.title).toBeGreaterThanOrEqual(25)
+    expect(sizes.description).toBeGreaterThanOrEqual(16)
   })
 }
 

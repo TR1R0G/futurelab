@@ -92,9 +92,51 @@ export function RealizedProjects({ id, title, projects }: RealizedProjectsProps)
           1,
           Math.max(0.48, Math.min(widthScale, heightScale))
         );
-        const cardHeight = 874 * scale;
+        const cards = cardRefs.current.filter(
+          (card): card is HTMLElement => Boolean(card)
+        );
+        const shellHeights =
+          window.innerWidth >= 720
+            ? cards.map((card) => {
+                const shell = card.querySelector<HTMLElement>(
+                  ".realized-project-card-shell"
+                );
+                return shell?.offsetHeight ?? 868;
+              })
+            : [];
+        const shellHeight = shellHeights.length
+          ? Math.max(...shellHeights)
+          : 868;
+        const copyHeight = Math.max(
+          0,
+          ...cards.map((card) => {
+            const copy = card.querySelector<HTMLElement>(
+              ".realized-project-card-copy"
+            );
+            return copy?.offsetHeight ?? 0;
+          })
+        );
+        // The source card is a dark content shell plus a separate 6px gradient edge.
+        const cardHeight = (shellHeight + 6) * scale;
+        cards.forEach((card) => {
+          card.style.setProperty(
+            "--realized-card-shell-height",
+            `${shellHeight}px`
+          );
+          card.style.setProperty(
+            "--realized-card-copy-height",
+            `${copyHeight}px`
+          );
+          card.style.setProperty(
+            "--realized-card-natural-height",
+            `${cardHeight}px`
+          );
+        });
+        // Reserve a small track tail for the exposed gradient edge and rounded corners.
+        const trackHeight = cardHeight + 8;
         const cardWidth = 698 * scale;
-        const sectionHeight = topPadding + titleHeight + cardGap + cardHeight + bottomPadding;
+        const sectionHeight =
+          topPadding + titleHeight + cardGap + trackHeight + bottomPadding;
 
         section.style.setProperty("--realized-top-padding", `${topPadding}px`);
         section.style.setProperty("--realized-title-height", `${titleHeight}px`);
@@ -103,6 +145,7 @@ export function RealizedProjects({ id, title, projects }: RealizedProjectsProps)
         section.style.setProperty("--realized-card-scale", String(scale));
         section.style.setProperty("--realized-card-width", `${cardWidth}px`);
         section.style.setProperty("--realized-card-height", `${cardHeight}px`);
+        section.style.setProperty("--realized-track-height", `${trackHeight}px`);
         section.style.setProperty(
           "--realized-card-half-height",
           `${cardHeight / 2}px`
@@ -118,6 +161,11 @@ export function RealizedProjects({ id, title, projects }: RealizedProjectsProps)
       };
 
       setViewportFit();
+
+      void document.fonts.ready.then(() => {
+        setViewportFit();
+        ScrollTrigger.refresh();
+      });
 
       const handleResize = () => {
         setViewportFit();
@@ -160,7 +208,7 @@ export function RealizedProjects({ id, title, projects }: RealizedProjectsProps)
       media.revert();
       ctx.revert();
     };
-  }, []);
+  }, [projects]);
 
   useEffect(() => {
     const container = wrapperRef.current;
@@ -347,7 +395,7 @@ export function RealizedProjects({ id, title, projects }: RealizedProjectsProps)
 
       <div
         ref={wrapperRef}
-        className="realized-projects-viewport section-shell mt-20 overflow-x-auto overflow-y-visible pb-4 [scrollbar-width:none] md:mt-[70px] lg:mt-[var(--realized-card-gap,70px)] lg:overflow-hidden [&::-webkit-scrollbar]:hidden"
+        className="realized-projects-viewport section-shell mt-20 overflow-x-auto overflow-y-visible pb-4 [scrollbar-width:none] md:mt-[70px] lg:mt-[var(--realized-card-gap,70px)] lg:overflow-visible [&::-webkit-scrollbar]:hidden"
       >
         <div
           ref={trackRef}
